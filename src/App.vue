@@ -1,17 +1,18 @@
 <template>
   <v-app>
     <v-app-bar>  
-    <template v-slot:prepend>
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
-    </template>
-    <v-app-bar-title>Application Bar</v-app-bar-title>
+    <v-app-bar-title>Bar</v-app-bar-title>
    
     <template v-slot:append>
-      <v-btn icon="mdi-heart"></v-btn>
-  
-      <v-btn icon="mdi-magnify"></v-btn>
-  
-      <v-btn icon="mdi-dots-vertical"></v-btn>
+      <RouterLink class="closeStyle" to="/">
+        <v-btn >Главная</v-btn>
+      </RouterLink>
+      <RouterLink class="closeStyle" to="/Statistics">
+        <v-btn variant="text">Статистика</v-btn>
+      </RouterLink>
+      <RouterLink class="closeStyle" to="/Guide">
+        <v-btn >Справочник</v-btn>
+      </RouterLink>
     </template>
   </v-app-bar>
   
@@ -20,18 +21,16 @@
   </v-main>
   
   </v-app>  
-  
-      <!-- <nav>
-          <RouterLink to="/">Home</RouterLink>
-          <RouterLink to="/about">About</RouterLink>
-      </nav> -->
   </template>
 
 <script setup> 
-import { RouterView } from 'vue-router'
+import { RouterView, RouterLink } from 'vue-router'
 // import SideNavigationMenu from '@/components/SideNavigationMenu.vue';
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+.closeStyle{
+  text-decoration: none;
+  color: inherit;
+}
 </style>
