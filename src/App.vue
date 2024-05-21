@@ -25,7 +25,15 @@
 
 <script setup> 
 import { RouterView, RouterLink } from 'vue-router'
-// import SideNavigationMenu from '@/components/SideNavigationMenu.vue';
+import { ref } from 'vue'
+
+//Конструкция для получения данных из json !!! В функцию ее обернуть для async
+// import getFoodBase from './composables/requestGetFoodBase.js'
+// const data = ref([]);
+// data.value = await getFoodBase()
+// console.log(data.value[1]);
+
+
 </script>
 
 <style scoped lang="scss">

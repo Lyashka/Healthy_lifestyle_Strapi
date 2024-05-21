@@ -1,26 +1,22 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-const MainPage = () => import('../views/MainPage.vue')
-const StatisticsPage = () => import('../views/StatisticsPage.vue')
-const GuidePage = () => import('../views/GuidePage.vue')
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
       name: 'MainPage',
-      component: MainPage
+      component: () => import('../views/MainPage.vue')
     },
     {
       path: '/Statistics', 
       name: 'StatisticsPage',
-      component: StatisticsPage
+      component: () => import('../views/StatisticsPage.vue')
     },
     {
       path: '/Guide', 
       name: 'GuidePage',
-      component: GuidePage
+      component: () => import('../views/GuidePage.vue')
     }
      
   ] 

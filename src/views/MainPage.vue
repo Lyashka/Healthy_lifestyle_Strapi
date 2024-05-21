@@ -13,9 +13,10 @@
 
           <v-expansion-panels>
 
-            <!-- в отдельный компонент вывести -->
+            <!-- в отдельный компонент вывести??? -->
             <v-expansion-panel>
               <v-expansion-panel-title>
+                <!-- информация на самой вкладке категории -->
                 <v-row>
                   <v-col cols="4">
                     Завтрак
@@ -27,39 +28,13 @@
                     ывфыв
                   </v-col>
                 </v-row>
+                <!-- ______________ -->
               </v-expansion-panel-title>
               <v-expansion-panel-text style="text-align: center">
 
-  <!-- ____________________________________________ -->
-                <div class="text-center pa-4">
-    <v-btn icon="$plus" size="small" @click="dialog = true"/>
-    <v-dialog
-      v-model="dialog"
-      width="auto"
-    >
-      <v-card
-        max-width="400"
-        min-height="600"
-        text="Your application will relaunch automatically after the update is complete."
-        title="Update in progress"
-      >
-        <template v-slot:actions>
-          <v-btn 
-            text="Cancel"
-            @click="dialog = false"
-          />
-          <v-btn
-            class="ms-auto"
-            text="Ok"
-            @click="dialog = false"
-          />
-        </template>
-      </v-card>
-    </v-dialog>
-  </div>
-  <!-- ____________________________________________ -->
+                <MenuSelectFoods/>
 
-                <!-- <v-btn icon="$plus" size="small"  /> -->
+                <!-- Элемент элемента списка категории "Завтрак" да и в целом для всего -->
                 <v-row>
                   <v-col cols="3">
                     еда
@@ -68,7 +43,7 @@
                     калории
                   </v-col>
                 </v-row>
-                
+                <!-- ______________________________ -->
                 
               </v-expansion-panel-text> 
             </v-expansion-panel>
@@ -77,7 +52,8 @@
               title="Обед"
             >
               <v-expansion-panel-text style="text-align: center">
-                <v-btn icon="$plus" size="small"  />
+                <MenuSelectFoods/>
+                
               </v-expansion-panel-text>
             </v-expansion-panel>
 
@@ -85,7 +61,8 @@
               title="Ужин"
             >
               <v-expansion-panel-text style="text-align: center">
-                <v-btn icon="$plus" size="small"  />
+                <MenuSelectFoods/>
+
               </v-expansion-panel-text>
             </v-expansion-panel>
           </v-expansion-panels>
@@ -105,9 +82,8 @@
 </template>
 
 <script setup>
-import SelectDate from '@/components/SelectDate.vue'; 
-import { ref } from 'vue'
- 
-const dialog = ref(false)
+import SelectDate from '../components/SelectDate.vue'; 
+import MenuSelectFoods from '../components/MenuSelectFoods.vue'
+
 </script>
  
