@@ -23,7 +23,7 @@
             <v-btn
               color="primary"
               variant="text" 
-              @click="menu = false"
+              @click="saveDay"
             >
               OK
             </v-btn> 
@@ -34,19 +34,21 @@
   </template>
   
   <script setup> 
-  import {ref, watch} from 'vue'     
-
+  import {ref} from 'vue'  
+  import { useCalendarDaysStore } from '../stores/calendarDays'   
+  const calendarDaysStore = useCalendarDaysStore()
+  const { editTargetDate, getDataForDay } = calendarDaysStore
+  
   let menu = ref(false)
   
   let selectedDate = ref(new Date());
 
+  function saveDay() {
+    editTargetDate(selectedDate.value)
 
+    menu.value = false
+  }
 
-watch(selectedDate, () => {
- 
-    console.log(selectedDate.value);
-
-});
 
 
   

@@ -27,11 +27,12 @@
 import { RouterView, RouterLink } from 'vue-router'
 import { ref } from 'vue'
 
-//Конструкция для получения данных из json !!! В функцию ее обернуть для async
-// import getFoodBase from './composables/requestGetFoodBase.js'
-// const data = ref([]);
-// data.value = await getFoodBase()
-// console.log(data.value[1]);
+import { useCalendarDaysStore } from './stores/calendarDays'
+// const calendarDaysStore = useCalendarDaysStore()
+// const { calendarDays } = calendarDaysStore
+// console.log(calendarDays); 
+
+
 
 
 </script>

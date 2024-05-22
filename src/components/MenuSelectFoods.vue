@@ -8,9 +8,9 @@
        <v-card
          max-width="400"
          min-height="600"
-         text="Your application will relaunch automatically after the update is complete."
-         title="Update in progress"
        >
+       <v-card-title>{{ getTargetDate() }}</v-card-title>
+       <v-card-text>Your application will relaunch automatically after the update is complete.</v-card-text>
          <template v-slot:actions>
            <v-btn 
              text="Cancel"
@@ -29,7 +29,11 @@
  
  <script setup>
  import { ref } from 'vue'
- 
+ import { useCalendarDaysStore } from '../stores/calendarDays'   
+  
+ const calendarDaysStore = useCalendarDaysStore()
+ const { getTargetDate } = calendarDaysStore
+
  const dialog = ref(false)
  </script>
  

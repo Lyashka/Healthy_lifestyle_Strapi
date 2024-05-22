@@ -10,16 +10,15 @@
       <v-col>
         <v-card max-width="500px" min-width="300px" height="500px" class="mx-auto" variant="outlined"> 
           <SelectDate/>
-
+          {{ data }}
           <v-expansion-panels>
-
             <!-- в отдельный компонент вывести??? -->
-            <v-expansion-panel>
+            <v-expansion-panel v-for="ration in rations" :key="ration.id">
               <v-expansion-panel-title>
                 <!-- информация на самой вкладке категории -->
                 <v-row>
                   <v-col cols="4">
-                    Завтрак
+                    {{ ration.name }}
                   </v-col>
                   <v-col cols="3">
                     Калории:
@@ -32,17 +31,21 @@
               </v-expansion-panel-title>
               <v-expansion-panel-text style="text-align: center">
 
-                <MenuSelectFoods/>
-
+                <MenuSelectFoods />
+              
                 <!-- Элемент элемента списка категории "Завтрак" да и в целом для всего -->
-                <v-row>
+                <!-- Может, if ration name = 'завтрак' передавай breackfast , хз чето-->
+                <div v-if="ration.id == 1">
+                  <v-row v-for="item in data.breakfast" :key="item.id">
                   <v-col cols="3">
-                    еда
+                    {{ item.name }}
                   </v-col>
                   <v-col cols="3">
-                    калории
+                    калории: {{ item.calories }}
                   </v-col>
                 </v-row>
+                </div>
+                
                 <!-- ______________________________ -->
                 
               </v-expansion-panel-text> 
@@ -84,6 +87,36 @@
 <script setup>
 import SelectDate from '../components/SelectDate.vue'; 
 import MenuSelectFoods from '../components/MenuSelectFoods.vue'
+
+import { ref } from 'vue'
+// import getFoodRations from '../composables/requestGetFoodRatons'
+// const data = ref([]);
+// // data.value = await getFoodRations()
+// console.log(await getFoodRations());
+
+//Конструкция для получения данных из json !!! В функцию ее обернуть для async
+import getFoodRations from '../composables/requestGetFoodRatons'
+const rations = ref([]);
+const getRations = async function() {
+  rations.value = await getFoodRations()
+}
+getRations()
+
+
+import { useCalendarDaysStore } from '../stores/calendarDays' 
+import { watch } from 'vue'  
+  const calendarDaysStore = useCalendarDaysStore()
+  const { calendarDays, getDataForDay, dataForDay } = calendarDaysStore
+
+  const data = ref(getDataForDay())
+
+  watch(dataForDay, (newval) => {
+    console.log(newval);
+    // getDataForDay()
+  })
+
+
+
 
 </script>
  
