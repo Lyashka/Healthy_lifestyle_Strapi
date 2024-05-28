@@ -21,10 +21,10 @@
                     {{ ration.name }}
                   </v-col>
                   <v-col cols="3">
-                    Калории:
+                    Калории: 
                   </v-col>
                   <v-col cols="3">
-                    ывфыв
+                    {{ getSummCalories(ration.id) }} 
                   </v-col>
                 </v-row>
                 <!-- ______________ -->
@@ -45,13 +45,35 @@
                   </v-col>
                 </v-row>
                 </div>
+
+                <div v-if="ration.id == 2">
+                  <v-row v-for="item in data.lunch" :key="item.id">
+                  <v-col cols="3">
+                    {{ item.name }}
+                  </v-col>
+                  <v-col cols="3">
+                    калории: {{ item.calories }}
+                  </v-col>
+                </v-row>
+                </div>
+
+                <div v-if="ration.id == 3">
+                  <v-row v-for="item in data.dinner" :key="item.id">
+                  <v-col cols="3">
+                    {{ item.name }}
+                  </v-col>
+                  <v-col cols="3">
+                    калории: {{ item.calories }}
+                  </v-col>
+                </v-row>
+                </div>
                 
                 <!-- ______________________________ -->
                 
               </v-expansion-panel-text> 
             </v-expansion-panel>
 
-            <v-expansion-panel
+            <!-- <v-expansion-panel
               title="Обед"
             >
               <v-expansion-panel-text style="text-align: center">
@@ -67,7 +89,7 @@
                 <MenuSelectFoods/>
 
               </v-expansion-panel-text>
-            </v-expansion-panel>
+            </v-expansion-panel> -->
           </v-expansion-panels>
 
         </v-card>
@@ -105,18 +127,25 @@ getRations()
 
 import { useCalendarDaysStore } from '../stores/calendarDays' 
 import { watch } from 'vue'  
-  const calendarDaysStore = useCalendarDaysStore()
-  const { calendarDays, getDataForDay, dataForDay } = calendarDaysStore
+const calendarDaysStore = useCalendarDaysStore()
+const { calendarDays, getDataForDay, dataForDay, getTargetDate } = calendarDaysStore
 
-  const data = ref(getDataForDay())
+const data = ref(getDataForDay())
 
-  watch(dataForDay, (newval) => {
-    console.log(newval);
-    // getDataForDay()
-  })
+watch(
+  () => calendarDaysStore.dataForDay, (newValue) => {
+      data.value = newValue
+  }
+)
 
 
-
+function getSummCalories(id){
+  switch(id){
+    case 1: return 1
+    case 2: return 2
+    case 3: return 3
+  }
+}
 
 </script>
  
