@@ -6,7 +6,7 @@ export const useCalendarDaysStore = defineStore('calendarDays', () => {
     {
       date: '28.05.2024', //Дата дня 
       breakfast: [
-        { id: 1, name: 'Яйца', calories: 200 },
+        { id: 1, name: 'Яйца', calories: 400 },
         { id: 2, name: 'Овсянка', calories: 300 },
       ],
       lunch: [

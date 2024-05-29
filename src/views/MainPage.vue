@@ -29,9 +29,9 @@
                 </v-row>
                 <!-- ______________ -->
               </v-expansion-panel-title>
-              <v-expansion-panel-text style="text-align: center">
+              <v-expansion-panel-text >
 
-                <MenuSelectFoods />
+                <MenuSelectFoods :ration="ration"/>
               
                 <!-- Элемент элемента списка категории "Завтрак" да и в целом для всего -->
                 <!-- Может, if ration name = 'завтрак' передавай breackfast , хз чето-->
@@ -73,23 +73,6 @@
               </v-expansion-panel-text> 
             </v-expansion-panel>
 
-            <!-- <v-expansion-panel
-              title="Обед"
-            >
-              <v-expansion-panel-text style="text-align: center">
-                <MenuSelectFoods/>
-                
-              </v-expansion-panel-text>
-            </v-expansion-panel>
-
-            <v-expansion-panel
-              title="Ужин"
-            >
-              <v-expansion-panel-text style="text-align: center">
-                <MenuSelectFoods/>
-
-              </v-expansion-panel-text>
-            </v-expansion-panel> -->
           </v-expansion-panels>
 
         </v-card>
@@ -119,7 +102,7 @@ import { ref } from 'vue'
 //Конструкция для получения данных из json !!! В функцию ее обернуть для async
 import getFoodRations from '../composables/requestGetFoodRatons'
 const rations = ref([]);
-const getRations = async function() {
+const getRations = async function() { 
   rations.value = await getFoodRations()
 }
 getRations()
@@ -138,13 +121,16 @@ watch(
   }
 )
 
-
 function getSummCalories(id){
   switch(id){
-    case 1: return 1
-    case 2: return 2
-    case 3: return 3
+    case 1: return calculateSummCalories(data.value.breakfast)
+    case 2: return calculateSummCalories(data.value.lunch)
+    case 3: return calculateSummCalories(data.value.dinner)
   }
+}
+
+function calculateSummCalories(value) {
+  return value.reduce((acc, curr) => acc += curr.calories, 0)
 }
 
 </script>
