@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 export const useCalendarDaysStore = defineStore('calendarDays', () => {
   const calendarDays = reactive([
     {
-      date: '28.05.2024', //Дата дня 
+      date: '30.05.2024', //Дата дня 
       breakfast: [
         { id: 1, name: 'Яйца', calories: 400 },
         { id: 2, name: 'Овсянка', calories: 300 },
@@ -19,7 +19,7 @@ export const useCalendarDaysStore = defineStore('calendarDays', () => {
       ], 
     },
     {
-      date: '29.05.2024', //Дата дня 
+      date: '31.05.2024', //Дата дня 
       breakfast: [
         { id: 7, name: '111', calories: 200 },
         { id: 8, name: '222', calories: 300 }
@@ -60,17 +60,19 @@ export const useCalendarDaysStore = defineStore('calendarDays', () => {
   }
  
   function getDataForDay() {
+    let isEmptyData = true
     calendarDays.forEach(item => {
       if (item.date == targetDate.value.toLocaleDateString()) {
         dataForDay.value = item
+        isEmptyData = false
       }
-      // else{      Добавить проверку на ненахождение даты в массиве дней calendarDays 
-      //   dataForDay.value = {}
-      // }
     })
+    if(isEmptyData) {
+      dataForDay.value = {}
+    }
     console.log(dataForDay.value);
     return dataForDay.value
-  }
+  } 
 
   // function editDataForDay() {
   //   calendarDays.forEach(item => {

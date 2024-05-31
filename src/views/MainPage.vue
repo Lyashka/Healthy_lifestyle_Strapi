@@ -8,7 +8,7 @@
     </v-col> -->
  
       <v-col>
-        <v-card max-width="500px" min-width="300px" height="500px" class="mx-auto" variant="outlined"> 
+        <v-card max-width="500px" min-width="300px" min-height="500px" class="mx-auto" variant="outlined"> 
           <SelectDate/>
           {{ data }}
           <v-expansion-panels>
@@ -122,6 +122,7 @@ watch(
 )
 
 function getSummCalories(id){
+
   switch(id){
     case 1: return calculateSummCalories(data.value.breakfast)
     case 2: return calculateSummCalories(data.value.lunch)
@@ -130,7 +131,8 @@ function getSummCalories(id){
 }
 
 function calculateSummCalories(value) {
-  return value.reduce((acc, curr) => acc += curr.calories, 0)
+  // console.log(value);
+  return value ? value.reduce((acc, curr) => acc += curr.calories, 0) : 0
 }
 
 </script>
