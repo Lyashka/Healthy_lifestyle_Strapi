@@ -43,6 +43,17 @@
                   <v-col cols="3">
                     калории: {{ item.calories }}
                   </v-col>
+                  <v-col cols="3">
+                    МБ БЖУ?
+                  </v-col>
+                  <v-col cols="3">
+                    <v-btn 
+                      variant="text" 
+                      density="compact" 
+                      icon="mdi-close"
+                      @click="removePositionFromRation(data.date, ration.id, item.id)"
+                    />
+                  </v-col>
                 </v-row>
                 </div>
 
@@ -54,6 +65,17 @@
                   <v-col cols="3">
                     калории: {{ item.calories }}
                   </v-col>
+                  <v-col cols="3">
+                    МБ БЖУ?
+                  </v-col>
+                  <v-col cols="3">
+                    <v-btn 
+                      variant="text" 
+                      density="compact" 
+                      icon="mdi-close"
+                      @click="removePositionFromRation(data.date, ration.id, item.id)"
+                    />
+                  </v-col>
                 </v-row>
                 </div>
 
@@ -64,6 +86,17 @@
                   </v-col>
                   <v-col cols="3">
                     калории: {{ item.calories }}
+                  </v-col>
+                  <v-col cols="3">
+                    МБ БЖУ?
+                  </v-col>
+                  <v-col cols="3">
+                    <v-btn 
+                      variant="text" 
+                      density="compact" 
+                      icon="mdi-close"
+                      @click="removePositionFromRation(data.date, ration.id, item.id)"
+                    />
                   </v-col>
                 </v-row>
                 </div>
@@ -94,10 +127,7 @@ import SelectDate from '../components/SelectDate.vue';
 import MenuSelectFoods from '../components/MenuSelectFoods.vue'
 
 import { ref } from 'vue'
-// import getFoodRations from '../composables/requestGetFoodRatons'
-// const data = ref([]);
-// // data.value = await getFoodRations()
-// console.log(await getFoodRations());
+
 
 //Конструкция для получения данных из json !!! В функцию ее обернуть для async
 import getFoodRations from '../composables/requestGetFoodRatons'
@@ -111,7 +141,7 @@ getRations()
 import { useCalendarDaysStore } from '../stores/calendarDays' 
 import { watch } from 'vue'  
 const calendarDaysStore = useCalendarDaysStore()
-const { calendarDays, getDataForDay, dataForDay, getTargetDate } = calendarDaysStore
+const { calendarDays, getDataForDay, dataForDay, getTargetDate, removePositionFromRation } = calendarDaysStore
 
 const data = ref(getDataForDay())
 
@@ -131,7 +161,6 @@ function getSummCalories(id){
 }
 
 function calculateSummCalories(value) {
-  // console.log(value);
   return value ? value.reduce((acc, curr) => acc += curr.calories, 0) : 0
 }
 

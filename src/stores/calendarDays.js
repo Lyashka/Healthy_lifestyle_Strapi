@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 export const useCalendarDaysStore = defineStore('calendarDays', () => {
   const calendarDays = reactive([
     {
-      date: '30.05.2024', //Дата дня 
+      date: '01.06.2024', //Дата дня 
       breakfast: [
         { id: 1, name: 'Яйца', calories: 400 },
         { id: 2, name: 'Овсянка', calories: 300 },
@@ -17,9 +17,9 @@ export const useCalendarDaysStore = defineStore('calendarDays', () => {
         { id: 5, name: 'Стейк', calories: 600 },
         { id: 6, name: 'Рыба', calories: 350 },
       ], 
-    },
+    }, 
     {
-      date: '31.05.2024', //Дата дня 
+      date: '02.06.2024', //Дата дня 
       breakfast: [
         { id: 7, name: '111', calories: 200 },
         { id: 8, name: '222', calories: 300 }
@@ -39,7 +39,7 @@ export const useCalendarDaysStore = defineStore('calendarDays', () => {
   const dataForDay = ref({})
   
   
-  const addNewDayInCalendar = function(newData) {
+  const addNewDayInCalendar = function(newData) { 
     calendarDays.push({
       date: newData.date, //Дата дня 
       breakfast: newData.breakfast,
@@ -49,13 +49,35 @@ export const useCalendarDaysStore = defineStore('calendarDays', () => {
     })
   } 
 
+  function removePositionFromRation(date, rationId, positionId) {
+    calendarDays.forEach(e => {
+      if(e.date == date){
+        if(rationId == 1){
+          const index = e.breakfast.findIndex(item => item.id == positionId)
+          if (index != -1) {
+            e.breakfast.splice(index, 1)
+          }
+        }else if(rationId == 2) { 
+          const index = e.lunch.findIndex(item => item.id == positionId)
+          if (index != -1) {
+            e.lunch.splice(index, 1)
+          }
+        }else if(rationId == 3) {
+          const index = e.dinner.findIndex(item => item.id == positionId)
+          if (index != -1) {
+            e.dinner.splice(index, 1)
+          }
+        }
+      }
+    })
+  }
+
   function getTargetDate() {
     return targetDate.value.toLocaleDateString()
   }
 
   function editTargetDate(newDay) {
     targetDate.value = newDay
-    // console.log(newDay);
     getDataForDay()
   }
  
@@ -70,7 +92,7 @@ export const useCalendarDaysStore = defineStore('calendarDays', () => {
     if(isEmptyData) {
       dataForDay.value = {}
     }
-    console.log(dataForDay.value);
+    // console.log(dataForDay.value);
     return dataForDay.value
   } 
 
@@ -84,8 +106,6 @@ export const useCalendarDaysStore = defineStore('calendarDays', () => {
   //   })
   // }
 // watch(dataForDay, () => {
-//  console.log('sss');
-//  console.log(dataForDay);
 // })
 
   return { 
@@ -93,6 +113,7 @@ export const useCalendarDaysStore = defineStore('calendarDays', () => {
     getTargetDate,
     editTargetDate,
     getDataForDay,
+    removePositionFromRation,
     // editDataForDay,
     dataForDay
   }

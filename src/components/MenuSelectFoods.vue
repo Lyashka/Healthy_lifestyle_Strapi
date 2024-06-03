@@ -89,7 +89,7 @@
  const props = defineProps({
   ration: Object
  })
- console.log(props.ration);
+//  console.log(props.ration);
  const calendarDaysStore = useCalendarDaysStore()
  const { getTargetDate } = calendarDaysStore
 
