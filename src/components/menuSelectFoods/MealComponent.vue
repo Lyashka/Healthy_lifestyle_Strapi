@@ -7,26 +7,30 @@
         append-inner-icon="mdi-magnify"
         type="input"
         v-model="searchName"
-        @input="selectFood($event.target.value)"
+        @input="inputValueSelectFood($event.target.value)"
         ></v-text-field>
-  
-    <v-list lines="one">
-      <v-row  v-for="(food, index) in showFoods" 
+        {{ selected }}
+    <v-list lines="one" height="350">
+      <div v-if="loader" class="text-center">
+        <v-progress-circular  indeterminate></v-progress-circular>
+      </div> 
+      
+      <v-row no-gutters v-for="(food, index) in showFoods" 
         :key="index"
+        
         >
-        <v-col>
+        <v-col >
           <v-list-item>
             <v-list-item-title> {{ food.name }} </v-list-item-title>
             <v-list-item-subtitle> {{ food.calories }} </v-list-item-subtitle>
             <!-- Б-${food.proteins} Ж-${food.fats} У-${food.carbs} -->
           </v-list-item> 
         </v-col>
-        <v-col>
-          <!-- <v-checkbox
+        <v-col cols="auto">
+          <v-checkbox
           v-model="selected"
-          label="John"
-          value="John"
-          /> -->
+          :value="food"
+          />
         </v-col>
         
       </v-row>
@@ -37,12 +41,15 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import getFoodBase from '@/composables/requestGetFoodBase.js'
+import { debounce } from 'lodash'
 defineProps({
     ration: Object
 })
  
 const searchName = ref('')
-const foodBase = ref([]);
+const foodBase = ref([])
+const loader = ref(false)
+const selected = ref([]) 
 
 onMounted(async () => {
   foodBase.value = await getFoodBase()
@@ -50,14 +57,23 @@ onMounted(async () => {
 })
 
 const showFoods = ref([])
-function selectFood(value) {
+
+const inputValueSelectFood = (value) =>{
+  loader.value = true
+  selectFood(value)
+}
+
+const selectFood = debounce((value) => {
   if (value){
+    console.log(value);
     showFoods.value = filteredFoods(value)
+    loader.value = false
   }
   else{
     showFoods.value = []
+    loader.value = false
   }
-}
+}, 1000)
 
 function filteredFoods(value)  {
         return foodBase.value.filter(item => 

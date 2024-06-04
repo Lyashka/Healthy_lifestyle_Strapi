@@ -3,51 +3,69 @@
      <v-btn icon="mdi-plus" size="small" @click="dialog = true"/>
      <v-dialog
        v-model="dialog"
-       width="400"
+       width="500"
      >
        <v-card
-         max-width="400"
-         min-height="600"
+         
+         min-height="700"
        >
-       <v-card-title>{{ getTargetDate() }}</v-card-title> 
+       <v-row>
+         
+          <v-col>
+            <v-card-title>{{ getTargetDate() }}</v-card-title> 
+          </v-col>
+          <v-col cols="auto">
+            <v-badge :content="14" class="pa-4" inline>
+              <v-icon icon="mdi-check" size="x-large"></v-icon>
+            </v-badge>
+          </v-col>
+       </v-row>
+      
        <v-card-subtitle>
         {{ ration.name }}
        </v-card-subtitle>
        <v-card-text class="pa-0">
-          <v-row  
-            no-gutters 
-            align="center" 
+          <v-row
+            text-align="center" 
             justify="space-between"
-            class="pa-4"
+            class="d-flex flex-nowrap  pa-4"
             >
-            <v-col cols="auto">
-              <v-btn 
+            <v-col>
+              <v-btn
+                width="100%" 
+                height="100%"
                 density="compact" 
                 prepend-icon="mdi-silverware-fork-knife" 
+                class="py-1"
                 stacked
                 @click="showComponent('meal')"
                 >Еда</v-btn>
             </v-col>
-            <v-col cols="auto">
+            <v-col >
               <v-btn 
+                height="100%"
+                width="100%" 
                 density="compact" 
                 prepend-icon="mdi-history" 
+                class="py-1"
                 stacked
                 @click="showComponent('history')"
                 >История</v-btn>
             </v-col>
-            <v-col cols="auto">
+            <v-col >
               <v-btn 
+                height="100%"
+                width="100%" 
                 density="compact" 
                 prepend-icon="mdi-food-drumstick" 
+                class="py-1"
                 stacked
                 @click="showComponent('myMeal')"
+              
                 >Моя еда</v-btn>
             </v-col>
           </v-row> 
 
-          
-          
           <v-card-text>
             <div v-if="showMeal">
               <MealComponent :ration="ration"/>
