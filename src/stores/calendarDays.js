@@ -1,10 +1,11 @@
 import { ref, reactive, computed, watch } from 'vue'
 import { defineStore } from 'pinia'
+import { last } from 'lodash'
 
 export const useCalendarDaysStore = defineStore('calendarDays', () => {
   const calendarDays = reactive([
     {
-      date: '01.06.2024', //Дата дня 
+      date: '05.06.2024', //Дата дня 
       breakfast: [
         { id: 1, name: 'Яйца', calories: 400 },
         { id: 2, name: 'Овсянка', calories: 300 },
@@ -19,7 +20,7 @@ export const useCalendarDaysStore = defineStore('calendarDays', () => {
       ], 
     }, 
     {
-      date: '02.06.2024', //Дата дня 
+      date: '04.06.2024', //Дата дня 
       breakfast: [
         { id: 7, name: '111', calories: 200 },
         { id: 8, name: '222', calories: 300 }
@@ -39,15 +40,61 @@ export const useCalendarDaysStore = defineStore('calendarDays', () => {
   const dataForDay = ref({})
   
   
-  const addNewDayInCalendar = function(newData) { 
-    calendarDays.push({
-      date: newData.date, //Дата дня 
-      breakfast: newData.breakfast,
-      lunch: newData.lunch,
-      dinner: newData.dinner, 
+  const addNewDataInCalendar = function(newData) { 
 
+    const isExistDay = calendarDays.some(item => {
+      return item.date.includes(newData.date)
     })
+    if (isExistDay){
+      addFoodsInRation(newData)
+    }else{
+      calendarDays.push({
+        date: newData.date,
+        breakfast: [],
+        lunch: [],
+        dinner: []
+      })
+      addFoodsInRation(newData)
+    }
   } 
+
+  function addFoodsInRation(newData) {
+    calendarDays.forEach(item => {
+      if (item.date == newData.date) {
+        if(newData.ration.id == 1) {
+          newData.selectedFoods.forEach(newFood => {
+            console.log(item.breakfast.length);
+            item.breakfast.push(
+              {
+                id: item.breakfast.length != 0  ? item.breakfast[item.breakfast.length-1].id + 1 : 1,
+                ...newFood
+              }
+            )
+          })
+        }
+        else if (newData.ration.id == 2){
+          newData.selectedFoods.forEach(newFood => {
+            item.lunch.push(
+              {
+                id: item.lunch.length != 0 ? item.lunch[item.lunch.length-1].id + 1 : 1,
+                ...newFood
+              }
+            )
+          })
+        }else if (newData.ration.id == 3){
+          newData.selectedFoods.forEach(newFood => {
+            item.dinner.push(
+              {
+                id: item.dinner.length != 0 ? item.dinner[item.dinner.length-1].id + 1 : 1,
+                ...newFood
+              }
+            )
+          })
+        }
+      }
+      console.log(item);
+    })
+  }
 
   function removePositionFromRation(date, rationId, positionId) {
     calendarDays.forEach(e => {
@@ -110,11 +157,11 @@ export const useCalendarDaysStore = defineStore('calendarDays', () => {
 
   return { 
     calendarDays,
+    addNewDataInCalendar,
     getTargetDate,
     editTargetDate,
     getDataForDay,
     removePositionFromRation,
-    // editDataForDay,
     dataForDay
   }
 })

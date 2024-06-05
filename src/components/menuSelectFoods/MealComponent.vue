@@ -8,8 +8,7 @@
         type="input"
         v-model="searchName"
         @input="inputValueSelectFood($event.target.value)"
-        ></v-text-field>
-        {{ selected }}
+        />
     <v-list lines="one" height="350">
       <div v-if="loader" class="text-center">
         <v-progress-circular  indeterminate></v-progress-circular>
@@ -39,12 +38,15 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import getFoodBase from '@/composables/requestGetFoodBase.js'
 import { debounce } from 'lodash'
 defineProps({
     ration: Object
 })
+const emit = defineEmits(
+  ['updateSelectedFood']
+  )
  
 const searchName = ref('')
 const foodBase = ref([])
@@ -53,7 +55,7 @@ const selected = ref([])
 
 onMounted(async () => {
   foodBase.value = await getFoodBase()
-  console.log(foodBase.value);
+  // console.log(foodBase.value);
 })
 
 const showFoods = ref([])
@@ -65,7 +67,7 @@ const inputValueSelectFood = (value) =>{
 
 const selectFood = debounce((value) => {
   if (value){
-    console.log(value);
+    // console.log(value);
     showFoods.value = filteredFoods(value)
     loader.value = false
   }
@@ -73,6 +75,7 @@ const selectFood = debounce((value) => {
     showFoods.value = []
     loader.value = false
   }
+
 }, 1000)
 
 function filteredFoods(value)  {
@@ -80,6 +83,11 @@ function filteredFoods(value)  {
             item.name.toLowerCase().includes(value.toLowerCase()) 
           )
 }
+
+watch(selected, () => {
+  emit('updateSelectedFood', selected.value);
+})
+
 
 </script>
 

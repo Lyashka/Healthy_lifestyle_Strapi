@@ -1,12 +1,11 @@
 <template>
-    <div class="text-center pa-4">
+    <div class="text-center pa-2">
      <v-btn icon="mdi-plus" size="small" @click="dialog = true"/>
      <v-dialog
        v-model="dialog"
        width="500"
      >
-       <v-card
-         
+       <v-card 
          min-height="700"
        >
        <v-row>
@@ -15,7 +14,12 @@
             <v-card-title>{{ getTargetDate() }}</v-card-title> 
           </v-col>
           <v-col cols="auto">
-            <v-badge :content="14" class="pa-4" inline>
+            <v-badge 
+              :content="selectedFoodsCount" 
+              class="pa-4" 
+              color="info"
+              inline
+              >
               <v-icon icon="mdi-check" size="x-large"></v-icon>
             </v-badge>
           </v-col>
@@ -68,7 +72,7 @@
 
           <v-card-text>
             <div v-if="showMeal">
-              <MealComponent :ration="ration"/>
+              <MealComponent :ration="ration" @updateSelectedFood="updateSelectedFood"/> 
             </div> 
             <div v-if="showHistory">
               <HistoryComponent/>
@@ -89,7 +93,7 @@
            <v-btn
              class="ms-auto"
              text="Ok"
-             @click="dialog = false"
+             @click="addNewFood"
            />
          </template>
        </v-card>
@@ -109,7 +113,7 @@
  })
 //  console.log(props.ration);
  const calendarDaysStore = useCalendarDaysStore()
- const { getTargetDate } = calendarDaysStore
+ const { getTargetDate, addNewDataInCalendar } = calendarDaysStore
 
  const dialog = ref(false)
 
@@ -117,7 +121,8 @@
  const showHistory = ref(false)
  const showMyMeal = ref(false)
 
-
+ const selectedFoodsCount = ref(0)
+ const selectedData = ref([])
 
  function showComponent(nameComponent) {
   switch(nameComponent){
@@ -142,6 +147,28 @@
   }
  } 
 
+  
+ function updateSelectedFood(selectedFood) {
+  selectedFoodsCount.value = selectedFood.length
+  selectedData.value = selectedFood
+}
+
+function addNewFood(){ 
+  // console.log(getTargetDate());
+  // console.log(props.ration);
+  // console.log(selectedData.value);
+
+  addNewDataInCalendar(
+    {
+      date: getTargetDate(), 
+      ration: props.ration,
+      selectedFoods: selectedData.value
+    }
+  )
+
+  dialog.value = false
+}
+ 
  </script>
  
  <style>

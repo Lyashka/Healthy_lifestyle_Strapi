@@ -10,7 +10,6 @@
       <v-col>
         <v-card max-width="500px" min-width="300px" min-height="500px" class="mx-auto" variant="outlined"> 
           <SelectDate/>
-          {{ data }}
           <v-expansion-panels>
             <!-- в отдельный компонент вывести??? -->
             <v-expansion-panel v-for="ration in rations" :key="ration.id">
@@ -36,69 +35,87 @@
                 <!-- Элемент элемента списка категории "Завтрак" да и в целом для всего -->
                 <!-- Может, if ration name = 'завтрак' передавай breackfast , хз чето-->
                 <div v-if="ration.id == 1">
-                  <v-row v-for="item in data.breakfast" :key="item.id">
-                  <v-col cols="3">
-                    {{ item.name }}
-                  </v-col>
-                  <v-col cols="3">
-                    калории: {{ item.calories }}
-                  </v-col>
-                  <v-col cols="3">
-                    МБ БЖУ?
-                  </v-col>
-                  <v-col cols="3">
-                    <v-btn 
-                      variant="text" 
-                      density="compact" 
-                      icon="mdi-close"
-                      @click="removePositionFromRation(data.date, ration.id, item.id)"
-                    />
-                  </v-col>
+                  <div v-for="item in data.breakfast" :key="item.id">
+                    <v-row>
+                      <v-col cols="5">
+                        {{ item.name }}
+                      </v-col>
+                      <v-col cols="5">
+                        калории: {{ trimString(item.calories) }}
+                      </v-col>
+                    
+                      <v-col cols="auto">
+                        <v-btn 
+                          variant="text" 
+                          density="compact" 
+                          icon="mdi-close"
+                          @click="removePositionFromRation(data.date, ration.id, item.id)"
+                        />
+                      </v-col>
                 </v-row>
+                <!-- <v-row no-gutters>
+                  <v-col v-if="item.proteins != undefined" class="text-caption " cols="2">
+                    Б- {{item.proteins}} 
+                  </v-col>
+                  <v-col v-if="item.fats != undefined" class="text-caption" cols="2">
+                    Ж- {{item.fats}} 
+                  </v-col>
+                  <v-col v-if="item.carbs != undefined" class="text-caption" cols="2">
+                    У- {{item.carbs}}  
+                  </v-col>
+                  <v-col v-else class="text-caption" cols="12">
+                    Нет данных БЖУ
+                  </v-col>
+                </v-row> -->
+                <v-divider :thickness="2" class="mb-5"></v-divider>
+                  </div>
+                  
                 </div>
 
                 <div v-if="ration.id == 2">
-                  <v-row v-for="item in data.lunch" :key="item.id">
-                  <v-col cols="3">
-                    {{ item.name }}
-                  </v-col>
-                  <v-col cols="3">
-                    калории: {{ item.calories }}
-                  </v-col>
-                  <v-col cols="3">
-                    МБ БЖУ?
-                  </v-col>
-                  <v-col cols="3">
-                    <v-btn 
-                      variant="text" 
-                      density="compact" 
-                      icon="mdi-close"
-                      @click="removePositionFromRation(data.date, ration.id, item.id)"
-                    />
-                  </v-col>
-                </v-row>
+                  <div v-for="item in data.lunch" :key="item.id">
+                    <v-row>
+                      <v-col cols="5">
+                        {{ item.name }}
+                      </v-col>
+                      <v-col cols="5">
+                        калории: {{ trimString(item.calories) }}
+                      </v-col>
+                      <v-col cols="auto">
+                        <v-btn 
+                          variant="text" 
+                          density="compact" 
+                          icon="mdi-close"
+                          @click="removePositionFromRation(data.date, ration.id, item.id)"
+                        />
+                      </v-col>
+                    </v-row> 
+                    <v-divider :thickness="2" class="mb-5"></v-divider>
+                  </div>
+                  
                 </div>
 
                 <div v-if="ration.id == 3">
-                  <v-row v-for="item in data.dinner" :key="item.id">
-                  <v-col cols="3">
-                    {{ item.name }}
-                  </v-col>
-                  <v-col cols="3">
-                    калории: {{ item.calories }}
-                  </v-col>
-                  <v-col cols="3">
-                    МБ БЖУ?
-                  </v-col>
-                  <v-col cols="3">
-                    <v-btn 
-                      variant="text" 
-                      density="compact" 
-                      icon="mdi-close"
-                      @click="removePositionFromRation(data.date, ration.id, item.id)"
-                    />
-                  </v-col>
-                </v-row>
+                  <div v-for="item in data.dinner" :key="item.id">
+                    <v-row>
+                      <v-col cols="5">
+                        {{ item.name }}
+                      </v-col>
+                      <v-col cols="5">
+                        калории: {{ trimString(item.calories) }}
+                      </v-col>
+                      <v-col cols="auto">
+                        <v-btn 
+                          variant="text" 
+                          density="compact" 
+                          icon="mdi-close"
+                          @click="removePositionFromRation(data.date, ration.id, item.id)"
+                        />
+                      </v-col>
+                    </v-row>
+                    <v-divider :thickness="2" class="mb-5"></v-divider>
+                  </div>
+                  
                 </div>
                 
                 <!-- ______________________________ -->
@@ -127,7 +144,6 @@ import SelectDate from '../components/SelectDate.vue';
 import MenuSelectFoods from '../components/MenuSelectFoods.vue'
 
 import { ref } from 'vue'
-
 
 //Конструкция для получения данных из json !!! В функцию ее обернуть для async
 import getFoodRations from '../composables/requestGetFoodRatons'
@@ -161,8 +177,16 @@ function getSummCalories(id){
 }
 
 function calculateSummCalories(value) {
-  return value ? value.reduce((acc, curr) => acc += curr.calories, 0) : 0
+  return value ? value.reduce((acc, curr) => acc += +trimString(curr.calories), 0) : 0
 }
+
+function trimString(value) {
+  return value.toString().replace(/\D/g, '')
+}
+
+watch(calendarDays, () => {
+  data.value = getDataForDay()
+})
 
 </script>
  
