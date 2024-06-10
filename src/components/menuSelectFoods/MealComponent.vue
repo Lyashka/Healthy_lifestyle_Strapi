@@ -9,45 +9,110 @@
         v-model="searchName"
         @input="inputValueSelectFood($event.target.value)"
         />
-    <v-list lines="one" height="350">
+
+
+<!-- __________________________________________ -->
+<v-list lines="one" height="350">
       <div v-if="loader" class="text-center">
         <v-progress-circular  indeterminate></v-progress-circular>
       </div> 
-      
-      <v-row no-gutters v-for="(food, index) in showFoods" 
+      <v-dialog max-width="500">
+        <template v-slot:activator="{ props: activatorProps }">
+          <v-row 
+              no-gutters 
+              v-for="(food, index) in showFoods" 
+              :key="index"
+              class="hover-color"
+              v-bind="activatorProps"
+              @click="openInfoProduct(food)"
+
+              >
+              <v-col >
+                <v-list-item> 
+                  <v-list-item-title> {{ food.name }} </v-list-item-title>
+                  <v-list-item-subtitle> {{ food.calories }} </v-list-item-subtitle>
+                  <!-- Б-${food.proteins} Ж-${food.fats} У-${food.carbs} -->
+                </v-list-item> 
+              </v-col>
+              <v-col cols="auto">
+                <v-checkbox
+                v-model="selected"
+                :value="food"
+                @click.stop
+                />
+              </v-col>
+              
+            </v-row>
+        </template>
+
+        <template v-slot:default="{ isActive }">
+          <v-card :title="dataProductForSettings.name">
+            <v-card-text>
+              {{ dataProductForSettings.calories }}
+              {{ dataProductForSettings.proteins }}
+              {{ dataProductForSettings.fats }}
+              {{ dataProductForSettings.carbs }}
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+
+              <v-btn
+                text="Close"
+                @click="isActive.value = false"
+              ></v-btn>
+            </v-card-actions>
+          </v-card>
+        </template>
+      </v-dialog>
+
+</v-list>
+ <!-- _________________________________________ -->
+
+
+    <!-- <v-list lines="one" height="350">
+      <div v-if="loader" class="text-center">
+        <v-progress-circular  indeterminate></v-progress-circular>
+      </div> 
+      <v-row 
+        no-gutters 
+        v-for="(food, index) in showFoods" 
         :key="index"
-        
+        class="hover-color"
+        @click="openInfoProduct()"
         >
         <v-col >
-          <v-list-item>
+          <v-list-item> 
             <v-list-item-title> {{ food.name }} </v-list-item-title>
             <v-list-item-subtitle> {{ food.calories }} </v-list-item-subtitle>
-            <!-- Б-${food.proteins} Ж-${food.fats} У-${food.carbs} -->
+             Б-${food.proteins} Ж-${food.fats} У-${food.carbs} 
           </v-list-item> 
         </v-col>
         <v-col cols="auto">
           <v-checkbox
           v-model="selected"
           :value="food"
+          @click.stop
           />
         </v-col>
         
       </v-row>
       
-    </v-list>  
+    </v-list>   -->
 </template>
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import getFoodBase from '@/composables/requestGetFoodBase.js'
 import { debounce } from 'lodash'
+
 defineProps({
     ration: Object
 })
 const emit = defineEmits(
   ['updateSelectedFood']
   )
- 
+  
 const searchName = ref('')
 const foodBase = ref([])
 const loader = ref(false)
@@ -55,7 +120,6 @@ const selected = ref([])
 
 onMounted(async () => {
   foodBase.value = await getFoodBase()
-  // console.log(foodBase.value);
 })
 
 const showFoods = ref([])
@@ -84,6 +148,12 @@ function filteredFoods(value)  {
           )
 }
 
+const dataProductForSettings = ref({})
+function openInfoProduct(food) {
+  dataProductForSettings.value = food
+  console.log(food);
+}
+
 watch(selected, () => {
   emit('updateSelectedFood', selected.value);
 })
@@ -91,6 +161,8 @@ watch(selected, () => {
 
 </script>
 
-<style>
-
+<style scoped lang="scss">
+  .hover-color:hover{
+    background-color: lightgray;
+  }
 </style>
