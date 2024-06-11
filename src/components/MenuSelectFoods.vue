@@ -166,6 +166,8 @@ function addNewFood(){
     }
   )
 
+  selectedData.value = []
+  selectedFoodsCount.value = 0
   dialog.value = false
 }
  

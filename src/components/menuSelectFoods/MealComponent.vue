@@ -16,54 +16,67 @@
       <div v-if="loader" class="text-center">
         <v-progress-circular  indeterminate></v-progress-circular>
       </div> 
-      <v-dialog max-width="500">
-        <template v-slot:activator="{ props: activatorProps }">
-          <v-row 
-              no-gutters 
-              v-for="(food, index) in showFoods" 
-              :key="index"
-              class="hover-color"
-              v-bind="activatorProps"
-              @click="openInfoProduct(food)"
 
-              >
-              <v-col >
-                <v-list-item> 
-                  <v-list-item-title> {{ food.name }} </v-list-item-title>
-                  <v-list-item-subtitle> {{ food.calories }} </v-list-item-subtitle>
-                  <!-- Б-${food.proteins} Ж-${food.fats} У-${food.carbs} -->
-                </v-list-item> 
-              </v-col>
-              <v-col cols="auto">
-                <v-checkbox
-                v-model="selected"
-                :value="food"
-                @click.stop
-                />
-              </v-col>
-              
-            </v-row>
-        </template>
+      <v-row 
+        no-gutters 
+        v-for="(food, index) in showFoods" 
+        :key="index"
+        class="hover-color"
+        @click="openInfoProduct(food)"
+      >
+        <v-col >
+          <v-list-item> 
+            <v-list-item-title> {{ food.name }} </v-list-item-title>
+            <v-list-item-subtitle> {{ food.calories }} </v-list-item-subtitle>
+          </v-list-item> 
+        </v-col>
+        <v-col cols="auto">
+          <v-checkbox
+            v-model="selected"
+            :value="food"
+            @click.stop
+          />
+        </v-col>                        
+      </v-row>
 
-        <template v-slot:default="{ isActive }">
-          <v-card :title="dataProductForSettings.name">
-            <v-card-text>
+      <v-dialog 
+        max-width="500"
+        v-model="dialog"
+      >
+        <v-card :title="dataProductForSettings.name">
+            <v-card-item>
+              <v-text-field 
+                prepend-icon="$vuetify" 
+                v-model="productWeight"
+                type="number"
+                @update:modelValue="updateDataForProduct"
+                /> 
+            </v-card-item> 
+            <v-card-item>
               {{ dataProductForSettings.calories }}
+            </v-card-item>
+            <v-card-item>
               {{ dataProductForSettings.proteins }}
+            </v-card-item>
+            <v-card-item>
               {{ dataProductForSettings.fats }}
+            </v-card-item>
+            <v-card-item>
               {{ dataProductForSettings.carbs }}
-            </v-card-text>
-
+            </v-card-item>
+              
             <v-card-actions>
               <v-spacer></v-spacer>
-
               <v-btn
                 text="Close"
-                @click="isActive.value = false"
+                @click="closeSettings"
+              ></v-btn>
+              <v-btn
+                text="Save"
+                @click="saveSettings"
               ></v-btn>
             </v-card-actions>
-          </v-card>
-        </template>
+        </v-card>
       </v-dialog>
 
 </v-list>
@@ -106,6 +119,14 @@ import { ref, onMounted, watch } from 'vue'
 import getFoodBase from '@/composables/requestGetFoodBase.js'
 import { debounce } from 'lodash'
 
+const dialog = ref(false)
+
+
+// function closeDialog() {
+//   dataProductForSettings.value = {}
+//   isActive.value = false
+// }
+
 defineProps({
     ration: Object
 })
@@ -131,15 +152,16 @@ const inputValueSelectFood = (value) =>{
 
 const selectFood = debounce((value) => {
   if (value){
-    // console.log(value);
-    showFoods.value = filteredFoods(value)
+    showFoods.value = filteredFoods(value).map((food, index) => ({
+      ...food,
+      id: index + 1,
+    }))
     loader.value = false
   }
   else{
     showFoods.value = []
     loader.value = false
   }
-
 }, 1000)
 
 function filteredFoods(value)  {
@@ -150,8 +172,60 @@ function filteredFoods(value)  {
 
 const dataProductForSettings = ref({})
 function openInfoProduct(food) {
-  dataProductForSettings.value = food
-  console.log(food);
+  dialog.value = true
+  dataProductForSettings.value = Object.assign({}, food); // склонировали
+  if (dataProductForSettings.value.productWeight) {
+    productWeight.value = dataProductForSettings.value.productWeight
+  }else{
+    productWeight.value = 100
+  }
+}
+
+const productWeight = ref(100)
+function updateDataForProduct(newData) {
+  
+  let inputValue = newData ? newData : 100
+    showFoods.value.forEach(el => {
+      if (el.id == dataProductForSettings.value.id) {
+
+        dataProductForSettings.value.calories = `${(+trimString(el.calories) * inputValue)/100} кКал` 
+        dataProductForSettings.value.proteins = `${(+trimString(el.proteins) * inputValue)/100} г` 
+        dataProductForSettings.value.fats = `${(+trimString(el.fats) * inputValue)/100} г`
+        dataProductForSettings.value.carbs = `${(+trimString(el.carbs) * inputValue)/100} г`
+        console.log(dataProductForSettings.value);
+      }
+    });
+}
+
+
+function saveSettings() { 
+  showFoods.value.forEach(el => {
+    if (el.id == dataProductForSettings.value.id) {
+      el.calories = dataProductForSettings.value.calories
+      el.proteins = dataProductForSettings.value.proteins
+      el.fats = dataProductForSettings.value.fats
+      el.carbs = dataProductForSettings.value.carbs
+      el.productWeight = +productWeight.value
+      console.log(el);
+    }
+  })
+  
+  dataProductForSettings.value = {}
+  productWeight.value = 100 
+  dialog.value = false
+}
+
+function closeSettings() {
+ 
+  dataProductForSettings.value = {}
+  productWeight.value = 100 
+  dialog.value = false
+}
+
+
+
+function trimString(value) {
+  return value.toString().replace(/\D/g, '')
 }
 
 watch(selected, () => {
