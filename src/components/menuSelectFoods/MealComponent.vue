@@ -46,24 +46,54 @@
         <v-card :title="dataProductForSettings.name">
             <v-card-item>
               <v-text-field 
-                prepend-icon="$vuetify" 
+                prepend-icon="mdi-plus-minus-variant" 
                 v-model="productWeight"
                 type="number"
                 @update:modelValue="updateDataForProduct"
                 /> 
-            </v-card-item> 
-            <v-card-item>
-              {{ dataProductForSettings.calories }}
             </v-card-item>
-            <v-card-item>
-              {{ dataProductForSettings.proteins }}
-            </v-card-item>
-            <v-card-item>
-              {{ dataProductForSettings.fats }}
-            </v-card-item>
-            <v-card-item>
-              {{ dataProductForSettings.carbs }}
-            </v-card-item>
+            <v-row no-gutters class="text-center">
+              <v-col class="ma-1 bg-grey" >
+                <v-card-item >
+                  <v-card-title> Калории </v-card-title>
+                  <v-card-text  class="size-text">
+                    {{ dataProductForSettings.calories }}
+                  </v-card-text>
+                 
+                </v-card-item>
+              </v-col>
+              <v-col class="ma-1 bg-grey"> 
+                <v-card-item>
+                  <v-card-title> Белок </v-card-title>
+                  <v-card-text class="size-text">
+                    {{ dataProductForSettings.proteins }}
+                  </v-card-text>
+                </v-card-item>
+              </v-col>
+            </v-row>
+            <v-row no-gutters  class="text-center">
+              <v-col class="ma-1 bg-grey">
+                <v-card-item>
+                  <v-card-title> Жиры </v-card-title>
+                  <v-card-text class="size-text">
+                    {{ dataProductForSettings.fats }}
+                  </v-card-text>
+                </v-card-item>
+              </v-col>
+              <v-col class="ma-1 bg-grey">
+                <v-card-item>
+                  <v-card-title> Углеводы </v-card-title>
+                  <v-card-text class="size-text">
+                    {{ dataProductForSettings.carbs }}
+                  </v-card-text>
+                  
+                </v-card-item>
+              </v-col>
+            </v-row>
+           
+           
+           
+            
               
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -121,12 +151,6 @@ import { debounce } from 'lodash'
 
 const dialog = ref(false)
 
-
-// function closeDialog() {
-//   dataProductForSettings.value = {}
-//   isActive.value = false
-// }
-
 defineProps({
     ration: Object
 })
@@ -154,8 +178,24 @@ const selectFood = debounce((value) => {
   if (value){
     showFoods.value = filteredFoods(value).map((food, index) => ({
       ...food,
+      productWeight: 100, 
       id: index + 1,
     }))
+    if (selected) {
+        selected.value.forEach(item => {
+          showFoods.value.forEach(el => {
+            if(el.id == item.id && el.name == item.name){
+              el.calories = item.calories
+              el.proteins = item.proteins
+              el.fats = item.fats
+              el.carbs = item.carbs
+              el.productWeight = item.productWeight
+          }
+          })
+         
+        })
+      }
+
     loader.value = false
   }
   else{
@@ -183,21 +223,21 @@ function openInfoProduct(food) {
 
 const productWeight = ref(100)
 function updateDataForProduct(newData) {
-  
-  let inputValue = newData ? newData : 100
+
+  let inputValue = newData > 0 ? newData : 100
+  console.log(inputValue);  
+  console.log(productWeight.value);
     showFoods.value.forEach(el => {
-      if (el.id == dataProductForSettings.value.id) {
-
-        dataProductForSettings.value.calories = `${(+trimString(el.calories) * inputValue)/100} кКал` 
-        dataProductForSettings.value.proteins = `${(+trimString(el.proteins) * inputValue)/100} г` 
-        dataProductForSettings.value.fats = `${(+trimString(el.fats) * inputValue)/100} г`
-        dataProductForSettings.value.carbs = `${(+trimString(el.carbs) * inputValue)/100} г`
-        console.log(dataProductForSettings.value);
-      }
-    });
+      if (el.id == dataProductForSettings.value.id) { 
+        console.log(inputValue);
+        dataProductForSettings.value.calories = `${((+trimString(el.calories) * inputValue) / el.productWeight).toFixed(1).replace(/\.0$/, '')} кКал`  
+        dataProductForSettings.value.proteins = `${((+trimString(el.proteins) * inputValue) / el.productWeight).toFixed(1).replace(/\.0$/, '')} г` 
+        dataProductForSettings.value.fats = `${((+trimString(el.fats) * inputValue) / el.productWeight).toFixed(1).replace(/\.0$/, '')} г`
+        dataProductForSettings.value.carbs = `${((+trimString(el.carbs) * inputValue) / el.productWeight).toFixed(1).replace(/\.0$/, '')} г` 
+      } 
+    }); 
 }
-
-
+ 
 function saveSettings() { 
   showFoods.value.forEach(el => {
     if (el.id == dataProductForSettings.value.id) {
@@ -208,6 +248,17 @@ function saveSettings() {
       el.productWeight = +productWeight.value
       console.log(el);
     }
+
+    selected.value.forEach(item => {
+            if(el.id == item.id && el.name == item.name){
+              item.calories = el.calories
+              item.proteins = el.proteins
+              item.fats = el.fats
+              item.carbs = el.carbs
+              item.productWeight = el.productWeight
+            console.log('sssssssssssssss');
+          }
+        })
   })
   
   dataProductForSettings.value = {}
@@ -222,21 +273,24 @@ function closeSettings() {
   dialog.value = false
 }
 
-
-
 function trimString(value) {
-  return value.toString().replace(/\D/g, '')
+  const cleanedStr = value.replace(',', '.').replace(/\s/g, '')
+  return parseFloat(cleanedStr);
+  // return value.toString().replace(/\D/g, '')
 }
 
 watch(selected, () => {
+  console.log(selected.value);
   emit('updateSelectedFood', selected.value);
 })
-
 
 </script>
 
 <style scoped lang="scss">
   .hover-color:hover{
     background-color: lightgray;
+  }
+  .size-text{
+    font-size: 18px;
   }
 </style>
