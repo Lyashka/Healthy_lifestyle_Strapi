@@ -12,18 +12,18 @@
 
 
 <!-- __________________________________________ -->
-<v-list lines="one" height="350">
+<FoodItem :showFoods="showFoods" :loader="loader" @updateSelectedFood="updateSelectedFood"/>
+<!-- <v-list lines="one" height="350">
       <div v-if="loader" class="text-center">
         <v-progress-circular  indeterminate></v-progress-circular>
       </div> 
-
       <v-row 
         no-gutters 
         v-for="(food, index) in showFoods" 
         :key="index"
         class="hover-color"
         @click="openInfoProduct(food)"
-      >
+      > 
         <v-col >
           <v-list-item> 
             <v-list-item-title> {{ food.name }} </v-list-item-title>
@@ -91,10 +91,6 @@
               </v-col>
             </v-row>
            
-           
-           
-            
-              
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
@@ -108,40 +104,8 @@
             </v-card-actions>
         </v-card>
       </v-dialog>
+</v-list> -->
 
-</v-list>
- <!-- _________________________________________ -->
-
-
-    <!-- <v-list lines="one" height="350">
-      <div v-if="loader" class="text-center">
-        <v-progress-circular  indeterminate></v-progress-circular>
-      </div> 
-      <v-row 
-        no-gutters 
-        v-for="(food, index) in showFoods" 
-        :key="index"
-        class="hover-color"
-        @click="openInfoProduct()"
-        >
-        <v-col >
-          <v-list-item> 
-            <v-list-item-title> {{ food.name }} </v-list-item-title>
-            <v-list-item-subtitle> {{ food.calories }} </v-list-item-subtitle>
-             Б-${food.proteins} Ж-${food.fats} У-${food.carbs} 
-          </v-list-item> 
-        </v-col>
-        <v-col cols="auto">
-          <v-checkbox
-          v-model="selected"
-          :value="food"
-          @click.stop
-          />
-        </v-col>
-        
-      </v-row>
-      
-    </v-list>   -->
 </template>
 
 <script setup>
@@ -149,11 +113,14 @@ import { ref, onMounted, watch } from 'vue'
 import getFoodBase from '@/composables/requestGetFoodBase.js'
 import { debounce } from 'lodash'
 
+import FoodItem from './FoodItem.vue';
+
 const dialog = ref(false)
 
 defineProps({
     ration: Object
 })
+
 const emit = defineEmits(
   ['updateSelectedFood']
   )
@@ -210,87 +177,93 @@ function filteredFoods(value)  {
           )
 }
 
-const dataProductForSettings = ref({})
-function openInfoProduct(food) {
-  dialog.value = true
-  dataProductForSettings.value = Object.assign({}, food); // склонировали
-  if (dataProductForSettings.value.productWeight) {
-    productWeight.value = dataProductForSettings.value.productWeight
-  }else{
-    productWeight.value = 100
-  }
-}
+// const dataProductForSettings = ref({})
+// function openInfoProduct(food) {
+//   dialog.value = true
+//   dataProductForSettings.value = Object.assign({}, food); // склонировали
+//   if (dataProductForSettings.value.productWeight) {
+//     productWeight.value = dataProductForSettings.value.productWeight
+//   }else{
+//     productWeight.value = 100
+//   }
+// }
 
-const productWeight = ref(100)
-function updateDataForProduct(newData) {
+// const productWeight = ref(100)
+// function updateDataForProduct(newData) {
 
-  let inputValue = newData > 0 ? newData : 100
-  console.log(inputValue);  
-  console.log(productWeight.value);
-    showFoods.value.forEach(el => {
-      if (el.id == dataProductForSettings.value.id) { 
-        console.log(inputValue);
-        dataProductForSettings.value.calories = `${((+trimString(el.calories) * inputValue) / el.productWeight).toFixed(1).replace(/\.0$/, '')} кКал`  
-        dataProductForSettings.value.proteins = `${((+trimString(el.proteins) * inputValue) / el.productWeight).toFixed(1).replace(/\.0$/, '')} г` 
-        dataProductForSettings.value.fats = `${((+trimString(el.fats) * inputValue) / el.productWeight).toFixed(1).replace(/\.0$/, '')} г`
-        dataProductForSettings.value.carbs = `${((+trimString(el.carbs) * inputValue) / el.productWeight).toFixed(1).replace(/\.0$/, '')} г` 
-      } 
-    }); 
-}
+//   let inputValue = newData > 0 ? newData : 100
+//   console.log(inputValue);  
+//   console.log(productWeight.value);
+//     showFoods.value.forEach(el => {
+//       if (el.id == dataProductForSettings.value.id) { 
+//         console.log(inputValue);
+//         dataProductForSettings.value.calories = `${((+trimString(el.calories) * inputValue) / el.productWeight).toFixed(1).replace(/\.0$/, '')} кКал`  
+//         dataProductForSettings.value.proteins = `${((+trimString(el.proteins) * inputValue) / el.productWeight).toFixed(1).replace(/\.0$/, '')} г` 
+//         dataProductForSettings.value.fats = `${((+trimString(el.fats) * inputValue) / el.productWeight).toFixed(1).replace(/\.0$/, '')} г`
+//         dataProductForSettings.value.carbs = `${((+trimString(el.carbs) * inputValue) / el.productWeight).toFixed(1).replace(/\.0$/, '')} г` 
+//       } 
+//     }); 
+// }
  
-function saveSettings() { 
-  showFoods.value.forEach(el => {
-    if (el.id == dataProductForSettings.value.id) {
-      el.calories = dataProductForSettings.value.calories
-      el.proteins = dataProductForSettings.value.proteins
-      el.fats = dataProductForSettings.value.fats
-      el.carbs = dataProductForSettings.value.carbs
-      el.productWeight = +productWeight.value
-      console.log(el);
-    }
+// function saveSettings() { 
+//   showFoods.value.forEach(el => {
+//     if (el.id == dataProductForSettings.value.id) {
+//       el.calories = dataProductForSettings.value.calories
+//       el.proteins = dataProductForSettings.value.proteins
+//       el.fats = dataProductForSettings.value.fats
+//       el.carbs = dataProductForSettings.value.carbs
+//       el.productWeight = +productWeight.value
+//       // console.log(el); 
+//     }
 
-    selected.value.forEach(item => {
-            if(el.id == item.id && el.name == item.name){
-              item.calories = el.calories
-              item.proteins = el.proteins
-              item.fats = el.fats
-              item.carbs = el.carbs
-              item.productWeight = el.productWeight
-            console.log('sssssssssssssss');
-          }
-        })
-  })
+//     selected.value.forEach(item => {
+//             if(el.id == item.id && el.name == item.name){
+//               item.calories = el.calories
+//               item.proteins = el.proteins
+//               item.fats = el.fats
+//               item.carbs = el.carbs
+//               item.productWeight = el.productWeight
+//           }
+//         })
+//   })
   
-  dataProductForSettings.value = {}
-  productWeight.value = 100 
-  dialog.value = false
-}
+//   dataProductForSettings.value = {}
+//   productWeight.value = 100 
+//   dialog.value = false
+// }
 
-function closeSettings() {
+// function closeSettings() {
  
-  dataProductForSettings.value = {}
-  productWeight.value = 100 
-  dialog.value = false
-}
+//   dataProductForSettings.value = {}
+//   productWeight.value = 100 
+//   dialog.value = false
+// }
+ 
+// function trimString(value) {
+//   const cleanedStr = value.replace(',', '.').replace(/\s/g, '')
+//   return parseFloat(cleanedStr);
+// }
 
-function trimString(value) {
-  const cleanedStr = value.replace(',', '.').replace(/\s/g, '')
-  return parseFloat(cleanedStr);
-  // return value.toString().replace(/\D/g, '')
+function updateSelectedFood(data) {
+  selected.value = data
+  emit('updateSelectedFood', data);
 }
 
 watch(selected, () => {
-  console.log(selected.value);
-  emit('updateSelectedFood', selected.value);
+  if (selected) {
+        selected.value.forEach(item => {
+          showFoods.value.forEach(el => {
+            if(el.id == item.id && el.name == item.name){
+              el.calories = item.calories
+              el.proteins = item.proteins
+              el.fats = item.fats
+              el.carbs = item.carbs
+              el.productWeight = item.productWeight
+            }
+          })
+        })
+    }
 })
 
 </script>
 
-<style scoped lang="scss">
-  .hover-color:hover{
-    background-color: lightgray;
-  }
-  .size-text{
-    font-size: 18px;
-  }
-</style>

@@ -39,7 +39,21 @@ export const useCalendarDaysStore = defineStore('calendarDays', () => {
 
   const dataForDay = ref({})
   
-  
+  const selectedData = ref([])
+  function addSelectedData(selected) {
+    if (selected) {
+      selected.forEach(el => {
+        selectedData.value.push(el)
+      })
+    }
+  }
+  function getSelectedData(){
+    return selectedData.value
+  }
+  function clearSelectedData() {
+    return selectedData.value = []
+  }
+
   const addNewDataInCalendar = function(newData) { 
 
     const isExistDay = calendarDays.some(item => {
@@ -162,7 +176,10 @@ export const useCalendarDaysStore = defineStore('calendarDays', () => {
     editTargetDate,
     getDataForDay,
     removePositionFromRation,
-    dataForDay
+    dataForDay,
+    addSelectedData,
+    getSelectedData,
+    clearSelectedData
   }
 })
 

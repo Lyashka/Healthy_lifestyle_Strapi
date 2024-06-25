@@ -8,15 +8,14 @@
        <v-card 
          min-height="700"
        >
+       <v-card-title>
        <v-row>
-         
           <v-col>
-            <v-card-title>{{ getTargetDate() }}</v-card-title> 
+            {{ getTargetDate() }}
           </v-col>
           <v-col cols="auto">
             <v-badge 
               :content="selectedFoodsCount" 
-              class="pa-4" 
               color="info"
               inline
               >
@@ -24,7 +23,7 @@
             </v-badge>
           </v-col>
        </v-row>
-      
+      </v-card-title> 
        <v-card-subtitle>
         {{ ration.name }}
        </v-card-subtitle>
@@ -75,7 +74,7 @@
               <MealComponent :ration="ration" @updateSelectedFood="updateSelectedFood"/> 
             </div> 
             <div v-if="showHistory">
-              <HistoryComponent/>
+              <HistoryComponent @updateSelectedFood="updateSelectedFood"/>
             </div>
             <div v-if="showMyMeal">
               <MyMealComponent/>
@@ -104,6 +103,8 @@
  <script setup>
  import { ref } from 'vue'
  import { useCalendarDaysStore } from '../stores/calendarDays'
+ import { useHistoryDataStore } from '@/stores/historyData'
+
  import MealComponent from './menuSelectFoods/MealComponent.vue'
  import HistoryComponent from './menuSelectFoods/HistoryComponent.vue'
  import MyMealComponent from './menuSelectFoods/MyMealComponent.vue'  
@@ -113,7 +114,10 @@
  })
 //  console.log(props.ration);
  const calendarDaysStore = useCalendarDaysStore()
- const { getTargetDate, addNewDataInCalendar } = calendarDaysStore
+ const { getTargetDate, addNewDataInCalendar, addSelectedData, getSelectedData, clearSelectedData } = calendarDaysStore
+
+ const historyDataStore = useHistoryDataStore()
+ const { addProductInHostory } = historyDataStore
 
  const dialog = ref(false)
 
@@ -122,7 +126,7 @@
  const showMyMeal = ref(false)
 
  const selectedFoodsCount = ref(0)
- const selectedData = ref([])
+//  const selectedData = ref([])
 
  function showComponent(nameComponent) {
   switch(nameComponent){
@@ -149,8 +153,11 @@
 
   
  function updateSelectedFood(selectedFood) {
+  console.log(selectedFood);
   selectedFoodsCount.value = selectedFood.length
-  selectedData.value = selectedFood
+  addSelectedData(selectedFood)
+
+  addProductInHostory(selectedFood)
 }
 
 function addNewFood(){ 
@@ -162,11 +169,11 @@ function addNewFood(){
     {
       date: getTargetDate(), 
       ration: props.ration,
-      selectedFoods: selectedData.value
+      selectedFoods: getSelectedData()
     }
   )
 
-  selectedData.value = []
+  clearSelectedData()
   selectedFoodsCount.value = 0
   dialog.value = false
 }
