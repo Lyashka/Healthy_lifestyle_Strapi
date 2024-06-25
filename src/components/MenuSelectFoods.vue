@@ -71,10 +71,10 @@
 
           <v-card-text>
             <div v-if="showMeal">
-              <MealComponent :ration="ration" @updateSelectedFood="updateSelectedFood"/> 
+              <MealComponent :ration="ration" @updateSelectedFood="updateMealSelectedFood"/> 
             </div> 
             <div v-if="showHistory">
-              <HistoryComponent @updateSelectedFood="updateSelectedFood"/>
+              <HistoryComponent @updateSelectedFood="updateHistorySelectedFood"/>
             </div>
             <div v-if="showMyMeal">
               <MyMealComponent/>
@@ -104,6 +104,7 @@
  import { ref } from 'vue'
  import { useCalendarDaysStore } from '../stores/calendarDays'
  import { useHistoryDataStore } from '@/stores/historyData'
+ import { useSelectedDataStore } from '@/stores/selectedData'
 
  import MealComponent from './menuSelectFoods/MealComponent.vue'
  import HistoryComponent from './menuSelectFoods/HistoryComponent.vue'
@@ -114,10 +115,13 @@
  })
 //  console.log(props.ration);
  const calendarDaysStore = useCalendarDaysStore()
- const { getTargetDate, addNewDataInCalendar, addSelectedData, getSelectedData, clearSelectedData } = calendarDaysStore
+ const { getTargetDate, addNewDataInCalendar } = calendarDaysStore
 
  const historyDataStore = useHistoryDataStore()
  const { addProductInHostory } = historyDataStore
+
+ const selectedDataStore = useSelectedDataStore()
+ const { addSelectedData, getSelectedData, clearSelectedData, getLengthSelectedData, clearLengthSelectedData } = selectedDataStore
 
  const dialog = ref(false)
 
@@ -126,7 +130,8 @@
  const showMyMeal = ref(false)
 
  const selectedFoodsCount = ref(0)
-//  const selectedData = ref([])
+
+ const selectedData = ref([])
 
  function showComponent(nameComponent) {
   switch(nameComponent){
@@ -152,18 +157,23 @@
  } 
 
   
- function updateSelectedFood(selectedFood) {
-  console.log(selectedFood);
-  selectedFoodsCount.value = selectedFood.length
-  addSelectedData(selectedFood)
-
-  addProductInHostory(selectedFood)
+ function updateMealSelectedFood(selectedFood) {
+  selectedData.value = selectedFood
+  addSelectedData(selectedFood, 1)   
+  
+  selectedFoodsCount.value = getLengthSelectedData()
+  // console.log(getSelectedData());
 }
 
+  function updateHistorySelectedFood(selectedFood) {
+    selectedData.value = selectedFood
+    addSelectedData(selectedFood, 2)   
+    
+    selectedFoodsCount.value = getLengthSelectedData()
+  }
+
+
 function addNewFood(){ 
-  // console.log(getTargetDate());
-  // console.log(props.ration);
-  // console.log(selectedData.value);
 
   addNewDataInCalendar(
     {
@@ -173,7 +183,10 @@ function addNewFood(){
     }
   )
 
+  addProductInHostory(selectedData.value)
+
   clearSelectedData()
+  clearLengthSelectedData()
   selectedFoodsCount.value = 0
   dialog.value = false
 }

@@ -8,7 +8,7 @@ export const useHistoryDataStore = defineStore('historyData', () => {
         
         products.forEach(el => {
             console.log(el);
-            const isDuplicate = historyData.some(product => product.id === el.id); 
+            const isDuplicate = historyData.some(item => item.name == el.name && item.productWeight == el.productWeight); 
             if (!isDuplicate){
                 historyData.push(el)
             }

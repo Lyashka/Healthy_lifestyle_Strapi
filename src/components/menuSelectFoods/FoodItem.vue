@@ -99,6 +99,11 @@ import { ref, onMounted, watch } from 'vue'
 import getFoodBase from '@/composables/requestGetFoodBase.js'
 import { debounce } from 'lodash'
 
+import { useSelectedDataStore } from '@/stores/selectedData'
+const selectedDataStore = useSelectedDataStore()
+ const { addSelectedData, getSelectedData, clearSelectedData, getLengthSelectedData } = selectedDataStore
+
+
 const dialog = ref(false)
 
 const props = defineProps({
@@ -231,7 +236,8 @@ function trimString(value) {
 
 watch(selected, () => {
   console.log(selected.value);
-  
+  // addSelectedData( selected.value)
+
   emit('updateSelectedFood', selected.value);
 })
 
