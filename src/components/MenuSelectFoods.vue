@@ -71,7 +71,7 @@
 
           <v-card-text>
             <div v-if="showMeal">
-              <MealComponent :ration="ration" @updateSelectedFood="updateMealSelectedFood"/> 
+              <MealComponent :foodBase="foodBase" @updateSelectedFood="updateMealSelectedFood"/> 
             </div> 
             <div v-if="showHistory">
               <HistoryComponent @updateSelectedFood="updateHistorySelectedFood"/>
@@ -87,7 +87,7 @@
        <template v-slot:actions>
            <v-btn 
              text="Cancel"
-             @click="dialog = false"
+             @click="closeMenu"
            />
            <v-btn
              class="ms-auto"
@@ -101,7 +101,7 @@
  </template>
  
  <script setup>
- import { ref } from 'vue'
+ import { onMounted, ref } from 'vue'
  import { useCalendarDaysStore } from '../stores/calendarDays'
  import { useHistoryDataStore } from '@/stores/historyData'
  import { useSelectedDataStore } from '@/stores/selectedData'
@@ -109,6 +109,8 @@
  import MealComponent from './menuSelectFoods/MealComponent.vue'
  import HistoryComponent from './menuSelectFoods/HistoryComponent.vue'
  import MyMealComponent from './menuSelectFoods/MyMealComponent.vue'  
+
+ import getFoodBase from '@/composables/requestGetFoodBase.js'
  
  const props = defineProps({
   ration: Object
@@ -132,6 +134,8 @@
  const selectedFoodsCount = ref(0)
 
  const selectedData = ref([])
+
+ const foodBase = ref([])
 
  function showComponent(nameComponent) {
   switch(nameComponent){
@@ -162,7 +166,7 @@
   addSelectedData(selectedFood, 1)   
   
   selectedFoodsCount.value = getLengthSelectedData()
-  // console.log(getSelectedData());
+
 }
 
   function updateHistorySelectedFood(selectedFood) {
@@ -174,7 +178,6 @@
 
 
 function addNewFood(){ 
-
   addNewDataInCalendar(
     {
       date: getTargetDate(), 
@@ -182,15 +185,25 @@ function addNewFood(){
       selectedFoods: getSelectedData()
     }
   )
-
   addProductInHostory(selectedData.value)
-
   clearSelectedData()
   clearLengthSelectedData()
+  localStorage.clear();
   selectedFoodsCount.value = 0
   dialog.value = false
 }
- 
+
+function closeMenu() {
+  clearSelectedData()
+  clearLengthSelectedData()
+  localStorage.clear();
+  selectedFoodsCount.value = 0
+  dialog.value = false
+}
+
+ onMounted(async () => {
+  foodBase.value = await getFoodBase()
+ })
  </script>
  
  <style>

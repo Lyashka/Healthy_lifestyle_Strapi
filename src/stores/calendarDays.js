@@ -3,38 +3,7 @@ import { defineStore } from 'pinia'
 import { last } from 'lodash'
 
 export const useCalendarDaysStore = defineStore('calendarDays', () => {
-  const calendarDays = reactive([
-    {
-      date: '05.06.2024', //Дата дня 
-      breakfast: [
-        { id: 1, name: 'Яйца', calories: 400 },
-        { id: 2, name: 'Овсянка', calories: 300 },
-      ],
-      lunch: [
-        { id: 3, name: 'Суп', calories: 400 },
-        { id: 4, name: 'Салат', calories: 250 }
-      ],
-      dinner: [
-        { id: 5, name: 'Стейк', calories: 600 },
-        { id: 6, name: 'Рыба', calories: 350 },
-      ], 
-    }, 
-    {
-      date: '04.06.2024', //Дата дня 
-      breakfast: [
-        { id: 7, name: '111', calories: 200 },
-        { id: 8, name: '222', calories: 300 }
-      ],
-      lunch: [
-        { id: 9, name: '333', calories: 400 },
-        { id: 10, name: '444', calories: 250 }
-      ],
-      dinner: [
-        { id: 11, name: '555', calories: 600 },
-        { id: 12, name: '666', calories: 350 },
-      ], 
-    }
-  ])
+  const calendarDays = reactive([])
   const targetDate = ref(new Date())
 
   const dataForDay = ref({})

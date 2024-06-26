@@ -236,11 +236,34 @@ function trimString(value) {
 
 watch(selected, () => {
   console.log(selected.value);
-  // addSelectedData( selected.value)
 
+  localStorage.setItem('selectedFoodForMeal', JSON.stringify(selected.value))
   emit('updateSelectedFood', selected.value);
 })
 
+
+onMounted(() => {
+  if(localStorage.getItem('selectedFoodForMeal')) {
+
+      selected.value = JSON.parse(localStorage.getItem('selectedFoodForMeal'))
+
+      if (selected.value) {
+          selected.value.forEach(item => { 
+            props.showFoods.forEach(el => {
+              if(el.id == item.id && el.name == item.name){
+                
+                el.calories = item.calories
+                el.proteins = item.proteins
+                el.fats = item.fats
+                el.carbs = item.carbs
+                el.productWeight = item.productWeight
+
+            }
+            })
+          })
+        }
+    }
+})
 
 </script>
 

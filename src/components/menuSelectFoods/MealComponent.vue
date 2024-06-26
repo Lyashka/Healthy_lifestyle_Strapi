@@ -110,15 +110,19 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
-import getFoodBase from '@/composables/requestGetFoodBase.js'
+// import getFoodBase from '@/composables/requestGetFoodBase.js'
 import { debounce } from 'lodash'
 
 import FoodItem from './FoodItem.vue';
 
+import { useSelectedDataStore } from '@/stores/selectedData'
+const selectedDataStore = useSelectedDataStore()
+ const { addSelectedData, getSelectedData, clearSelectedData, getLengthSelectedData, clearLengthSelectedData } = selectedDataStore
+
 const dialog = ref(false)
 
-defineProps({
-    ration: Object
+const props = defineProps({
+  foodBase: Array
 })
 
 const emit = defineEmits(
@@ -128,13 +132,18 @@ const emit = defineEmits(
 const searchName = ref('')
 const foodBase = ref([])
 const loader = ref(false)
+
+const showFoods = ref([])
 const selected = ref([]) 
 
 onMounted(async () => {
-  foodBase.value = await getFoodBase()
-})
+  foodBase.value = props.foodBase
 
-const showFoods = ref([])
+
+  if(localStorage.getItem('showFoods')) {
+    showFoods.value = JSON.parse(localStorage.getItem('showFoods'))
+  }
+})
 
 const inputValueSelectFood = (value) =>{
   loader.value = true
@@ -162,6 +171,8 @@ const selectFood = debounce((value) => {
          
         })
       }
+    localStorage.setItem('showFoods', JSON.stringify(showFoods.value))
+    // localStorage.setItem('lastRequest', JSON.stringify(value)) 
 
     loader.value = false
   }
@@ -246,6 +257,9 @@ function filteredFoods(value)  {
 
 function updateSelectedFood(data) {
   selected.value = data
+
+
+
   emit('updateSelectedFood', data);
 }
 
@@ -264,6 +278,8 @@ watch(selected, () => {
         })
     }
 })
+
+
 
 </script>
 

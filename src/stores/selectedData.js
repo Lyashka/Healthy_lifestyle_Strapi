@@ -28,16 +28,20 @@ export const useSelectedDataStore = defineStore('selectedData', () => {
                     console.log(selectedHistory.value);
                 }
                 else if(seletedId == 3) {
-                    selectedMy.value = selected
+                    selectedMy.value = selected 
                 }
             }
            
             selectedData.value = [...selectedMain.value, ...selectedHistory.value, ...selectedMy.value] 
+            selectedData.value = selectedData.value.filter((item, index, self) => 
+            index === self.findIndex(t => t.id === item.id && t.name === item.name && t.productWeight === item.productWeight)
+            )
+            console.log(selectedData.value);
     } 
 
 
     function getSelectedData(){
-        selectedData.value = [...selectedMain.value, ...selectedHistory.value, ...selectedMy.value]
+        // selectedData.value = [...selectedMain.value, ...selectedHistory.value, ...selectedMy.value]
         return selectedData.value
     }
 
@@ -52,6 +56,7 @@ export const useSelectedDataStore = defineStore('selectedData', () => {
         countSelectedData.value = selectedData.value.length
         return countSelectedData.value
     }
+
     function clearLengthSelectedData() {
         return countSelectedData.value = 0
     }
