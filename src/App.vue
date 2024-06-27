@@ -17,6 +17,7 @@
   </v-app-bar>
   
   <v-main>
+    <Personalization v-if="statusMenuPersonalization"/>
     <RouterView />
   </v-main>
   
@@ -25,9 +26,20 @@
 
 <script setup> 
 import { RouterView, RouterLink } from 'vue-router'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
-import { useCalendarDaysStore } from './stores/calendarDays'
+import { useCalendarDaysStore } from './stores/calendarDays' 
+
+import Personalization from './components/Personalization.vue';
+
+const statusMenuPersonalization = ref(true)
+onMounted(() => {
+  if(localStorage.getItem('statusMenuPersonalization')){
+    statusMenuPersonalization.value = JSON.parse(localStorage.getItem('statusMenuPersonalization'))
+  }else{
+    statusMenuPersonalization.value = true
+  }
+})
 // const calendarDaysStore = useCalendarDaysStore()
 // const { calendarDays } = calendarDaysStore
 // console.log(calendarDays); 

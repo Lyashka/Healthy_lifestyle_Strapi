@@ -117,7 +117,11 @@ import FoodItem from './FoodItem.vue';
 
 import { useSelectedDataStore } from '@/stores/selectedData'
 const selectedDataStore = useSelectedDataStore()
- const { addSelectedData, getSelectedData, clearSelectedData, getLengthSelectedData, clearLengthSelectedData } = selectedDataStore
+const { addSelectedData, getSelectedData, clearSelectedData, getLengthSelectedData, clearLengthSelectedData } = selectedDataStore
+
+import { useMyFoodsDataStore } from '@/stores/myFoodsData' 
+const myFoodsDataStore = useMyFoodsDataStore() 
+const { filterMyFoods } = myFoodsDataStore
 
 const dialog = ref(false)
 
@@ -152,11 +156,17 @@ const inputValueSelectFood = (value) =>{
 
 const selectFood = debounce((value) => {
   if (value){
-    showFoods.value = filteredFoods(value).map((food, index) => ({
+
+    const filteredAllFoods = filteredFoods(value).map((food, index) => ({
       ...food,
       productWeight: 100, 
       id: index + 1,
     }))
+
+    const filteredMyFoods = filterMyFoods(value) 
+
+    showFoods.value = [...filteredMyFoods, ...filteredAllFoods]
+
     if (selected) {
         selected.value.forEach(item => {
           showFoods.value.forEach(el => {

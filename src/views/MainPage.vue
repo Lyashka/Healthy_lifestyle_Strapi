@@ -41,7 +41,7 @@
                         {{ item.name }}
                       </v-col>
                       <v-col cols="5">
-                        калории: {{ trimString(item.calories) }}
+                        {{ item.calories }}
                       </v-col>
                     
                       <v-col cols="auto">
@@ -79,7 +79,7 @@
                         {{ item.name }}
                       </v-col>
                       <v-col cols="5">
-                        калории: {{ trimString(item.calories) }}
+                        {{ item.calories }}
                       </v-col>
                       <v-col cols="auto">
                         <v-btn 
@@ -102,7 +102,7 @@
                         {{ item.name }}
                       </v-col>
                       <v-col cols="5">
-                        калории: {{ trimString(item.calories) }}
+                        {{ item.calories }}
                       </v-col>
                       <v-col cols="auto">
                         <v-btn 
@@ -177,11 +177,12 @@ function getSummCalories(id){
 }
 
 function calculateSummCalories(value) {
-  return value ? value.reduce((acc, curr) => acc += +trimString(curr.calories), 0) : 0
+  return value ? value.reduce((acc, curr) => acc += trimString(curr.calories), 0).toFixed(1).replace(/\.0$/, '') : 0
 }
 
 function trimString(value) {
-  return value.toString().replace(/\D/g, '')
+  const cleanedStr = value.replace(',', '.').replace(/\s/g, '') 
+  return parseFloat(cleanedStr)
 }
 
 watch(calendarDays, () => {

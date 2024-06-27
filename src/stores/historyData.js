@@ -26,9 +26,16 @@ export const useHistoryDataStore = defineStore('historyData', () => {
                 
             }
         })
+        
+        localStorage.setItem('historyData', JSON.stringify(historyData.value))
+
     }
 
     function getHistoryData() {
+        if (localStorage.getItem('historyData')){
+            historyData.value = JSON.parse(localStorage.getItem('historyData'))
+        }
+
         return historyData.value
     }
 

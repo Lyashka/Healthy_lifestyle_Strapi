@@ -2,7 +2,7 @@
     <v-list lines="one" height="350">
       <div v-if="props.loader" class="text-center">
         <v-progress-circular  indeterminate></v-progress-circular>
-      </div> 
+      </div>
       <v-row 
         no-gutters 
         v-for="(food, index) in props.showFoods" 
@@ -230,7 +230,7 @@ function closeSettings() {
 }
 
 function trimString(value) {
-  const cleanedStr = value.replace(',', '.').replace(/\s/g, '')
+  const cleanedStr = value.replace(',', '.').replace(/\s/g, '') 
   return parseFloat(cleanedStr);
 }
 

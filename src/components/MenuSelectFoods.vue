@@ -77,7 +77,7 @@
               <HistoryComponent @updateSelectedFood="updateHistorySelectedFood"/>
             </div>
             <div v-if="showMyMeal">
-              <MyMealComponent/>
+              <MyMealComponent @updateSelectedFood="updateMyFoodSelectedFood"/>
             </div>
           </v-card-text>
         
@@ -176,6 +176,13 @@
     selectedFoodsCount.value = getLengthSelectedData()
   }
 
+  function updateMyFoodSelectedFood(selectedFood) {
+    selectedData.value = selectedFood
+    addSelectedData(selectedFood, 3)   
+    
+    selectedFoodsCount.value = getLengthSelectedData()
+  }
+
 
 function addNewFood(){ 
   addNewDataInCalendar(
@@ -188,7 +195,8 @@ function addNewFood(){
   addProductInHostory(selectedData.value)
   clearSelectedData()
   clearLengthSelectedData()
-  localStorage.clear();
+  localStorage.removeItem('showFoods');
+  localStorage.removeItem('selectedFoodForMeal');
   selectedFoodsCount.value = 0
   dialog.value = false
 }
@@ -196,7 +204,8 @@ function addNewFood(){
 function closeMenu() {
   clearSelectedData()
   clearLengthSelectedData()
-  localStorage.clear();
+  localStorage.removeItem('showFoods');
+  localStorage.removeItem('selectedFoodForMeal');
   selectedFoodsCount.value = 0
   dialog.value = false
 }

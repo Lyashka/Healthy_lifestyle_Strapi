@@ -28,7 +28,7 @@ export const useSelectedDataStore = defineStore('selectedData', () => {
                     console.log(selectedHistory.value);
                 }
                 else if(seletedId == 3) {
-                    selectedMy.value = selected 
+                    selectedMy.value = selected
                 }
             }
            
