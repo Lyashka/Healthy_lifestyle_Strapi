@@ -34,8 +34,8 @@ import Personalization from './components/Personalization.vue';
 
 const statusMenuPersonalization = ref(true)
 onMounted(() => {
-  if(localStorage.getItem('statusMenuPersonalization')){
-    statusMenuPersonalization.value = JSON.parse(localStorage.getItem('statusMenuPersonalization'))
+  if(localStorage.getItem('personalization')){
+    statusMenuPersonalization.value = false
   }else{
     statusMenuPersonalization.value = true
   }

@@ -29,14 +29,14 @@
 
           <v-radio-group 
             inline 
-            v-model="radios"
+            v-model="gender"
             label="Пол"
            >
             <v-radio label="М" value="1"></v-radio>
             <v-radio label="Ж" value="2"></v-radio>
           </v-radio-group>
           <v-select
-            v-model="selectedValue"       
+            v-model="activity"       
             label="Уровень активности"
             :items="['Минимальная активность', 
                     'Слабый уровень активности', 
@@ -61,38 +61,48 @@
 <script setup>
 import { ref } from 'vue'
 
+import { usePersonalizationDataStore } from '@/stores/personalizationData';
+const personalizationDataStore = usePersonalizationDataStore()
+const { updatePersonalization } = personalizationDataStore 
 
 const dialog = ref(true)
 
-const height = ref('')
-const weight = ref('')
-const age = ref('')
-const radios = ref("")
-const selectedValue = ref('')
+const height = ref(null)
+const weight = ref(null)
+const age = ref(null)
+const gender = ref(null)
+const activity = ref(null)
 
-const resultCalories = ref(0)
+const needingCalories = ref(0)
 
 function closePersonalization() {
     calculateCalories()
-
-    // dialog.value = false
-    // localStorage.setItem('statusMenuPersonalization', JSON.stringify(dialog.value))
+    dialog.value = false
 }
 
 function calculateCalories() {
-    if (radios.value == 1) {
+    if (gender.value == 1) {
+      needingCalories.value = Math.round((10 * +weight.value + 6.25 * +height.value - 5 * +age.value + 5) * getActivityParameter()) 
+        console.log(needingCalories.value);
 
-        resultCalories.value = (10 * +weight.value + 6.25 * +height.value - 5 * +age.value + 5) * getActivityParameter() 
-        console.log(resultCalories.value);
-
-    }else if(radios.value == 2){ 
-        // для женщин нужно прописать   
+    }else if(gender.value == 2){ 
+      needingCalories.value = Math.round((10 * +weight.value + 6.25 * +height.value - 5 * +age.value - 161) * getActivityParameter())
+        console.log(needingCalories.value);
     } 
+    const newPerson = {
+      height: height.value,
+      weight: weight.value,
+      age: age.value,
+      gender: gender.value,
+      activity: activity.value,
+      needingCalories: needingCalories.value
+    }
+    updatePersonalization(newPerson)
 }
 
 function getActivityParameter() {
     let parameterValue = 0
-    switch (selectedValue.value) {
+    switch (activity.value) {
         case 'Минимальная активность':
             parameterValue = 1.2
             break;

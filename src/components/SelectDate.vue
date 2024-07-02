@@ -1,5 +1,5 @@
 <template>
-    <div class="text-center mt-5">
+    <div >
       <v-menu
         v-model="menu"
         :close-on-content-click="false"

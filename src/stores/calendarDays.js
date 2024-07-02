@@ -107,30 +107,61 @@ export const useCalendarDaysStore = defineStore('calendarDays', () => {
     if(isEmptyData) {
       dataForDay.value = {}
     }
-    // console.log(dataForDay.value);
     return dataForDay.value
   } 
 
-  // function editDataForDay() {
-  //   calendarDays.forEach(item => {
-  //     if (item.date == targetDate.value.toLocaleDateString()) {
-  //       dataForDay.value = item
-  //     }else{
-  //       dataForDay.value = {}
-  //     }
-  //   })
-  // }
-// watch(dataForDay, () => {
-// })
+function calculateMyCalories() {
+  const dataForDay = getDataForDay()
+  let resultCalories = 0
+  if(dataForDay) {
+    if(dataForDay.breakfast) {
+      dataForDay.breakfast.forEach(e => {
+        resultCalories += trimString(e.calories)
+      })
+    }
+    if(dataForDay.lunch){
+      dataForDay.lunch.forEach(e => {
+        resultCalories += trimString(e.calories)
+      })
+    }
+    if(dataForDay.dinner){
+      dataForDay.dinner.forEach(e => {
+        resultCalories += trimString(e.calories)
+      })
+    }
+    return resultCalories
+  }else{
+    return resultCalories
+  }
+}
+
+function trimString(value) {
+  const cleanedStr = value.replace(',', '.').replace(/\s/g, '') 
+  return parseFloat(cleanedStr)
+}
+
+function updateCalendarDays(newCalendarDays) {
+ console.log(newCalendarDays);
+ newCalendarDays.forEach(e => {
+  calendarDays.push(e)
+ })
+ console.log(calendarDays);
+}
+
+watch(calendarDays, () => {
+  localStorage.setItem('calendarDays', JSON.stringify(calendarDays))
+})
 
   return { 
     calendarDays,
+    dataForDay,
     addNewDataInCalendar,
     getTargetDate,
     editTargetDate,
     getDataForDay,
     removePositionFromRation,
-    dataForDay
+    calculateMyCalories,
+    updateCalendarDays
   }
 })
 

@@ -9,7 +9,28 @@
  
       <v-col>
         <v-card max-width="500px" min-width="300px" min-height="500px" class="mx-auto" variant="outlined"> 
-          <SelectDate/>
+        
+          <v-row no-gutters class="d-flex align-center mb-3" >
+            <v-col class="d-flex flex-wrap">
+               <v-progress-linear
+                  rounded="lg"
+                  class="mx-auto ml-1"
+                  color="#228B22" 
+                  v-model="progressLinerValue" 
+                  :height="30"
+                 
+             >{{ myCalories }} / {{ getPersonalization().needingCalories }}</v-progress-linear>
+             <div class="py-auto"></div>
+            </v-col>
+            <v-col>
+              <SelectDate class="text-center align-center"/> 
+            </v-col>
+           <v-col>
+
+           </v-col>
+            
+          </v-row>
+         
           <v-expansion-panels>
             <!-- в отдельный компонент вывести??? -->
             <v-expansion-panel v-for="ration in rations" :key="ration.id">
@@ -53,20 +74,7 @@
                         />
                       </v-col>
                 </v-row>
-                <!-- <v-row no-gutters>
-                  <v-col v-if="item.proteins != undefined" class="text-caption " cols="2">
-                    Б- {{item.proteins}} 
-                  </v-col>
-                  <v-col v-if="item.fats != undefined" class="text-caption" cols="2">
-                    Ж- {{item.fats}} 
-                  </v-col>
-                  <v-col v-if="item.carbs != undefined" class="text-caption" cols="2">
-                    У- {{item.carbs}}  
-                  </v-col>
-                  <v-col v-else class="text-caption" cols="12">
-                    Нет данных БЖУ
-                  </v-col>
-                </v-row> -->
+                
                 <v-divider :thickness="2" class="mb-5"></v-divider>
                   </div>
                   
@@ -143,7 +151,7 @@
 import SelectDate from '../components/SelectDate.vue'; 
 import MenuSelectFoods from '../components/MenuSelectFoods.vue'
 
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
 //Конструкция для получения данных из json !!! В функцию ее обернуть для async
 import getFoodRations from '../composables/requestGetFoodRatons'
@@ -152,12 +160,15 @@ const getRations = async function() {
   rations.value = await getFoodRations()
 }
 getRations()
-
+ 
+import { usePersonalizationDataStore } from '@/stores/personalizationData';
+const personalizationDataStore = usePersonalizationDataStore()
+const { getPersonalization, updatePersonalization } = personalizationDataStore 
 
 import { useCalendarDaysStore } from '../stores/calendarDays' 
 import { watch } from 'vue'  
 const calendarDaysStore = useCalendarDaysStore()
-const { calendarDays, getDataForDay, dataForDay, getTargetDate, removePositionFromRation } = calendarDaysStore
+const { calendarDays, getDataForDay, dataForDay, getTargetDate, removePositionFromRation, calculateMyCalories, updateCalendarDays } = calendarDaysStore
 
 const data = ref(getDataForDay())
 
@@ -187,6 +198,24 @@ function trimString(value) {
 
 watch(calendarDays, () => {
   data.value = getDataForDay()
+})
+
+const progressLinerValue = ref(0)
+const myCalories = computed(()=>{
+  return calculateMyCalories()
+})
+watch(myCalories, ()=>{
+  progressLinerValue.value = +calculateMyCalories() * 100 / +getPersonalization().needingCalories
+})
+
+onMounted(() => {
+  if(localStorage.getItem('personalization')){
+    updatePersonalization(JSON.parse(localStorage.getItem('personalization')))
+  }
+  
+  if(localStorage.getItem('calendarDays')){
+    updateCalendarDays(JSON.parse(localStorage.getItem('calendarDays')))
+  }
 })
 
 </script>
