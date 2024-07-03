@@ -129,10 +129,20 @@ function calculateMyCalories() {
         resultCalories += trimString(e.calories)
       })
     }
+    addSummCaloriesInDay(dataForDay, resultCalories)
     return resultCalories
   }else{
+    addSummCaloriesInDay(dataForDay, resultCalories)
     return resultCalories
   }
+}
+
+function addSummCaloriesInDay(dataForDay, resultCalories) {
+  calendarDays.forEach(el => {
+    if(el.date == dataForDay.date) {
+      el.summCalories = resultCalories
+    }
+  })
 }
 
 function trimString(value) {
@@ -141,11 +151,17 @@ function trimString(value) {
 }
 
 function updateCalendarDays(newCalendarDays) {
- console.log(newCalendarDays);
- newCalendarDays.forEach(e => {
-  calendarDays.push(e)
- })
- console.log(calendarDays);
+
+ 
+  newCalendarDays.forEach(e => {
+    if(!calendarDays.some(item => item.date == e.date)) {
+      calendarDays.push(e)
+    }
+    
+   })
+ 
+//  console.log(newCalendarDays);
+//  console.log(calendarDays);
 }
 
 watch(calendarDays, () => {

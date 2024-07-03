@@ -1,5 +1,5 @@
 <template>
-    <div >
+    <div>
       <v-menu
         v-model="menu"
         :close-on-content-click="false"
@@ -16,7 +16,7 @@
         </template>
   
         <v-card min-height="300px">
-          <v-date-picker v-model="selectedDate"></v-date-picker>
+          <v-date-picker v-model="selectedDate" hide-header></v-date-picker>
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>

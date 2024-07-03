@@ -32,10 +32,8 @@
           </v-row>
          
           <v-expansion-panels>
-            <!-- в отдельный компонент вывести??? -->
             <v-expansion-panel v-for="ration in rations" :key="ration.id">
               <v-expansion-panel-title>
-                <!-- информация на самой вкладке категории -->
                 <v-row>
                   <v-col cols="4">
                     {{ ration.name }}
@@ -52,9 +50,7 @@
               <v-expansion-panel-text >
 
                 <MenuSelectFoods :ration="ration"/>
-              
-                <!-- Элемент элемента списка категории "Завтрак" да и в целом для всего -->
-                <!-- Может, if ration name = 'завтрак' передавай breackfast , хз чето-->
+
                 <div v-if="ration.id == 1">
                   <div v-for="item in data.breakfast" :key="item.id">
                     <v-row>
@@ -74,7 +70,7 @@
                         />
                       </v-col>
                 </v-row>
-                
+
                 <v-divider :thickness="2" class="mb-5"></v-divider>
                   </div>
                   
@@ -214,7 +210,11 @@ onMounted(() => {
   }
   
   if(localStorage.getItem('calendarDays')){
-    updateCalendarDays(JSON.parse(localStorage.getItem('calendarDays')))
+    // if(calendarDays == []){
+      updateCalendarDays(JSON.parse(localStorage.getItem('calendarDays')))
+      progressLinerValue.value = +calculateMyCalories() * 100 / +getPersonalization().needingCalories
+    // }
+    
   }
 })
 
