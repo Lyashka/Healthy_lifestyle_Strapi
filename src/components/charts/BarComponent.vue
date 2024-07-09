@@ -8,17 +8,58 @@ import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
 import {ref, computed, onMounted, watch } from 'vue'
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+import AnnotationPlugin from 'chartjs-plugin-annotation';
+
+import { usePersonalizationDataStore } from '@/stores/personalizationData';
+const personalizationDataStore = usePersonalizationDataStore()
+const { getPersonalization } = personalizationDataStore 
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, AnnotationPlugin)
 
 const props = defineProps({
   data: Object
 })
 
   const chartData = ref(props.data)
-  const chartOptions = computed ( () => { return /* mutable chart options */ })
+
+  const borderLineValue = ref(getPersonalization().needingCalories)
+  console.log(borderLineValue.value);
+  const chartOptions = computed ( () => { 
+    return {
+      elements: {
+        bar: {
+          borderWidth: 1, // Толщина линии границы
+          borderColor: 'rgb(0, 0, 0)', // Цвет линии границы
+          borderSkipped: false, // Не пропускать рисование границы
+          borderRadius: 7 // Скругление углов (необязательно)
+        }
+      },
+    
+      plugins: {
+        legend: {
+          display: false
+        },
+        annotation: {
+          annotations: {
+            line: {
+              type: 'line', 
+              yMin: borderLineValue.value, 
+              yMax: borderLineValue.value,
+              borderColor: 'red', 
+              borderWidth: 2,
+              
+            }
+          }
+        }
+      }
+    };
+  })
     
 watch(chartData.value, () => {
-  chartData.value = { datasets: [ props.data.datasets[0]], labels: props.data.labels }
+  chartData.value = { 
+                      datasets: [ props.data.datasets[0] ],
+                      labels: props.data.labels 
+                    }
   console.log(chartData.value);
 })
 

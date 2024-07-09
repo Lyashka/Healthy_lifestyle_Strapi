@@ -10,6 +10,9 @@ export const usePersonalizationDataStore = defineStore('personalizationData', ()
         localStorage.setItem('personalization', JSON.stringify(personalization.value))
     }
     function getPersonalization(){
+        if(localStorage.getItem('personalization')){
+            personalization.value = JSON.parse(localStorage.getItem('personalization'))
+        }
         return personalization.value
     }
     return {

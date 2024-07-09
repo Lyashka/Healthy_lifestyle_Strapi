@@ -54,9 +54,9 @@ let menu = ref(false)
   
 let selectedDate = ref([new Date()]);
 
-watch(selectedDate, () => {
-    console.log(getSelectedDates());
-})
+// watch(selectedDate, () => {
+//     console.log(getSelectedDates());
+// })
 
 const emit = defineEmits(
   ['getParametrsCalories'] 
@@ -68,10 +68,24 @@ function saveDay() {
     emit('getParametrsCalories', getDataCalories())
     menu.value = false
 }
-onMounted(() => {
 
-  //тут создать массив вокруг сегодняшнего дня
-  updateSelectedDates(selectedDate.value)
+function getDatesOfWeek(date) {
+  const dates = [];
+  const firstDay = new Date(date);
+  firstDay.setDate(firstDay.getDate() - firstDay.getDay()); // Получаем понедельник
+  
+  for (let i = 0; i < 7; i++) {
+    const nextDay = new Date(firstDay);
+    nextDay.setDate(nextDay.getDate() + i);
+    dates.push(nextDay);
+  }
+
+  return dates;
+}
+
+onMounted(() => {
+  const datesOfWeek = getDatesOfWeek(new Date());
+  updateSelectedDates(datesOfWeek)
   emit('getParametrsCalories', getDataCalories())
 })
 
