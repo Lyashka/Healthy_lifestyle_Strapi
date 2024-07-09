@@ -11,11 +11,11 @@
             color="white"
             v-bind="props"
           >  
-          <div v-if="selectedDate.length > 0"> 
+          <div v-if="selectedDate.length > 1"> 
             {{ selectedDate[0].toLocaleDateString() }} - {{ selectedDate[selectedDate.length-1].toLocaleDateString() }}
           </div>
           <div v-else>
-            {{ new Date().toLocaleDateString() }}
+            {{ selectedDate[0].toLocaleDateString() }}
           </div>
             
           </v-btn>
@@ -42,26 +42,38 @@
 <script setup>
 import {onMounted, ref, watch} from 'vue'  
 
+import getDataCalories from '@/composables/calculateDataCaloriesForDays'
+
 import { useSelectedDateForStatisticsDataStore } from '@/stores/selectedDateForStatisticsData'
 const selectedDateForStatisticsDataStore = useSelectedDateForStatisticsDataStore()
 const { updateSelectedDates, getSelectedDates } = selectedDateForStatisticsDataStore
   
+
+
 let menu = ref(false)
   
-let selectedDate = ref([]);
+let selectedDate = ref([new Date()]);
 
-onMounted(() => {
-    // console.log(selectedDate.value.length);   
-})
 watch(selectedDate, () => {
     console.log(getSelectedDates());
-  
 })
+
+const emit = defineEmits(
+  ['getParametrsCalories'] 
+  )
 
 function saveDay() {
     updateSelectedDates(selectedDate.value)
+
+    emit('getParametrsCalories', getDataCalories())
     menu.value = false
 }
+onMounted(() => {
+
+  //тут создать массив вокруг сегодняшнего дня
+  updateSelectedDates(selectedDate.value)
+  emit('getParametrsCalories', getDataCalories())
+})
 
 </script>
 

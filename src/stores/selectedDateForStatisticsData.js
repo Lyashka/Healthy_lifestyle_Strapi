@@ -5,20 +5,20 @@ export const useSelectedDateForStatisticsDataStore = defineStore('selectedDateFo
     const selectedDates = ref([]) 
 
     function updateSelectedDates(newDates) {
+        selectedDates.value = []
         newDates.forEach(el => {
             selectedDates.value.push(el)
-        })
-        
-        
+        })    
     }
+
     function getSelectedDates(){
         if (selectedDates.value.length > 0) {
-            console.log(selectedDates.value);
+            // console.log(selectedDates.value);
             return selectedDates.value
             
         }else{
             selectedDates.value.push(new Date())
-            console.log(selectedDates.value);
+            // console.log(selectedDates.value);
             return selectedDates.value
         }
         

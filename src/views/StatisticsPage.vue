@@ -4,9 +4,9 @@
         
         <v-row no-gutters> 
             <v-col> 
-                <v-card  max-width="850px" min-width="350px" height="650px"  class="mx-auto" variant="outlined">
-                    <SelectedDateForCharts/>
-                    <BarComponent/>
+                <v-card  max-width="1500px" min-width="350px" height="650px"  class="mx-auto" variant="outlined">
+                    <SelectedDateForCharts @getParametrsCalories="getParametrsCalories"/>
+                    <BarComponent :data="data"/>
                 </v-card>
             </v-col>
             <!-- <v-col>
@@ -27,18 +27,29 @@
 import BarComponent from '../components/charts/BarComponent.vue'
 import SelectedDateForCharts from '../components/charts/SelectedDateForCharts.vue'
 
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 
 import { useCalendarDaysStore } from '@/stores/calendarDays' 
 const calendarDaysStore = useCalendarDaysStore()
-const { updateCalendarDays } = calendarDaysStore
+const { calendarDays, updateCalendarDays } = calendarDaysStore
+
+
+const data = ref({
+    datasets: [{data: [50, 100] }], 
+    labels: ['1','2']
+  })
+
+function getParametrsCalories(dataCalories) {
+    console.log(dataCalories);
+    data.value.datasets[0].data = dataCalories.parametrs
+    data.value.labels = dataCalories.labels
+}
 
 onMounted(() => {
   if(localStorage.getItem('calendarDays')){
-    // if(calendarDays == []){
       updateCalendarDays(JSON.parse(localStorage.getItem('calendarDays')))
-    // }
   }
+
 })
 </script>
 
