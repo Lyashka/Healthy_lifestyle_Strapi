@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar>  
-    <v-app-bar-title>Bar</v-app-bar-title>
+    <v-app-bar-title>Healthy Lifestyle</v-app-bar-title>
    
     <template v-slot:append>
       <RouterLink class="closeStyle" to="/">
@@ -54,4 +54,5 @@ onMounted(() => {
   text-decoration: none;
   color: inherit;
 }
+
 </style>

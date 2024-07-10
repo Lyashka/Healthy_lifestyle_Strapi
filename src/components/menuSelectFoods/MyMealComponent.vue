@@ -1,9 +1,14 @@
 <template>
    <div >
     <div class="text-center pa-1"> 
-      <v-btn icon="mdi-plus" size="small"  @click="dialog = true"/>
+      <v-btn 
+        color = "rgba(34, 139, 34, 0.7)"
+        icon="mdi-plus" 
+        size="small"  
+        @click="dialog = true"
+        />
     </div>
-   
+  
     <v-dialog
        v-model="dialog"
        width="500"
@@ -15,9 +20,6 @@
        <v-card-title>
        Добавить новое блюдо/напиток
       </v-card-title> 
-       <v-card-subtitle>
-        subtitle
-       </v-card-subtitle>
        <v-card-text class="pa-0">
 
           <v-text-field
@@ -79,19 +81,19 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue' 
+import { ref, computed, onMounted, watch } from 'vue' 
 
 import FoodItem from './FoodItem.vue';
 
 import { useMyFoodsDataStore } from '@/stores/myFoodsData' 
 const myFoodsDataStore = useMyFoodsDataStore() 
-const { myFoods, addMyFoods, getMyFoods, searchDuplicatesMyFood } = myFoodsDataStore
+const { myFoods, addMyFoods, getMyFoods, searchDuplicatesMyFood, updateMyFood } = myFoodsDataStore
 
 import commonRules from '@/composables/commonValidators'
 
 const dialog = ref(false)
 
-const showFoods = getMyFoods()
+const showFoods = ref(getMyFoods())
 
 const nameFood = ref('')
 const productWeight = ref(100)
@@ -106,8 +108,8 @@ const disableBtnSaveMyFood = computed(() => {
 })
 
 function saveMyFood() {
+
   const newFood = {
-    id: myFoods[myFoods.length - 1] == undefined ? 1 : myFoods[myFoods.length - 1].id + 1,
     name: nameFood.value,
     productWeight: productWeight.value,
     calories: `${calories.value} кКал`,
@@ -115,6 +117,7 @@ function saveMyFood() {
     fats: `${fats.value} г`, 
     carbs: `${carbs.value} г`
   }
+  
   addMyFoods(newFood)
   clearForm()
   productWeight.value = 100
@@ -144,6 +147,18 @@ function updateSelectedFood(data) {
   emit('updateSelectedFood', data);
 }
 
+watch(myFoods, () => {
+    showFoods.value = getMyFoods()
+    console.log(showFoods.value);
+})
+
+onMounted(() => {
+  if(localStorage.getItem('myFoods')) {
+    updateMyFood( JSON.parse(localStorage.getItem('myFoods')) )
+    showFoods.value = getMyFoods()
+    
+  }
+})
 </script>
 
 <style>

@@ -1,6 +1,12 @@
 <template>
     <div class="text-center pa-2">
-     <v-btn icon="mdi-plus" size="small" @click="dialog = true"/>
+     <v-btn 
+      color = "rgba(34, 139, 34, 0.7)"
+      icon="mdi-plus" 
+      size="small" 
+      @click="dialog = true" 
+      
+      />
      <v-dialog
        v-model="dialog"
        width="500"

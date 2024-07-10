@@ -1,26 +1,19 @@
 <template>
-<div>
-    <v-container class="bg-surface-variant">
-        
-        <v-row no-gutters> 
-            <v-col> 
-                <v-card  max-width="1500px" min-width="350px" height="650px"  class="mx-auto" variant="outlined">
-                    <SelectedDateForCharts @getParametrsCalories="getParametrsCalories"/>
-                    <BarComponent :data="data"/>
-                </v-card>
-            </v-col>
-            <!-- <v-col>
-                <v-card max-width="850px" min-width="350px" height="450px" class="mx-auto" variant="outlined">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Provident, cupiditate pariatur nostrum, quos dolores consectetur veritatis qui nulla optio minima, vero explicabo tenetur adipisci reiciendis! Nesciunt eveniet nam eaque illo.</v-card>
-            </v-col>
-            <v-col>
-                <v-card max-width="850px" min-width="350px" height="450px" class="mx-auto" variant="outlined">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Provident, cupiditate pariatur nostrum, quos dolores consectetur veritatis qui nulla optio minima, vero explicabo tenetur adipisci reiciendis! Nesciunt eveniet nam eaque illo.</v-card>
-
-            </v-col> -->
-        </v-row>
-       
-    </v-container>
-    
-</div>
+    <v-row no-gutters> 
+        <v-col> 
+            <v-card  
+                min-width="300px" 
+                max-width="1050px"
+                height="650px"  
+                class="mx-auto text-center mt-5 pl-2 pr-2" 
+                elevation="4" 
+                style="background-color:rgb(228,228,228);"
+            >
+                <SelectedDateForCharts @getParametrsCalories="getParametrsCalories"/>
+                <BarComponent :data="data"/>
+            </v-card>
+        </v-col>
+    </v-row>
 </template>
 
 <script setup>

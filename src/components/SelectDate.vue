@@ -4,6 +4,7 @@
         v-model="menu"
         :close-on-content-click="false"
         location="center"
+       
       >
         <template v-slot:activator="{ props }">
           <v-btn
