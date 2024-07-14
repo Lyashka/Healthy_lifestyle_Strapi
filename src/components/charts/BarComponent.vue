@@ -1,12 +1,12 @@
 <template>
-  <Bar  :data="chartData" :options="chartOptions" />
+  <Bar :data="chartData" :options="chartOptions" />
 </template>
 
 <script setup> 
 
 import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
-import {ref, computed, onMounted, watch } from 'vue'
+import {ref, computed, watch } from 'vue'
 
 import AnnotationPlugin from 'chartjs-plugin-annotation';
 
@@ -28,10 +28,10 @@ const props = defineProps({
     return {
       elements: {
         bar: {
-          borderWidth: 1, // Толщина линии границы
-          borderColor: 'rgb(0, 0, 0)', // Цвет линии границы
-          borderSkipped: false, // Не пропускать рисование границы
-          borderRadius: 7 // Скругление углов (необязательно)
+          borderWidth: 1,
+          borderColor: 'rgb(0, 0, 0)', 
+          borderSkipped: false, 
+          borderRadius: 7 
         }
       },
     

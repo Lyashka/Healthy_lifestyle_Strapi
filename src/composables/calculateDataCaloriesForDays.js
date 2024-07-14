@@ -1,16 +1,16 @@
-import { ref } from 'vue'
 
 import { useCalendarDaysStore } from '@/stores/calendarDays' 
 const calendarDaysStore = useCalendarDaysStore()
-const { calendarDays, calculateMyCalories, updateCalendarDays } = calendarDaysStore
+const { calendarDays, updateCalendarDays } = calendarDaysStore
 
 import { useSelectedDateForStatisticsDataStore } from '@/stores/selectedDateForStatisticsData'
 const selectedDateForStatisticsDataStore = useSelectedDateForStatisticsDataStore()
-const { selectedDates, getSelectedDates } = selectedDateForStatisticsDataStore
+const { getSelectedDates } = selectedDateForStatisticsDataStore
 
 export default function getDataCalories() {
     const labels = buildArrayLabels() 
     const parametrs = buildArrayParametrs()
+    
     return {
         labels: labels,
         parametrs: parametrs
@@ -46,7 +46,7 @@ function buildArrayLabels() {
     let arrayLabels = []
     getSelectedDates().forEach(el => {
         arrayLabels.push(el.toLocaleDateString())
-    })
-    // console.log(arrayLabels);
+    }) 
+
     return arrayLabels
 }

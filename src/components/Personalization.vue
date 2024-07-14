@@ -1,61 +1,58 @@
 <template>
-<v-dialog
-      v-model="dialog"
-      width="auto"
+  <v-dialog
+    v-model="dialog"
+    width="auto"
+  >
+    <v-card 
+      min-width="350"
+      prepend-icon="mdi-account"
+      title="Персонализация"
+      text="Введите свои данные"
     >
-      <v-card 
-        min-width="350"
-        prepend-icon="mdi-account"
-        title="Персонализация"
-        text="Введите свои данные"
-      >
-
       <v-card-text>
         <v-text-field
-            type="number"
-            v-model="age"
-            label="Возраст"
-          />
+          type="number"
+          v-model="age"
+          label="Возраст"
+        />
         <v-text-field
-            type="number"
-            v-model="height"
-            label="Рост"
-          />
-          <v-text-field
-            type="number"
-            v-model="weight"
-            label="Вес"
-          />
-
-          <v-radio-group 
-            inline 
-            v-model="gender"
-            label="Пол"
-           >
-            <v-radio label="М" value="1"></v-radio>
-            <v-radio label="Ж" value="2"></v-radio>
-          </v-radio-group>
-          <v-select
-            v-model="activity"       
-            label="Уровень активности"
-            :items="['Минимальная активность', 
-                    'Слабый уровень активности', 
-                    'Умеренный уровень активности', 
-                    'Тяжелая или трудоемкая активность', 
-                    'Экстремальный уровень'
-                    ]"
-           />
-      </v-card-text>
-
-        <template v-slot:actions>
-          <v-btn
-            class="ms-auto"
-            text="Ok"
-            @click="closePersonalization"
-          ></v-btn>
-        </template>
-      </v-card>
-    </v-dialog>
+          type="number"
+          v-model="height"
+          label="Рост"
+        />
+        <v-text-field
+          type="number"
+          v-model="weight"
+          label="Вес"
+        />
+        <v-radio-group 
+          inline 
+          v-model="gender"
+          label="Пол"
+        >
+          <v-radio label="М" value="1"></v-radio>
+          <v-radio label="Ж" value="2"></v-radio>
+        </v-radio-group>
+        <v-select
+          v-model="activity"       
+          label="Уровень активности"
+          :items="['Минимальная активность', 
+                  'Слабый уровень активности', 
+                  'Умеренный уровень активности', 
+                  'Тяжелая или трудоемкая активность', 
+                  'Экстремальный уровень'
+                  ]"
+        />
+      </v-card-text> 
+      <template v-slot:actions>
+        <v-btn
+          class="ms-auto"
+          text="Ok"
+          @click="closePersonalization"
+        />
+      </template>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup>
@@ -83,11 +80,9 @@ function closePersonalization() {
 function calculateCalories() {
     if (gender.value == 1) {
       needingCalories.value = Math.round((10 * +weight.value + 6.25 * +height.value - 5 * +age.value + 5) * getActivityParameter()) 
-        console.log(needingCalories.value);
 
     }else if(gender.value == 2){ 
       needingCalories.value = Math.round((10 * +weight.value + 6.25 * +height.value - 5 * +age.value - 161) * getActivityParameter())
-        console.log(needingCalories.value);
     } 
     const newPerson = {
       height: height.value,
@@ -124,7 +119,6 @@ function getActivityParameter() {
         default:
             break;
     }
-    console.log(parameterValue);
     return parameterValue
 }
 

@@ -1,82 +1,79 @@
 <template>
-   <div >
+  <div>
     <div class="text-center pa-1"> 
       <v-btn 
         color = "rgba(34, 139, 34, 0.7)"
         icon="mdi-plus" 
         size="small"  
         @click="dialog = true"
-        />
+      />
     </div>
   
     <v-dialog
-       v-model="dialog"
-       width="500"
-     >
-     <v-form fast-fail @submit.prevent>
-       <v-card 
-         min-height="500"
-       >
-       <v-card-title>
-       Добавить новое блюдо/напиток
-      </v-card-title> 
-       <v-card-text class="pa-0">
-
-          <v-text-field
-            v-model="nameFood"
-            :rules="[commonRules.checkStringName]"
-            label="Название"
-          />
-          <v-text-field
-            type="number"
-            v-model="productWeight"
-            :rules="[commonRules.checkNumber]"
-            label="г/мл"
-          />
-          <v-text-field
-            type="number"
-            v-model="calories"
-            :rules="[commonRules.checkNumber]"
-            label="Калории"
-          />
-          <v-text-field
-            type="number"
-            v-model="proteins"
-            :rules="[commonRules.checkNumber]"
-            label="Белок"
-          />
-          <v-text-field
-            type="number"
-            v-model="fats"
-            :rules="[commonRules.checkNumber]"
-            label="Жиры"
-          />
-          <v-text-field
-            type="number"
-            v-model="carbs"
-            :rules="[commonRules.checkNumber]"
-            label="Углеводы"
-          />
-
-       </v-card-text> 
-       <template v-slot:actions>
-           <v-btn 
-            class="ms-auto"
-             text="Cancel"
-             @click="closeMenuAddMyFood"
-           />
-           <v-btn
-             text="Ok"
-             type="submit"
-             :disabled="disableBtnSaveMyFood"
-             @click="saveMyFood"
-           />
-         </template>
-       </v-card>
+      v-model="dialog"
+      width="500"
+    >
+      <v-form fast-fail @submit.prevent>
+        <v-card 
+          min-height="500"
+        >
+          <v-card-title>
+            Добавить новое блюдо/напиток
+          </v-card-title> 
+          <v-card-text class="pa-0">
+            <v-text-field
+              v-model="nameFood"
+              :rules="[commonRules.checkStringName]"
+              label="Название"
+            />
+            <v-text-field
+              type="number"
+              v-model="productWeight"
+              :rules="[commonRules.checkNumber]"
+              label="г/мл"
+            />
+            <v-text-field
+              type="number"
+              v-model="calories"
+              :rules="[commonRules.checkNumber]"
+              label="Калории"
+            />
+            <v-text-field
+              type="number"
+              v-model="proteins"
+              :rules="[commonRules.checkNumber]"
+              label="Белок"
+            />
+            <v-text-field
+              type="number"
+              v-model="fats"
+              :rules="[commonRules.checkNumber]"
+              label="Жиры"
+            />
+            <v-text-field
+              type="number"
+              v-model="carbs"
+              :rules="[commonRules.checkNumber]"
+              label="Углеводы"
+            />
+          </v-card-text> 
+          <template v-slot:actions>
+            <v-btn 
+              class="ms-auto"
+              text="Cancel"
+              @click="closeMenuAddMyFood"
+            />
+            <v-btn
+              text="Ok"
+              type="submit"
+              :disabled="disableBtnSaveMyFood"
+              @click="saveMyFood"
+            />
+          </template>
+        </v-card>
       </v-form>
-     </v-dialog>
-
-     <FoodItem :showFoods="showFoods" @updateSelectedFood="updateSelectedFood"/>
+    </v-dialog>
+    <FoodItem :showFoods="showFoods" @updateSelectedFood="updateSelectedFood"/>
   </div>
 </template>
 
@@ -149,7 +146,6 @@ function updateSelectedFood(data) {
 
 watch(myFoods, () => {
     showFoods.value = getMyFoods()
-    console.log(showFoods.value);
 })
 
 onMounted(() => {
@@ -160,7 +156,3 @@ onMounted(() => {
   }
 })
 </script>
-
-<style>
-
-</style>

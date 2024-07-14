@@ -40,19 +40,14 @@ onMounted(() => {
     statusMenuPersonalization.value = true
   }
 })
-// const calendarDaysStore = useCalendarDaysStore()
-// const { calendarDays } = calendarDaysStore
-// console.log(calendarDays); 
-
-
-
 
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .closeStyle{
   text-decoration: none;
   color: inherit;
 }
+
 
 </style>

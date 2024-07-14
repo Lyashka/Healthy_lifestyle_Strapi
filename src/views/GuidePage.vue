@@ -4,7 +4,7 @@
     elevation="4" 
     style="background-color:rgb(228,228,228);"
     >
-    <v-card-text class="guide-container-header">
+      <v-card-text class="guide-container-header">
       <v-text-field 
         block
         label="Введите продукт" 
@@ -14,99 +14,89 @@
         v-model="searchName"
         class="pr-1"
         @input="inputValueSelectFood($event.target.value)"
-    />
-      
+      />
+
     <div class="text-center pl-1"> 
       <v-btn height="73%" @click="dialog = true">Добавить продукт</v-btn>
     </div>
-   
+  
     <v-dialog
        v-model="dialog"
        width="500"
      >
-     <v-form fast-fail @submit.prevent>
-       <v-card 
-         min-height="500"
-       >
-       <v-card-title>
-       Добавить новое блюдо/напиток
-      </v-card-title> 
-       <v-card-subtitle>
-        subtitle
-       </v-card-subtitle>
-       <v-card-text class="pa-0">
-
-          <v-text-field
-            v-model="nameFood"
-            :rules="[commonRules.checkStringName]"
-            label="Название"
-          />
-          <v-text-field
-            type="number"
-            v-model="productWeight"
-            :rules="[commonRules.checkNumber]"
-            label="г/мл"
-          />
-          <v-text-field
-            type="number"
-            v-model="calories"
-            :rules="[commonRules.checkNumber]"
-            label="Калории"
-          />
-          <v-text-field
-            type="number"
-            v-model="proteins"
-            :rules="[commonRules.checkNumber]"
-            label="Белок"
-          />
-          <v-text-field
-            type="number"
-            v-model="fats"
-            :rules="[commonRules.checkNumber]"
-            label="Жиры"
-          />
-          <v-text-field
-            type="number"
-            v-model="carbs"
-            :rules="[commonRules.checkNumber]"
-            label="Углеводы"
-          />
-
-       </v-card-text> 
-       <template v-slot:actions>
-           <v-btn 
-            class="ms-auto"
-             text="Cancel"
-             @click="closeMenuAddMyFood"
-           />
-           <v-btn
-             text="Ok"
-             type="submit"
-             :disabled="disableBtnSaveMyFood"
-             @click="saveMyFood"
-           />
-         </template>
-       </v-card>
+      <v-form fast-fail @submit.prevent>
+        <v-card 
+          min-height="500"
+        >
+          <v-card-title>
+            Добавить новое блюдо/напиток
+          </v-card-title> 
+          <v-card-text class="pa-0">
+            <v-text-field
+              v-model="nameFood"
+              :rules="[commonRules.checkStringName]"
+              label="Название"
+            />
+            <v-text-field
+              type="number"
+              v-model="productWeight"
+              :rules="[commonRules.checkNumber]"
+              label="г/мл"
+            />
+            <v-text-field
+              type="number"
+              v-model="calories"
+              :rules="[commonRules.checkNumber]"
+              label="Калории"
+            />
+            <v-text-field
+              type="number"
+              v-model="proteins"
+              :rules="[commonRules.checkNumber]"
+              label="Белок"
+            />
+            <v-text-field
+              type="number"
+              v-model="fats"
+              :rules="[commonRules.checkNumber]"
+              label="Жиры"
+            />
+            <v-text-field
+              type="number"
+              v-model="carbs"
+              :rules="[commonRules.checkNumber]"
+              label="Углеводы"
+            />
+          </v-card-text> 
+          <template v-slot:actions>
+            <v-btn 
+              class="ms-auto"
+              text="Cancel"
+              @click="closeMenuAddMyFood"
+            />
+            <v-btn
+              text="Ok"
+              type="submit"
+              :disabled="disableBtnSaveMyFood"
+              @click="saveMyFood"
+            />
+          </template>
+        </v-card>
       </v-form>
-     </v-dialog>
-    </v-card-text>
+    </v-dialog>
+  </v-card-text>
    
-       
-
-    <div v-if="loader" class="text-center">
-      <v-progress-circular  indeterminate></v-progress-circular>
-    </div>
-
-    <v-data-table
+  <div v-if="loader" class="text-center">
+    <v-progress-circular  indeterminate></v-progress-circular>
+  </div>
+  <v-data-table
     :headers="headers"
     :items="showFoods"
     height="700"
-    item-value="name" 
-    
-    >
+    item-value="name"  
+  >
     <template #item.actions="{ item }">
-      <v-btn
-       
+      <v-btn  
         variant="text"
         v-if="item.canDelete"
         icon
@@ -116,20 +106,19 @@
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </template>
-    </v-data-table>
-  </v-card>
+  </v-data-table>
+</v-card>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import getFoodBase from '@/composables/requestGetFoodBase.js'
 import { debounce } from 'lodash'
 import commonRules from '@/composables/commonValidators'
 
 import { useMyFoodsDataStore } from '@/stores/myFoodsData' 
 const myFoodsDataStore = useMyFoodsDataStore() 
-const { addMyFoods, myFoods, getMyFoods, filterMyFoods, searchDuplicatesMyFood, updateMyFood, removeMyFoods } = myFoodsDataStore
-
+const { addMyFoods, getMyFoods, filterMyFoods, searchDuplicatesMyFood, updateMyFood, removeMyFoods } = myFoodsDataStore
 
 
 const foodBase = ref([])
@@ -144,6 +133,7 @@ const proteins = ref('')
 const fats = ref('')
 const carbs = ref('')
 
+const showFoods = ref([])
 
 const headers = [
     { title: 'Название', align: 'start', sortable: false, key: 'name' },
@@ -153,8 +143,6 @@ const headers = [
     { title: 'Углеводы', align: 'end', sortable: false, key: 'carbs' },
     { text: 'Actions', align: 'center', value: 'actions', sortable: false },
 ]     
-
-const showFoods = ref([])
     
 const inputValueSelectFood = (value) =>{
   loader.value = true
@@ -248,6 +236,7 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
+
 .guide-container{
   margin: auto;
   margin-top: 1%;
@@ -260,4 +249,5 @@ onMounted(async () => {
 .guide-container-header{
   display: flex;
 }
+
 </style>

@@ -1,6 +1,7 @@
-import { ref, reactive, computed, watch } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import { defineStore } from 'pinia'
-import { last } from 'lodash'
+
+import trimString  from '@/composables/trimString.js'
 
 export const useCalendarDaysStore = defineStore('calendarDays', () => {
   const calendarDays = reactive([])
@@ -31,7 +32,6 @@ export const useCalendarDaysStore = defineStore('calendarDays', () => {
       if (item.date == newData.date) {
         if(newData.ration.id == 1) {
           newData.selectedFoods.forEach(newFood => {
-            console.log(item.breakfast.length);
             item.breakfast.push(
               {
                 id: item.breakfast.length != 0  ? item.breakfast[item.breakfast.length-1].id + 1 : 1,
@@ -60,7 +60,6 @@ export const useCalendarDaysStore = defineStore('calendarDays', () => {
           })
         }
       }
-      console.log(item);
     })
   }
 
@@ -145,11 +144,6 @@ function addSummCaloriesInDay(dataForDay, resultCalories) {
   })
 }
 
-function trimString(value) {
-  const cleanedStr = value.replace(',', '.').replace(/\s/g, '') 
-  return parseFloat(cleanedStr)
-}
-
 function updateCalendarDays(newCalendarDays) {
 
  
@@ -159,9 +153,6 @@ function updateCalendarDays(newCalendarDays) {
     }
     
    })
- 
-//  console.log(newCalendarDays);
-//  console.log(calendarDays);
 }
 
 watch(calendarDays, () => {

@@ -1,8 +1,7 @@
 <template>
-  <div class="mx-auto">
+  <div class="mx-auto ">
     <v-container>
     <v-row no-gutters> 
- 
       <v-col>
         <v-card 
           max-width="800px" 
@@ -12,7 +11,6 @@
           style="background-color:rgb(228,228,228);"
           elevation="4"
           > 
-        
           <v-row no-gutters class="d-flex align-center mb-3" >
             <v-col class="d-flex flex-wrap">
                <v-progress-linear
@@ -20,11 +18,10 @@
                   class="mx-auto ml-1"
                   color="#228B22" 
                   v-model="progressLinerValue" 
-                  :height="30"   
+                  height="30"   
                 >
                   {{ myCalories }} / {{ getPersonalization().needingCalories }}
                 </v-progress-linear>
-             <div class="py-auto"></div>
             </v-col>
             <v-col>
               <SelectDate class="text-center align-center"/> 
@@ -32,9 +29,8 @@
            <v-col>
 
            </v-col>
-            
           </v-row>
-         
+
           <v-expansion-panels>
             <v-expansion-panel v-for="ration in rations" :key="ration.id">
               <v-expansion-panel-title>
@@ -43,7 +39,7 @@
                     {{ ration.name }}
                   </v-col>
                   <v-col cols="3">
-                    Калории: 
+                    кКал: 
                   </v-col>
                   <v-col cols="3">
                     {{ getSummCalories(ration.id) }} 
@@ -52,9 +48,7 @@
                 <!-- ______________ -->
               </v-expansion-panel-title>
               <v-expansion-panel-text >
-
                 <MenuSelectFoods :ration="ration"/>
-
                 <div v-if="ration.id == 1">
                   <div v-for="item in data.breakfast" :key="item.id">
                     <v-row>
@@ -73,11 +67,9 @@
                           @click="removePositionFromRation(data.date, ration.id, item.id)"
                         />
                       </v-col>
-                </v-row>
-
-                <v-divider :thickness="2" class="mb-5"></v-divider>
+                    </v-row> 
+                    <v-divider :thickness="2" class="mb-5"></v-divider>
                   </div>
-                  
                 </div>
 
                 <div v-if="ration.id == 2">
@@ -123,22 +115,14 @@
                     </v-row>
                     <v-divider :thickness="2" class="mb-5"></v-divider>
                   </div>
-                  
-                </div>
-                
-                <!-- ______________________________ -->
-                
+                </div> 
               </v-expansion-panel-text> 
             </v-expansion-panel>
-
           </v-expansion-panels>
-
         </v-card>
       </v-col>
     </v-row> 
   </v-container>
-   
-   
   </div>
 </template>
 
@@ -146,32 +130,30 @@
 import SelectDate from '../components/SelectDate.vue'; 
 import MenuSelectFoods from '../components/MenuSelectFoods.vue'
 
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 
-//Конструкция для получения данных из json !!! В функцию ее обернуть для async
 import getFoodRations from '../composables/requestGetFoodRatons'
-const rations = ref([]);
-const getRations = async function() { 
-  rations.value = await getFoodRations()
-}
-getRations()
- 
+
 import { usePersonalizationDataStore } from '@/stores/personalizationData';
 const personalizationDataStore = usePersonalizationDataStore()
 const { getPersonalization, updatePersonalization } = personalizationDataStore 
 
-import { useCalendarDaysStore } from '../stores/calendarDays' 
-import { watch } from 'vue'  
+import { useCalendarDaysStore } from '../stores/calendarDays'  
 const calendarDaysStore = useCalendarDaysStore()
-const { calendarDays, getDataForDay, dataForDay, getTargetDate, removePositionFromRation, calculateMyCalories, updateCalendarDays } = calendarDaysStore
+const { calendarDays, getDataForDay, removePositionFromRation, calculateMyCalories, updateCalendarDays } = calendarDaysStore
 
+
+const rations = ref([]);
 const data = ref(getDataForDay())
+const progressLinerValue = ref(0)
 
-watch(
-  () => calendarDaysStore.dataForDay, (newValue) => {
-      data.value = newValue
-  }
-)
+const myCalories = computed(()=>{
+  return calculateMyCalories()
+})
+
+const getRations = async function() { 
+  rations.value = await getFoodRations()
+}
 
 function getSummCalories(id){
 
@@ -191,29 +173,32 @@ function trimString(value) {
   return parseFloat(cleanedStr)
 }
 
+watch(
+  () => calendarDaysStore.dataForDay, (newValue) => {
+      data.value = newValue
+  }
+)
+
 watch(calendarDays, () => {
   data.value = getDataForDay()
 })
 
-const progressLinerValue = ref(0)
-const myCalories = computed(()=>{
-  return calculateMyCalories()
-})
+
 watch(myCalories, ()=>{
   progressLinerValue.value = +calculateMyCalories() * 100 / +getPersonalization().needingCalories
 })
 
 onMounted(() => {
+
+  getRations()
+
   if(localStorage.getItem('personalization')){
     updatePersonalization(JSON.parse(localStorage.getItem('personalization')))
   }
   
   if(localStorage.getItem('calendarDays')){
-    // if(calendarDays == []){
       updateCalendarDays(JSON.parse(localStorage.getItem('calendarDays')))
       progressLinerValue.value = +calculateMyCalories() * 100 / +getPersonalization().needingCalories
-    // }
-    
   }
 })
 

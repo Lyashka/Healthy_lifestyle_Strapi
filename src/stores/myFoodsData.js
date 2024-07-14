@@ -1,4 +1,4 @@
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useMyFoodsDataStore = defineStore('myFoodsData', () => {
@@ -14,7 +14,6 @@ export const useMyFoodsDataStore = defineStore('myFoodsData', () => {
           }))
 
         localStorage.setItem('myFoods',  JSON.stringify(myFoods.value))
-        console.log(myFoods.value);
     }
 
     function removeMyFoods(foodId) {
@@ -26,10 +25,6 @@ export const useMyFoodsDataStore = defineStore('myFoodsData', () => {
     }
 
     function getMyFoods() {
-        // if(localStorage.getItem('myFoods')){
-        //     myFoods.value = JSON.parse(localStorage.getItem('myFoods'))
-        // }
-
         return myFoods.value
     }
 
@@ -38,7 +33,6 @@ export const useMyFoodsDataStore = defineStore('myFoodsData', () => {
         myFood.forEach(e => {
             myFoods.value.push(e)
         })
-        console.log(myFoods.value);
     }
 
     function filterMyFoods(value) {
@@ -48,20 +42,13 @@ export const useMyFoodsDataStore = defineStore('myFoodsData', () => {
     }
 
     function searchDuplicatesMyFood(value) {
-        // console.log(value);
-        // const lastUserName = users[users.length - 1].name.toLowerCase();
         for (let i = 0; i < myFoods.value.length; i++) {
         if (myFoods.value[i].name.toLowerCase() == value.toLowerCase()){
-            console.log(myFoods.value[i].name);
             return true
         }else{
             return false
         }
     }    
-
-    }
-
-    function searchDublicateFoods() {
 
     }
 

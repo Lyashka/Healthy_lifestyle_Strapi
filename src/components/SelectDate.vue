@@ -1,4 +1,4 @@
-<template>
+  <template>
     <div>
       <v-menu
         v-model="menu"
@@ -35,24 +35,18 @@
   </template>
   
   <script setup> 
+  
   import {ref} from 'vue'  
   import { useCalendarDaysStore } from '../stores/calendarDays'   
   const calendarDaysStore = useCalendarDaysStore()
-  const { editTargetDate, getDataForDay } = calendarDaysStore
+  const { editTargetDate } = calendarDaysStore
   
   let menu = ref(false)
-  
   let selectedDate = ref(new Date());
 
   function saveDay() {
     editTargetDate(selectedDate.value)
-
     menu.value = false
   }
-
-
-
   
   </script>
-
-<style scoped lang="scss"></style>

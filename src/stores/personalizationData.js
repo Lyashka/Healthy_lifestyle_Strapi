@@ -1,4 +1,4 @@
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const usePersonalizationDataStore = defineStore('personalizationData', () => {
@@ -6,7 +6,6 @@ export const usePersonalizationDataStore = defineStore('personalizationData', ()
 
     function updatePersonalization(newPerson) {
         personalization.value = newPerson
-        console.log(personalization.value);
         localStorage.setItem('personalization', JSON.stringify(personalization.value))
     }
     function getPersonalization(){

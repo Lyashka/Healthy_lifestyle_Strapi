@@ -1,4 +1,4 @@
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useHistoryDataStore = defineStore('historyData', () => {
@@ -23,7 +23,6 @@ export const useHistoryDataStore = defineStore('historyData', () => {
                         historyData.value = deleteDublicateInArr(historyData.value)
                     }
                 })
-                
             }
         })
         
