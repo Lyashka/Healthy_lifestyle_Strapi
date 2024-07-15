@@ -36,7 +36,7 @@
   
   <script setup> 
   
-  import {ref} from 'vue'  
+  import {onMounted, ref} from 'vue'  
   import { useCalendarDaysStore } from '../stores/calendarDays'   
   const calendarDaysStore = useCalendarDaysStore()
   const { editTargetDate } = calendarDaysStore
@@ -48,5 +48,7 @@
     editTargetDate(selectedDate.value)
     menu.value = false
   }
-  
+  onMounted(() => {
+    editTargetDate(selectedDate.value)
+  })
   </script>

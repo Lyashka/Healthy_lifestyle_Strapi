@@ -112,7 +112,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import getFoodBase from '@/composables/requestGetFoodBase.js'
+import food_base from '../data/food_base.json'
 import { debounce } from 'lodash'
 import commonRules from '@/composables/commonValidators'
 
@@ -226,7 +226,7 @@ function deleteItem(value){
 }
 
 onMounted(async () => {
-  foodBase.value = await getFoodBase()
+  foodBase.value = food_base
   if(localStorage.getItem('myFoods')) {
     updateMyFood( JSON.parse(localStorage.getItem('myFoods')) )
   }

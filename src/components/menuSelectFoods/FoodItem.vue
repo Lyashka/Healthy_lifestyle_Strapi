@@ -97,7 +97,6 @@
 <script setup>
 
 import { ref, onMounted, watch, computed } from 'vue'
-import getFoodBase from '@/composables/requestGetFoodBase.js'
 import trimString  from '@/composables/trimString.js'
 
 import { useDisplay } from 'vuetify'
@@ -138,12 +137,7 @@ const emit = defineEmits(
   ['updateSelectedFood']
   )
 
-const foodBase = ref([])
 const selected = ref([]) 
-
-onMounted(async () => {
-  foodBase.value = await getFoodBase()
-})     
 
 const dataProductForSettings = ref({})
 function openInfoProduct(food) {

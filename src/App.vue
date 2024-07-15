@@ -30,6 +30,7 @@ import { onMounted, ref } from 'vue'
 
 import { useCalendarDaysStore } from './stores/calendarDays' 
 
+
 import Personalization from './components/Personalization.vue';
 
 const statusMenuPersonalization = ref(true)

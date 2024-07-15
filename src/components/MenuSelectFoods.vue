@@ -142,7 +142,7 @@
  import HistoryComponent from './menuSelectFoods/HistoryComponent.vue'
  import MyMealComponent from './menuSelectFoods/MyMealComponent.vue'  
 
- import getFoodBase from '@/composables/requestGetFoodBase.js'
+ import food_base from '../data/food_base.json'
  
  import { useCalendarDaysStore } from '../stores/calendarDays'
  const calendarDaysStore = useCalendarDaysStore()
@@ -244,7 +244,7 @@ function closeMenu() {
 }
 
  onMounted(async () => {
-  foodBase.value = await getFoodBase()
+  foodBase.value = food_base
  })
  </script>
  

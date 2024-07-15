@@ -132,7 +132,7 @@ import MenuSelectFoods from '../components/MenuSelectFoods.vue'
 
 import { ref, computed, onMounted, watch } from 'vue'
 
-import getFoodRations from '../composables/requestGetFoodRatons'
+import food_rations from '../data/food_rations.json'
 
 import { usePersonalizationDataStore } from '@/stores/personalizationData';
 const personalizationDataStore = usePersonalizationDataStore()
@@ -151,8 +151,8 @@ const myCalories = computed(()=>{
   return calculateMyCalories()
 })
 
-const getRations = async function() { 
-  rations.value = await getFoodRations()
+const getRations = function() { 
+  rations.value = food_rations
 }
 
 function getSummCalories(id){
