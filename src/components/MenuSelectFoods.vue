@@ -113,7 +113,6 @@
  import { useDisplay } from 'vuetify'
  const { name } = useDisplay()
  const height = computed(() => {
-    console.log(name.value);
     switch (name.value) {
       case 'xs': return 700
       case 'sm': return 800

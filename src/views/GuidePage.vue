@@ -165,14 +165,13 @@ const selectFood = debounce((value) => {
     showFoods.value = [...filteredMyFoods, ...filteredAllFoods]
 
     localStorage.setItem('showFoods', JSON.stringify(showFoods.value))
-    console.log(showFoods.value);
     loader.value = false
   }
   else{
     showFoods.value = [...myFood, ...foodBase.value]
     loader.value = false
   }
-}, 1000)
+}, 800)
  
 function filteredFoods(value)  {
         return foodBase.value.filter(item => 

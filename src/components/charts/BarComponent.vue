@@ -23,7 +23,6 @@ const props = defineProps({
   const chartData = ref(props.data)
 
   const borderLineValue = ref(getPersonalization().needingCalories)
-  console.log(borderLineValue.value);
   const chartOptions = computed ( () => { 
     return {
       elements: {
@@ -60,7 +59,6 @@ watch(chartData.value, () => {
                       datasets: [ props.data.datasets[0] ],
                       labels: props.data.labels 
                     }
-  console.log(chartData.value);
 })
 
 </script>

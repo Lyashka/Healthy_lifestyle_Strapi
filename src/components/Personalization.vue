@@ -36,13 +36,9 @@
         <v-select
           v-model="activity"       
           label="Уровень активности"
-          :items="['Минимальная активность', 
-                  'Слабый уровень активности', 
-                  'Умеренный уровень активности', 
-                  'Тяжелая или трудоемкая активность', 
-                  'Экстремальный уровень'
-                  ]"
+          :items="listItemsForSelect"
         />
+        <!--const arr = [{title : '' , props: {subtitle: ''}}] -->
       </v-card-text> 
       <template v-slot:actions>
         <v-btn
@@ -71,6 +67,27 @@ const gender = ref(null)
 const activity = ref(null)
 
 const needingCalories = ref(0)
+
+const listItemsForSelect = [
+  {
+    title : 'Минимальная активность', 
+    props: {
+      subtitle: 's'
+    }
+  },
+  {
+    title : 'Минимальная активность', 
+    props: {
+      subtitle: 's'
+    }
+  }
+]
+// ['Минимальная активность', 
+//                   'Слабый уровень активности', 
+//                   'Умеренный уровень активности', 
+//                   'Тяжелая или трудоемкая активность', 
+//                   'Экстремальный уровень'
+//                   ]
 
 function closePersonalization() {
     calculateCalories()
