@@ -86,8 +86,10 @@
     </v-dialog>
   </v-card-text>
    
-  <div v-if="loader" class="text-center">
-    <v-progress-circular  indeterminate></v-progress-circular>
+  <div v-if="loader" class="text-center mb-2">
+    <v-progress-circular  indeterminate :width="4"></v-progress-circular>
+  </div>
+  <div v-else class="mb-9">
   </div>
   <v-data-table
     :headers="headers"

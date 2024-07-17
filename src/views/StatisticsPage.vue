@@ -30,6 +30,7 @@ import { usePersonalizationDataStore } from '@/stores/personalizationData';
 const personalizationDataStore = usePersonalizationDataStore()
 const { getPersonalization } = personalizationDataStore 
 
+
 const data = ref({
     datasets: [{ data: [] }], 
     labels: [],
@@ -41,7 +42,7 @@ function getParametrsCalories(dataCalories) {
     data.value.labels = dataCalories.labels
     data.value.datasets[0].backgroundColor = dataCalories.parametrs.map(value => value >= getPersonalization().needingCalories ? '#ea5545' : '#87bc45')
 }
- 
+
 onMounted(() => {
   if(localStorage.getItem('calendarDays')){
       updateCalendarDays(JSON.parse(localStorage.getItem('calendarDays')))

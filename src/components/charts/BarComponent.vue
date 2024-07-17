@@ -22,7 +22,6 @@ const props = defineProps({
 
   const chartData = ref(props.data)
 
-  const borderLineValue = ref(getPersonalization().needingCalories)
   const chartOptions = computed ( () => { 
     return {
       elements: {
@@ -42,11 +41,10 @@ const props = defineProps({
           annotations: {
             line: {
               type: 'line', 
-              yMin: borderLineValue.value, 
-              yMax: borderLineValue.value,
+              yMin: getPersonalization().needingCalories, 
+              yMax: getPersonalization().needingCalories,
               borderColor: 'red', 
               borderWidth: 2,
-              
             }
           }
         }
@@ -60,5 +58,6 @@ watch(chartData.value, () => {
                       labels: props.data.labels 
                     }
 })
+
 
 </script>

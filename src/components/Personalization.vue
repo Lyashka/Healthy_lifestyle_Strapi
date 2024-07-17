@@ -38,13 +38,16 @@
           label="Уровень активности"
           :items="listItemsForSelect"
         />
-        <!--const arr = [{title : '' , props: {subtitle: ''}}] -->
       </v-card-text> 
       <template v-slot:actions>
         <v-btn
+          text="Cansel"
+          @click="closePersonalization"
+        />
+        <v-btn
           class="ms-auto"
           text="Ok"
-          @click="closePersonalization"
+          @click="savePersonalization"
         />
       </template>
     </v-card>
@@ -56,7 +59,7 @@ import { ref } from 'vue'
 
 import { usePersonalizationDataStore } from '@/stores/personalizationData';
 const personalizationDataStore = usePersonalizationDataStore()
-const { updatePersonalization } = personalizationDataStore 
+const { updatePersonalization, setStatusMenuPersonalization } = personalizationDataStore 
 
 const dialog = ref(true)
 
@@ -72,26 +75,44 @@ const listItemsForSelect = [
   {
     title : 'Минимальная активность', 
     props: {
-      subtitle: 's'
+      subtitle: 'Сидячая работа, не требующая значительных физических нагрузок'
     }
   },
   {
-    title : 'Минимальная активность', 
+    title : 'Слабый уровень активности', 
     props: {
-      subtitle: 's'
+      subtitle: 'Интенсивные упражнения не менее 20 минут один-три раза в неделю'
+    }
+  },
+  {
+    title : 'Умеренный уровень активности', 
+    props: {
+      subtitle: 'Интенсивная тренировка не менее 30-60 мин три-четыре раза в неделю'
+    }
+  },
+  {
+    title : 'Тяжелая или трудоемкая активность', 
+    props: {
+      subtitle: 'Интенсивные упражнения и занятия спортом 5-7 дней в неделю'
+    }
+  },
+  {
+    title : 'Экстремальный уровень', 
+    props: {
+      subtitle: 'Включает чрезвычайно активные и/или очень энергозатратные виды деятельности'
     }
   }
 ]
-// ['Минимальная активность', 
-//                   'Слабый уровень активности', 
-//                   'Умеренный уровень активности', 
-//                   'Тяжелая или трудоемкая активность', 
-//                   'Экстремальный уровень'
-//                   ]
+
+function savePersonalization() {
+  calculateCalories()
+  dialog.value = false
+  setStatusMenuPersonalization(false)
+}
 
 function closePersonalization() {
-    calculateCalories()
-    dialog.value = false
+  dialog.value = false
+  setStatusMenuPersonalization(false)
 }
 
 function calculateCalories() {
@@ -129,6 +150,7 @@ function getActivityParameter() {
         case 'Тяжелая или трудоемкая активность':
             parameterValue = 1.7
             break
+
         case 'Экстремальный уровень':
             parameterValue = 1.9
             break
