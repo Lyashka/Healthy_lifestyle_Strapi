@@ -41,12 +41,13 @@
       </v-card-text> 
       <template v-slot:actions>
         <v-btn
-          text="Cansel"
+          text="Назад"
           @click="closePersonalization"
         />
         <v-btn
           class="ms-auto"
           text="Ok"
+          :disabled="disableBtnSaveMyFood"
           @click="savePersonalization"
         />
       </template>
@@ -55,7 +56,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { usePersonalizationDataStore } from '@/stores/personalizationData';
 const personalizationDataStore = usePersonalizationDataStore()
@@ -160,6 +161,10 @@ function getActivityParameter() {
     }
     return parameterValue
 }
+
+const disableBtnSaveMyFood = computed(() => {
+  return height.value == null || weight.value == null || age.value == null || gender.value == null || activity.value == null   
+ })
 
 </script>
 

@@ -41,7 +41,6 @@ import { useDisplay } from 'vuetify'
 const { name } = useDisplay()
 
 const isNarrowScreen = computed(() => name.value == 'xs')
-console.log(isNarrowScreen);
 
 const statusMenu = computed(() => {
   return getStatusMenuPersonalization()

@@ -5,21 +5,22 @@ const { searchDuplicatesMyFood } = myFoodsDataStore
 
 const commonRules = {
   checkStringName: (value) => {
-      if (!value ) {
+      if (!value) {
         return  'Обязательное поле' 
-      }
-      if (searchDuplicatesMyFood(value)){
+      }else if (searchDuplicatesMyFood(value)){
         return 'Этот продукт уже существует'
+      }else{
+        return true
       }
   },
   checkNumber: (value) => {
-    if(value == ''){
+    if(!value){
       return  'Обязательное поле' 
     }
-    if (value >= 0) {
-      return true;
-    }else{
+    else if (value <= 0) {
       return 'Число не должно быть меньше 0';
+    }else{
+      return true
     }
   }
 }

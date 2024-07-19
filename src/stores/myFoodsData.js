@@ -5,14 +5,17 @@ export const useMyFoodsDataStore = defineStore('myFoodsData', () => {
     const myFoods = ref([]) 
 
     function addMyFoods(newFood) {
-        myFoods.value.unshift(newFood)
 
-        myFoods.value = myFoods.value.map((food, index) => ({
+            myFoods.value.unshift(newFood)
+
+            myFoods.value = myFoods.value.map((food, index) => ({
             ...food,
             id: index + 1, 
             canDelete: true
-          }))
+            }))
 
+      
+        
         localStorage.setItem('myFoods',  JSON.stringify(myFoods.value))
     }
 
@@ -42,14 +45,11 @@ export const useMyFoodsDataStore = defineStore('myFoodsData', () => {
     }
 
     function searchDuplicatesMyFood(value) {
-        for (let i = 0; i < myFoods.value.length; i++) {
-        if (myFoods.value[i].name.toLowerCase() == value.toLowerCase()){
+        if (myFoods.value.some(item => item.name == value)){
             return true
         }else{
             return false
         }
-    }    
-
     }
 
     return { 
