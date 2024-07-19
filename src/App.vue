@@ -5,13 +5,16 @@
    
     <template v-slot:append>
       <RouterLink class="closeStyle" to="/">
-        <v-btn >Главная</v-btn>
+        <v-btn v-if="!isNarrowScreen">Главная</v-btn>
+        <v-btn v-else icon="mdi-home" size="x-large"/>
       </RouterLink>
       <RouterLink class="closeStyle" to="/Statistics">
-        <v-btn variant="text">Статистика</v-btn>
+        <v-btn v-if="!isNarrowScreen">Статистика</v-btn>
+        <v-btn v-else icon="mdi-chart-bar" size="x-large"/>
       </RouterLink>
       <RouterLink class="closeStyle" to="/Guide">
-        <v-btn >Справочник</v-btn>
+        <v-btn v-if="!isNarrowScreen">Справочник</v-btn>
+        <v-btn v-else icon="mdi-book-search" size="x-large"/>
       </RouterLink>
     </template>
   </v-app-bar>
@@ -33,6 +36,12 @@ import Personalization from './components/Personalization.vue';
 import { usePersonalizationDataStore } from '@/stores/personalizationData';
 const personalizationDataStore = usePersonalizationDataStore()
 const { setStatusMenuPersonalization, getStatusMenuPersonalization } = personalizationDataStore 
+
+import { useDisplay } from 'vuetify'
+const { name } = useDisplay()
+
+const isNarrowScreen = computed(() => name.value == 'xs')
+console.log(isNarrowScreen);
 
 const statusMenu = computed(() => {
   return getStatusMenuPersonalization()
