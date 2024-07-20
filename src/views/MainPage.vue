@@ -26,9 +26,8 @@
             <v-col>
               <SelectDate class="text-center align-center"/> 
             </v-col>
-           <v-col>
-
-           </v-col>
+            <v-col v-if="!isNarrowScreen">
+            </v-col>
           </v-row>
 
           <v-expansion-panels>
@@ -210,6 +209,9 @@ import { useCalendarDaysStore } from '../stores/calendarDays'
 const calendarDaysStore = useCalendarDaysStore()
 const { calendarDays, getDataForDay, removePositionFromRation, calculateMyCalories, updateCalendarDays } = calendarDaysStore
 
+import { useDisplay } from 'vuetify'
+const { name } = useDisplay()
+const isNarrowScreen = computed(() => name.value == 'xs')
 
 const rations = ref([]);
 const data = ref(getDataForDay())
