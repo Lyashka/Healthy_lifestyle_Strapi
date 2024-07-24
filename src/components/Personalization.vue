@@ -8,6 +8,7 @@
       prepend-icon="mdi-account"
       title="Персонализация"
       text="Введите свои данные"
+      v-click-outside="closePersonalizationIfClickedOutsideSelect" 
     >
       <v-card-text>
         <v-text-field
@@ -37,6 +38,8 @@
           v-model="activity"       
           label="Уровень активности"
           :items="listItemsForSelect"
+          @focus="isSelectFocused = true"
+          @blur="isSelectFocused = false"
         />
       </v-card-text> 
       <template v-slot:actions>
@@ -69,6 +72,7 @@ const weight = ref(null)
 const age = ref(null)
 const gender = ref(null)
 const activity = ref(null)
+const isSelectFocused = ref(false);
 
 const needingCalories = ref(0)
 
@@ -77,7 +81,7 @@ const listItemsForSelect = [
     title : 'Минимальная активность', 
     props: {
       subtitle: 'Сидячая работа, не требующая значительных физических нагрузок'
-    }
+    } 
   },
   {
     title : 'Слабый уровень активности', 
@@ -104,6 +108,12 @@ const listItemsForSelect = [
     }
   }
 ]
+
+function closePersonalizationIfClickedOutsideSelect() {
+  if (!isSelectFocused.value) {
+    closePersonalization();
+  }
+}
 
 function savePersonalization() {
   calculateCalories()

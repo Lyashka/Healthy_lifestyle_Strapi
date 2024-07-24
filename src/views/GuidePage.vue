@@ -226,7 +226,6 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-
 .guide-container{
   margin: auto;
   margin-top: 1%;
@@ -235,7 +234,6 @@ onMounted(async () => {
   
   min-width: 300px;
   max-width: 1500px;
-
   .guide-container-header{
   display: flex;
 }
