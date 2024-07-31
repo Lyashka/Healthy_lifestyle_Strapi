@@ -1,195 +1,219 @@
 <template>
   <div class="mx-auto ">
     <v-container>
-    <v-row  style="display: flex; flex-wrap: wrap;"> 
-      <v-col>
-        <v-card 
-          max-width="800px" 
-          min-width="300px" 
-          min-height="500px" 
-          class="mx-auto" 
-          style="background-color:rgb(228,228,228);"
-          elevation="4"
-          > 
-          <v-row no-gutters class="d-flex align-center mb-3" >
-            <v-col class="d-flex flex-wrap">
-               <v-progress-linear
-                  rounded="lg" 
-                  class="mx-auto ml-1"
-                  color="#228B22" 
-                  v-model="progressLinerValue" 
-                  height="30"   
-                >
-                  {{ myCalories }} / {{ getPersonalization().needingCalories }}
-                </v-progress-linear>
-            </v-col>
-            <v-col>
-              <SelectDate class="text-center align-center"/> 
-            </v-col>
-            <v-col v-if="!isNarrowScreen">
-            </v-col>
-          </v-row>
+      <v-row 
+        style="display: flex; flex-wrap: wrap"
+      > 
+        <v-col>
+          <v-card 
+            max-width="800px" 
+            min-width="300px" 
+            min-height="500px" 
+            class="mx-auto" 
+            style="background-color:rgb(228,228,228);"
+            elevation="4"
+            > 
+            <v-row 
+              no-gutters 
+              class="d-flex align-center mb-3" 
+            >
+              <v-col class="d-flex flex-wrap">
+                <v-progress-linear
+                    rounded="lg" 
+                    class="mx-auto ml-1"
+                    color="#228B22" 
+                    v-model="progressLinerValue" 
+                    height="30"   
+                  >
+                    {{ myCalories }} / {{ getPersonalization().needingCalories }}
+                  </v-progress-linear>
+              </v-col>
+              <v-col>
+                <SelectDate class="text-center align-center"/> 
+              </v-col>
+              <v-col v-if="!isNarrowScreen">
+              </v-col>
+            </v-row>
 
-          <v-expansion-panels>
-            <v-expansion-panel v-for="ration in rations" :key="ration.id">
-              <v-expansion-panel-title>
-                <v-row>
-                  <v-col cols="4">
-                    {{ ration.name }}
-                  </v-col>
-                  <v-col cols="3">
-                    кКал: 
-                  </v-col>
-                  <v-col cols="3">
-                    {{ getSummCalories(ration.id) }} 
-                  </v-col>
-                </v-row>
-                <!-- ______________ -->
-              </v-expansion-panel-title>
-              <v-expansion-panel-text >
-                <MenuSelectFoods :ration="ration"/>
-                <div v-if="ration.id == 1">
-                  <div v-for="item in data.breakfast" :key="item.id">
-                    <v-row>
-                      <v-col cols="5">
-                        {{ item.name }}
-                      </v-col>
-                      <v-col cols="5">
-                        {{ item.calories }}
-                      </v-col>
-                    
-                      <v-col cols="auto">
-                        <v-btn 
-                          variant="text" 
-                          density="compact" 
-                          icon="mdi-close"
-                          @click="removePositionFromRation(data.date, ration.id, item.id)"
-                        />
-                      </v-col>
-                    </v-row> 
-                    <v-divider :thickness="2" class="mb-5"></v-divider>
+            <v-expansion-panels>
+              <v-expansion-panel 
+                v-for="ration in rations" 
+                :key="ration.id"
+              >
+                <v-expansion-panel-title>
+                  <v-row>
+                    <v-col cols="4">
+                      {{ ration.name }}
+                    </v-col>
+                    <v-col cols="3">
+                      кКал: 
+                    </v-col>
+                    <v-col cols="3">
+                      {{ getSummCalories(ration.id) }} 
+                    </v-col>
+                  </v-row>
+                </v-expansion-panel-title>
+                <v-expansion-panel-text >
+                  <MenuSelectFoods :ration="ration"/>
+                  <div v-if="ration.id === 1">
+                    <div 
+                      v-for="item in data.breakfast" 
+                      :key="item.id"
+                    >
+                      <v-row>
+                        <v-col cols="5">
+                          {{ item.name }}
+                        </v-col>
+                        <v-col cols="5">
+                          {{ item.calories }}
+                        </v-col>
+                      
+                        <v-col cols="auto">
+                          <v-btn 
+                            variant="text" 
+                            density="compact" 
+                            icon="mdi-close"
+                            @click="removePositionFromRation(data.date, ration.id, item.id)"
+                          />
+                        </v-col>
+                      </v-row> 
+                      <v-divider 
+                        :thickness="2" 
+                        class="mb-5"
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <div v-if="ration.id == 2">
-                  <div v-for="item in data.lunch" :key="item.id">
-                    <v-row>
-                      <v-col cols="5">
-                        {{ item.name }}
-                      </v-col>
-                      <v-col cols="5">
-                        {{ item.calories }}
-                      </v-col>
-                      <v-col cols="auto">
-                        <v-btn 
-                          variant="text" 
-                          density="compact" 
-                          icon="mdi-close"
-                          @click="removePositionFromRation(data.date, ration.id, item.id)"
-                        />
-                      </v-col>
-                    </v-row> 
-                    <v-divider :thickness="2" class="mb-5"></v-divider>
+                  <div v-if="ration.id === 2">
+                    <div 
+                      v-for="item in data.lunch" 
+                      :key="item.id"
+                    >
+                      <v-row>
+                        <v-col cols="5">
+                          {{ item.name }}
+                        </v-col>
+                        <v-col cols="5">
+                          {{ item.calories }}
+                        </v-col>
+                        <v-col cols="auto">
+                          <v-btn 
+                            variant="text" 
+                            density="compact" 
+                            icon="mdi-close"
+                            @click="removePositionFromRation(data.date, ration.id, item.id)"
+                          />
+                        </v-col>
+                      </v-row> 
+                      <v-divider 
+                        :thickness="2" 
+                        class="mb-5"
+                      />
+                    </div>
                   </div>
-                  
-                </div>
 
-                <div v-if="ration.id == 3">
-                  <div v-for="item in data.dinner" :key="item.id">
-                    <v-row>
-                      <v-col cols="5">
-                        {{ item.name }}
-                      </v-col>
-                      <v-col cols="5">
-                        {{ item.calories }}
-                      </v-col>
-                      <v-col cols="auto">
-                        <v-btn 
-                          variant="text" 
-                          density="compact" 
-                          icon="mdi-close"
-                          @click="removePositionFromRation(data.date, ration.id, item.id)"
-                        />
-                      </v-col>
-                    </v-row>
-                    <v-divider :thickness="2" class="mb-5"></v-divider>
-                  </div>
-                </div> 
-              </v-expansion-panel-text> 
-            </v-expansion-panel>
-          </v-expansion-panels>
-        </v-card>
-      </v-col>
+                  <div v-if="ration.id === 3">
+                    <div 
+                      v-for="item in data.dinner" 
+                      :key="item.id"
+                    >
+                      <v-row>
+                        <v-col cols="5">
+                          {{ item.name }}
+                        </v-col>
+                        <v-col cols="5">
+                          {{ item.calories }}
+                        </v-col>
+                        <v-col cols="auto">
+                          <v-btn 
+                            variant="text" 
+                            density="compact" 
+                            icon="mdi-close"
+                            @click="removePositionFromRation(data.date, ration.id, item.id)"
+                          />
+                        </v-col>
+                      </v-row>
+                      <v-divider 
+                        :thickness="2" 
+                        class="mb-5"
+                      />
+                    </div>
+                  </div> 
+                </v-expansion-panel-text> 
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </v-card>
+        </v-col>
 
-      <v-col>
-        <v-card 
-          max-width="800px" 
-          min-width="300px" 
-          min-height="250px" 
-          class="mx-auto" 
-          style="background-color:rgb(228,228,228);"
-          elevation="4"
-        >
-          <v-card-title>
-            <v-row>
-              <v-col>
-                Ваши данные
-              </v-col>
-              <v-col cols="2">
-                <v-btn 
-                  size="x-small" 
-                  icon="mdi-pencil" 
-                  @click="openMenuPersonalization"
-                />
-              </v-col>
-            </v-row>
-          </v-card-title>
-          <v-card-text>
-            <v-row>
-              <v-col >
-                Возраст:
-              </v-col>
-              <v-col>
-                {{ age }}
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col >
-                Рост:
-              </v-col>
-              <v-col>
-                {{ height }} см 
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                Вес:
-              </v-col>
-              <v-col>
-                {{ weight }} кг
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                Дневная норма калорий:
-              </v-col>
-              <v-col>
-                {{ needingCalories }} кКал
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                Активность:
-              </v-col>
-              <v-col>
-                {{ activity }}
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row> 
-  </v-container>
+        <v-col>
+          <v-card 
+            max-width="800px" 
+            min-width="300px" 
+            min-height="250px" 
+            class="mx-auto" 
+            style="background-color:rgb(228,228,228);"
+            elevation="4"
+          >
+            <v-card-title>
+              <v-row>
+                <v-col>
+                  Ваши данные
+                </v-col>
+                <v-col cols="2">
+                  <v-btn 
+                    size="x-small" 
+                    icon="mdi-pencil" 
+                    @click="openMenuPersonalization"
+                  />
+                </v-col>
+              </v-row>
+            </v-card-title>
+            <v-card-text>
+              <v-row>
+                <v-col >
+                  Возраст:
+                </v-col>
+                <v-col>
+                  {{ age }}
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col >
+                  Рост:
+                </v-col>
+                <v-col>
+                  {{ height }} см 
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  Вес:
+                </v-col>
+                <v-col>
+                  {{ weight }} кг
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  Дневная норма калорий:
+                </v-col>
+                <v-col>
+                  {{ needingCalories }} кКал
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  Активность:
+                </v-col>
+                <v-col>
+                  {{ activity }}
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row> 
+    </v-container>
   </div>
 </template>
 

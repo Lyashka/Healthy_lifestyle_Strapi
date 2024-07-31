@@ -21,7 +21,10 @@
       </template>
 
       <v-card min-height="300px">
-        <v-date-picker v-model="selectedDate" hide-header multiple="range"/>
+        <v-date-picker 
+          v-model="selectedDate" 
+          hide-header multiple="range"
+        />
         <v-divider/>
         <v-card-actions>
           <v-spacer/>

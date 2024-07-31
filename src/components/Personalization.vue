@@ -94,7 +94,7 @@ const listItemsForSelect = [
     props: {
       subtitle: 'Интенсивная тренировка не менее 30-60 мин три-четыре раза в неделю'
     }
-  },
+  },    
   {
     title : 'Тяжелая или трудоемкая активность', 
     props: {
@@ -177,7 +177,3 @@ const disableBtnSaveMyFood = computed(() => {
  })
 
 </script>
-
-<style>
-
-</style>

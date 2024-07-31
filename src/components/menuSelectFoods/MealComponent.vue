@@ -8,7 +8,11 @@
     v-model="searchName"
     @input="inputValueSelectFood($event.target.value)"
   />
-  <FoodItem :showFoods="showFoods" :loader="loader" @updateSelectedFood="updateSelectedFood"/>
+  <FoodItem 
+    :filteredFood="filteredFood" 
+    :loader="loader" 
+    @updateSelectedFood="updateSelectedFood"
+  />
 </template>
 
 <script setup>
@@ -30,15 +34,15 @@ const searchName = ref('')
 const foodBase = ref([])
 const loader = ref(false)
 
-const showFoods = ref([])
+const filteredFood = ref([])
 const selected = ref([]) 
 
 onMounted(async () => {
   foodBase.value = props.foodBase
 
-
-  if(localStorage.getItem('showFoods')) {
-    showFoods.value = JSON.parse(localStorage.getItem('showFoods'))
+  if(localStorage.getItem('filteredFood')) {
+    filteredFood.value = JSON.parse(localStorage.getItem('filteredFood'))[1]
+    searchName.value = JSON.parse(localStorage.getItem('filteredFood'))[0]
   }
 })
 
@@ -57,27 +61,25 @@ const selectFood = debounce((value) => {
 
     const filteredMyFoods = filterMyFoods(value) 
 
-    showFoods.value = [...filteredMyFoods, ...filteredAllFoods]
+    filteredFood.value = [...filteredMyFoods, ...filteredAllFoods]
 
     if (selected) {
-        selected.value.forEach(item => {
-          showFoods.value.forEach(el => {
-            if(el.id == item.id && el.name == item.name){
-              el.calories = item.calories
-              el.proteins = item.proteins
-              el.fats = item.fats
-              el.carbs = item.carbs
-              el.productWeight = item.productWeight
-          }
-          })
-         
-        })
-      }
-    localStorage.setItem('showFoods', JSON.stringify(showFoods.value))
+      selected.value.forEach(item => {
+        const foundFood = filteredFood.value.find(food => food.id === item.id)
+        if(foundFood){
+          foundFood.calories = item.calories
+          foundFood.proteins = item.proteins
+          foundFood.fats = item.fats
+          foundFood.carbs = item.carbs
+          foundFood.productWeight = item.productWeight
+        }
+      })
+    }
+    localStorage.setItem('filteredFood', JSON.stringify([searchName.value, filteredFood.value]))
     loader.value = false
   }
   else{
-    showFoods.value = []
+    filteredFood.value = []
     loader.value = false
   }
 }, 1000)
@@ -99,21 +101,18 @@ function updateSelectedFood(data) {
 
 watch(selected, () => {
   if (selected) {
-        selected.value.forEach(item => {
-          showFoods.value.forEach(el => {
-            if(el.id == item.id && el.name == item.name){
-              el.calories = item.calories
-              el.proteins = item.proteins
-              el.fats = item.fats
-              el.carbs = item.carbs
-              el.productWeight = item.productWeight
-            }
-          })
-        })
-    }
+    selected.value.forEach(item => {
+      const foundFood = filteredFood.value.find(food => food.id === item.id)
+      if(foundFood){
+        foundFood.calories = item.calories
+        foundFood.proteins = item.proteins
+        foundFood.fats = item.fats
+        foundFood.carbs = item.carbs
+        foundFood.productWeight = item.productWeight
+      }
+    })
+  }
 })
-
-
 
 </script>
 

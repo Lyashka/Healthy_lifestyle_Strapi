@@ -13,9 +13,13 @@
       v-model="dialog"
       width="500"
     >
-    <FormAddNewFood @setDialogAndShowFoods="setDialogAndShowFoods"/>
+    <FormAddNewFood @setDialogAndFilteredFood="setDialogAndFilteredFood"/>
     </v-dialog>
-    <FoodItem :showFoods="showFoods" @updateSelectedFood="updateSelectedFood" />
+    
+    <FoodItem 
+      :filteredFood="filteredFood" 
+      @updateSelectedFood="updateSelectedFood" 
+    />
   </div>
 </template> 
 
@@ -31,9 +35,9 @@ const { myFoods, getMyFoods, updateMyFood } = myFoodsDataStore
 
 const dialog = ref(false)
 
-const showFoods = ref(getMyFoods())
+const filteredFood = ref(getMyFoods())
 
-function setDialogAndShowFoods(dialogStatus, newShowFoods) {
+function setDialogAndFilteredFood(dialogStatus) {
   dialog.value = dialogStatus
   
 }
@@ -47,13 +51,13 @@ function updateSelectedFood(data) {
 }
 
 watch(myFoods, () => {
-    showFoods.value = getMyFoods()
+  filteredFood.value = getMyFoods()
 })
 
 onMounted(() => {
   if(localStorage.getItem('myFoods')) {
     updateMyFood( JSON.parse(localStorage.getItem('myFoods')) )
-    showFoods.value = getMyFoods()
+    filteredFood.value = getMyFoods()
   }
 })
 </script>

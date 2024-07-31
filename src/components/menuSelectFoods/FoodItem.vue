@@ -1,11 +1,17 @@
 <template>
-  <v-list lines="one" :height="height"> 
-    <div v-if="props.loader" class="text-center">
+  <v-list 
+    lines="one" 
+    :height="height"
+  > 
+    <div 
+      v-if="props.loader" 
+      class="text-center"
+    >
       <v-progress-circular  indeterminate/>
     </div>
     <v-row 
       no-gutters 
-      v-for="(food, index) in props.showFoods" 
+      v-for="(food, index) in props.filteredFood" 
       :key="index"
       class="hover-color"
       @click="openInfoProduct(food)"
@@ -27,20 +33,25 @@
 
     <v-dialog 
       max-width="800"
-      
       v-model="dialog"
-    >
-      <v-card :title="dataProductForSettings.name">
+    > 
+      <v-card 
+        :title="dataProductForSettings.name"
+      >
           <v-card-item>
             <v-text-field 
               prepend-icon="mdi-plus-minus-variant" 
               v-model="productWeight"
               type="number"
               @update:modelValue="updateDataForProduct"
+    
             /> 
           </v-card-item>
 
-          <v-row no-gutters class="text-center">
+          <v-row 
+            no-gutters 
+            class="text-center"
+          >
             <v-col class="ma-1 bg-grey" >
               <v-card-item >
                 <v-card-title> Калории </v-card-title>
@@ -59,7 +70,10 @@
             </v-col>
           </v-row>
 
-          <v-row no-gutters  class="text-center">
+          <v-row 
+            no-gutters  
+            class="text-center"
+          >
             <v-col class="ma-1 bg-grey">
               <v-card-item>
                 <v-card-title> Жиры </v-card-title>
@@ -101,6 +115,7 @@ import trimString  from '@/composables/trimString.js'
 
 import { useDisplay } from 'vuetify'
  const { name } = useDisplay()
+
  const height = computed(() => {
     switch (name.value) {
       case 'xs': return 280
@@ -109,28 +124,17 @@ import { useDisplay } from 'vuetify'
       case 'lg': return 580
       case 'xl': return 680
       case 'xxl': return 780
+      default: return 380
     }
-
-    return undefined
   })
-  const width = computed(() => {
-    switch (name.value) {
-      case 'xs': return 500
-      case 'sm': return 500
-      case 'md': return 550
-      case 'lg': return 650
-      case 'xl': return 700
-      case 'xxl': return 800
-    }
-
-    return undefined
-  })
+  
 
 const dialog = ref(false)
+const isSelectFocused = ref(false);
 
 const props = defineProps({
-    showFoods: Array,
-    loader: Boolean
+  filteredFood: Array,
+  loader: Boolean
 })
 
 const emit = defineEmits(
@@ -154,7 +158,7 @@ const productWeight = ref(100)
 function updateDataForProduct(newData) {
 
   let inputValue = newData > 0 ? newData : 100 
-    props.showFoods.forEach(el => {
+    props.filteredFood.forEach(el => {
       if (el.id == dataProductForSettings.value.id) { 
         dataProductForSettings.value.calories = `${((+trimString(el.calories) * inputValue) / el.productWeight).toFixed(1).replace(/\.0$/, '')} кКал`  
         dataProductForSettings.value.proteins = `${((+trimString(el.proteins) * inputValue) / el.productWeight).toFixed(1).replace(/\.0$/, '')} г` 
@@ -165,7 +169,7 @@ function updateDataForProduct(newData) {
 }
  
 function saveSettings() { 
-  props.showFoods.forEach(el => {
+  props.filteredFood.forEach(el => {
     if (el.id == dataProductForSettings.value.id) {
       el.calories = dataProductForSettings.value.calories
       el.proteins = dataProductForSettings.value.proteins
@@ -191,11 +195,13 @@ function saveSettings() {
 }
 
 function closeSettings() {
- 
-  dataProductForSettings.value = {}
-  productWeight.value = 100 
-  dialog.value = false
+    dataProductForSettings.value = {}
+    productWeight.value = 100 
+    dialog.value = false
+  
 }
+
+
 
 watch(selected, () => {
   localStorage.setItem('selectedFoodForMeal', JSON.stringify(selected.value))
@@ -210,7 +216,7 @@ onMounted(() => {
 
       if (selected.value) {
           selected.value.forEach(item => { 
-            props.showFoods.forEach(el => {
+            props.filteredFood.forEach(el => {
               if(el.id == item.id && el.name == item.name){
                 
                 el.calories = item.calories

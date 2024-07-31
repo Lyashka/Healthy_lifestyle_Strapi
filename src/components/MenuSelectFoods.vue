@@ -6,9 +6,11 @@
       size="small" 
       @click="dialog = true" 
     />
-    <v-dialog
+    <v-overlay 
       v-model="dialog"
       :width="width"
+      class="align-center justify-center"
+      @click:outside="closeMenu"
     >
       <v-card 
         :height="height"
@@ -36,7 +38,7 @@
           <v-row
             text-align="center" 
             justify="space-between"
-            class="d-flex flex-nowrap  pa-4"
+            class="d-flex flex-nowrap pa-4"
           >
             <v-col>
               <v-btn
@@ -81,7 +83,10 @@
 
           <v-card-text>
             <div v-if="showMeal">
-              <MealComponent :foodBase="foodBase" @updateSelectedFood="updateMealSelectedFood"/> 
+              <MealComponent 
+                :foodBase="foodBase" 
+                @updateSelectedFood="updateMealSelectedFood"
+              /> 
             </div> 
             <div v-if="showHistory">
               <HistoryComponent @updateSelectedFood="updateHistorySelectedFood"/>
@@ -90,8 +95,8 @@
               <MyMealComponent @updateSelectedFood="updateMyFoodSelectedFood"/>
             </div>
           </v-card-text>
-        
-        </v-card-text> 
+        </v-card-text>
+
         <template v-slot:actions>
           <v-btn 
             text="Cancel"
@@ -104,7 +109,7 @@
           />
         </template>
       </v-card>
-    </v-dialog>
+    </v-overlay >
   </div>
 </template>
  
@@ -112,6 +117,7 @@
  import { onMounted, ref, computed } from 'vue'
  import { useDisplay } from 'vuetify'
  const { name } = useDisplay()
+
  const height = computed(() => {
     switch (name.value) {
       case 'xs': return 700
@@ -120,10 +126,10 @@
       case 'lg': return 1000
       case 'xl': return 1100
       case 'xxl': return 1200
+      default: return 700
     }
-
-    return undefined
   })
+
   const width = computed(() => {
     switch (name.value) {
       case 'xs': return 500
@@ -132,9 +138,8 @@
       case 'lg': return 650
       case 'xl': return 700
       case 'xxl': return 800
+      default: return 500
     }
-
-    return undefined
   })
 
  import MealComponent from './menuSelectFoods/MealComponent.vue'
@@ -227,8 +232,9 @@ function addNewFood(){
   addProductInHostory(selectedData.value)
   clearSelectedData()
   clearLengthSelectedData()
-  localStorage.removeItem('showFoods');
-  localStorage.removeItem('selectedFoodForMeal');
+  localStorage.removeItem('filteredFood')
+  localStorage.removeItem('selectedFoodForMeal')
+  localStorage.removeItem('filteredFood')
   selectedFoodsCount.value = 0
   dialog.value = false
 }
@@ -236,17 +242,15 @@ function addNewFood(){
 function closeMenu() {
   clearSelectedData()
   clearLengthSelectedData()
-  localStorage.removeItem('showFoods');
-  localStorage.removeItem('selectedFoodForMeal');
+  localStorage.removeItem('filteredFood')
+  localStorage.removeItem('selectedFoodForMeal')
+  localStorage.removeItem('filteredFood')
   selectedFoodsCount.value = 0
   dialog.value = false
 }
 
  onMounted(async () => {
   foodBase.value = food_base
+  localStorage.removeItem('filteredFood')
  })
  </script>
- 
- <style>
- 
- </style>

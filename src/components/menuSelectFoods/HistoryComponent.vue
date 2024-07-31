@@ -1,6 +1,11 @@
 <template>
-  <div v-if="showFoods.length == 0">История пуста</div>
-  <FoodItem :showFoods="showFoods" @updateSelectedFood="updateSelectedFood"/>
+  <div v-if="!filteredFood.length"> 
+    История пуста 
+  </div>
+  <FoodItem 
+    :filteredFood="filteredFood" 
+    @updateSelectedFood="updateSelectedFood"
+  />
 </template>
 
 <script setup>
@@ -11,7 +16,7 @@ import FoodItem from './FoodItem.vue';
 const hstoryDataStore = useHistoryDataStore()
 const { getHistoryData } = hstoryDataStore
 
-const showFoods = getHistoryData()
+const filteredFood = getHistoryData()
 
 const emit = defineEmits(
   ['updateSelectedFood']
@@ -23,7 +28,3 @@ function updateSelectedFood(data) {
 }
 
 </script>
-
-<style>
-
-</style>

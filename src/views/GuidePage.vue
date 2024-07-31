@@ -17,35 +17,72 @@
         />
 
         <div class="text-center pl-1"> 
-          <v-btn v-if="!isNarrowScreen" height="73%" @click="dialog = true">Добавить продукт</v-btn>
-          <v-btn v-else icon="mdi-plus" @click="dialog = true"/>
+          <v-btn 
+            v-if="!isNarrowScreen" 
+            height="73%" 
+            @click="dialog = true"
+          >
+            Добавить продукт
+          </v-btn>
+          <v-btn 
+            v-else icon="mdi-plus" 
+            @click="dialog = true"
+          />
         </div>
     
         <v-dialog
           v-model="dialog"
           width="500"
         >
-          <FormAddNewFood @setDialogAndShowFoods="setDialogAndShowFoods"  :foodBase="foodBase"/> 
-        </v-dialog>
+          <FormAddNewFood 
+            :foodBase="foodBase"
+            @setDialogAndFilteredFood="setDialogAndFilteredFood"
+          /> 
+        </v-dialog> 
       </v-card-text>
    
-    <div v-if="loader" class="text-center mb-2">
-      <v-progress-circular  indeterminate :width="4"></v-progress-circular>
+    <div 
+      v-if="loader" 
+      class="text-center mb-2"
+    >
+      <v-progress-circular  
+        indeterminate 
+        :width="4"
+      />
     </div>
-    <div v-else class="mb-9"></div>
+    <div 
+      v-else 
+      class="mb-9"
+    ></div>
+    
     <v-data-table 
       :headers="headers"
-      :items="showFoods"
+      :items="filteredFood"
       height="700"
       item-value="name"
     >
       <template v-slot:item="{ item }">
         <tr @click="handleRowClick(item)">
-          <td class="column-name">{{ item.name }}</td>
-          <td class="text-center">{{ item.calories }}</td>
-          <td v-if="!isNarrowScreen" class="text-center">{{ item.proteins }}</td>
-          <td v-if="!isNarrowScreen" class="text-center">{{ item.fats }}</td>
-          <td v-if="!isNarrowScreen" class="text-center">{{ item.carbs }}</td>
+          <td class="column-name"> {{ item.name }} </td>
+          <td class="text-center"> {{ item.calories }} </td>
+          <td 
+            v-if="!isNarrowScreen" 
+            class="text-center"
+          >
+            {{ item.proteins }}
+          </td>
+          <td 
+            v-if="!isNarrowScreen" 
+            class="text-center"
+          >
+            {{ item.fats }}
+          </td>
+          <td 
+            v-if="!isNarrowScreen" 
+            class="text-center"
+          >
+          {{ item.carbs }}
+          </td>
           <td class="text-center">
             <v-btn 
               variant="text"
@@ -73,7 +110,10 @@
           На {{ foodInfo.productWeight ? foodInfo.productWeight : 100 }} г. продукта
         </v-card-subtitle>
         <v-card-text>
-          <v-row no-gutters class="text-center">
+          <v-row 
+            no-gutters 
+            class="text-center"
+          >
             <v-col class="ma-1 bg-grey" >
               <v-card-item >
                 <v-card-title> Калории </v-card-title>
@@ -92,7 +132,10 @@
             </v-col>
           </v-row>
 
-          <v-row no-gutters  class="text-center">
+          <v-row 
+            no-gutters  
+            class="text-center"
+          >
             <v-col class="ma-1 bg-grey">
               <v-card-item>
                 <v-card-title> Жиры </v-card-title>
@@ -145,7 +188,7 @@ const loader = ref(false)
 
 const dialog = ref(false)
 
-const showFoods = ref([])
+const filteredFood = ref([])
 
 const overlay = ref(false)
 const foodInfo = ref({})
@@ -183,12 +226,12 @@ const selectFood = debounce((value) => {
       id: index + 1,
     }))
     const filteredMyFoods = filterMyFoods(value)
-    showFoods.value = [...filteredMyFoods, ...filteredAllFoods]
-    localStorage.setItem('showFoods', JSON.stringify(showFoods.value))
+    filteredFood.value = [...filteredMyFoods, ...filteredAllFoods]
+    localStorage.setItem('filteredFood', JSON.stringify(filteredFood.value))
     loader.value = false
   }
   else{
-    showFoods.value = [...myFood, ...foodBase.value]
+    filteredFood.value = [...myFood, ...foodBase.value]
     loader.value = false
   }
 }, 800)
@@ -199,14 +242,14 @@ function filteredFoods(value)  {
           )
 }
 
-function setDialogAndShowFoods(dialogStatus, newShowFoods) {
+function setDialogAndFilteredFood(dialogStatus, newFilteredFood) {
   dialog.value = dialogStatus
-  showFoods.value = newShowFoods
+  filteredFood.value = newFilteredFood
 }
 
 function deleteItem(value){
     removeMyFoods(value.id)
-    showFoods.value = [...getMyFoods(), ...foodBase.value]
+    filteredFood.value = [...getMyFoods(), ...foodBase.value]
 }
 
 function handleRowClick(item){
@@ -221,7 +264,7 @@ onMounted(async () => {
   if(localStorage.getItem('myFoods')) {
     updateMyFood( JSON.parse(localStorage.getItem('myFoods')) )
   }
-  showFoods.value = [...getMyFoods(), ...foodBase.value]
+  filteredFood.value = [...getMyFoods(), ...foodBase.value]
 })
 </script>
 

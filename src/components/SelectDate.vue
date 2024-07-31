@@ -4,7 +4,6 @@
         v-model="menu"
         :close-on-content-click="false"
         location="center"
-       
       >
         <template v-slot:activator="{ props }">
           <v-btn
@@ -17,10 +16,12 @@
         </template>
   
         <v-card min-height="300px">
-          <v-date-picker v-model="selectedDate" hide-header></v-date-picker>
-          <v-divider></v-divider>
+          <v-date-picker 
+            v-model="selectedDate" 
+            hide-header/>
+          <v-divider/>
           <v-card-actions>
-            <v-spacer></v-spacer>
+            <v-spacer/>
             <v-btn
               color="primary"
               variant="text" 

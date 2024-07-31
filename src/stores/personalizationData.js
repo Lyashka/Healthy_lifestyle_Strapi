@@ -8,6 +8,7 @@ export const usePersonalizationDataStore = defineStore('personalizationData', ()
     function setStatusMenuPersonalization(value) {
         statusMenuPersonalization.value = value
     }
+
     function getStatusMenuPersonalization(){
         return statusMenuPersonalization.value
     }
@@ -16,6 +17,7 @@ export const usePersonalizationDataStore = defineStore('personalizationData', ()
         personalization.value = newPerson
         localStorage.setItem('personalization', JSON.stringify(personalization.value))
     }
+
     function getPersonalization(){
         return personalization.value
     }
@@ -23,7 +25,6 @@ export const usePersonalizationDataStore = defineStore('personalizationData', ()
     return {
         setStatusMenuPersonalization,
         getStatusMenuPersonalization,
-
         updatePersonalization,
         getPersonalization
     }

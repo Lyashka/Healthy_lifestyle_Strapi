@@ -1,73 +1,76 @@
 <template>
-<v-form fast-fail @submit.prevent>
-        <v-card 
-          min-height="500"
-        >
-          <v-card-title>
-            Добавить новое блюдо/напиток
-          </v-card-title> 
-          <v-card-text class="pa-0">
-            <v-text-field
-              type="string"
-              v-model="nameFood"
-              :rules="[commonRules.checkStringName]"
-              label="Название"
-            />
-            <v-text-field
-              type="number"
-              v-model="productWeight"
-              :rules="[commonRules.checkNumber]"
-              label="г/мл"
-            />
-            <v-text-field
-              type="number"
-              v-model="calories"
-              :rules="[commonRules.checkNumber]"
-              label="Калории"
-            />
-            <v-text-field
-              type="number"
-              v-model="proteins"
-              :rules="[commonRules.checkNumber]"
-              label="Белок"
-            />
-            <v-text-field
-              type="number"
-              v-model="fats"
-              :rules="[commonRules.checkNumber]"
-              label="Жиры"
-            />
-            <v-text-field
-              type="number"
-              v-model="carbs"
-              :rules="[commonRules.checkNumber]"
-              label="Углеводы"
-            />
-          </v-card-text> 
-          <template v-slot:actions>
-            <v-btn 
-              class="ms-auto"
-              text="Назад"
-              @click="closeMenuAddMyFood"
-            />
-            <v-btn
-              text="Ok"
-              type="submit"
-              :disabled="disableBtnSaveMyFood"
-              @click="saveMyFood"
-            />
-          </template>
-        </v-card>
-      </v-form>
+  <v-form 
+    fast-fail 
+    @submit.prevent
+  >
+    <v-card 
+      min-height="500"
+    >
+      <v-card-title>
+        Добавить новое блюдо/напиток
+      </v-card-title> 
+      <v-card-text class="pa-0">
+        <v-text-field
+          type="string"
+          v-model="nameFood"
+          :rules="[commonRules.checkStringName]"
+          label="Название"
+        />
+        <v-text-field
+          type="number"
+          v-model="productWeight"
+          :rules="[commonRules.checkNumber]"
+          label="г/мл"
+        />
+        <v-text-field
+          type="number"
+          v-model="calories"
+          :rules="[commonRules.checkNumber]"
+          label="Калории"
+        />
+        <v-text-field
+          type="number"
+          v-model="proteins"
+          :rules="[commonRules.checkNumber]"
+          label="Белок"
+        />
+        <v-text-field
+          type="number"
+          v-model="fats"
+          :rules="[commonRules.checkNumber]"
+          label="Жиры"
+        />
+        <v-text-field
+          type="number"
+          v-model="carbs"
+          :rules="[commonRules.checkNumber]"
+          label="Углеводы"
+        />
+      </v-card-text> 
+      <template v-slot:actions>
+        <v-btn 
+          class="ms-auto"
+          text="Назад"
+          @click="closeMenuAddMyFood"
+        />
+        <v-btn
+          text="Ok"
+          type="submit"
+          :disabled="disableBtnSaveMyFood"
+          @click="saveMyFood"
+        />
+      </template>
+    </v-card>
+  </v-form>
 </template>
 
 <script setup>
- import { ref, computed, onMounted } from 'vue'
+ import { ref, computed } from 'vue'
  import commonRules from '@/composables/commonValidators'
  import { useMyFoodsDataStore } from '@/stores/myFoodsData'
 
  const emit = defineEmits(
-  ['setDialogAndShowFoods'],
+  ['setDialogAndFilteredFood'],
   )
   
 
@@ -85,7 +88,7 @@
  const fats = ref('')
  const carbs = ref('') 
 
- const showFoods = ref([])
+ const filteredFood = ref([])
 
  const disableBtnSaveMyFood = computed(() => {
   const filterStatus = searchDuplicatesMyFood(nameFood.value); 
@@ -105,22 +108,22 @@ function saveMyFood() {
   addMyFoods(newFood)
 
   if(props.foodBase){
-    showFoods.value = [...getMyFoods(), ...props.foodBase]
+    filteredFood.value = [...getMyFoods(), ...props.foodBase]
   }
   
  
   productWeight.value = 100
   clearForm()
-  emit('setDialogAndShowFoods', false,  showFoods.value)
+  emit('setDialogAndFilteredFood', false,  filteredFood.value)
 }
 
 function closeMenuAddMyFood() {
   if(props.foodBase){
-    showFoods.value = [...getMyFoods(), ...props.foodBase]
+    filteredFood.value = [...getMyFoods(), ...props.foodBase]
   }  
   clearForm()
   productWeight.value = 100
-  emit('setDialogAndShowFoods', false, showFoods.value)
+  emit('setDialogAndFilteredFood', false, filteredFood.value)
 }
 
 function clearForm() {
@@ -132,7 +135,3 @@ function clearForm() {
    carbs.value = ''
 }
 </script>
-
-<style>
-
-</style>

@@ -14,7 +14,6 @@ export const useSelectedDateForStatisticsDataStore = defineStore('selectedDateFo
     function getSelectedDates(){
         if (selectedDates.value.length > 0) {
             return selectedDates.value
-            
         }else{
             selectedDates.value.push(new Date())
             return selectedDates.value
