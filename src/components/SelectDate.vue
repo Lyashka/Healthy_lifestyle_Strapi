@@ -10,9 +10,8 @@
             prepend-icon="$calendar" 
             color="white"
             v-bind="props"
-          >  
-            {{ selectedDate.toLocaleDateString() }}
-          </v-btn>
+            :text="selectedDate.toLocaleDateString()"
+          />  
         </template>
   
         <v-card min-height="300px">
@@ -25,10 +24,9 @@
             <v-btn
               color="primary"
               variant="text" 
+              text="OK"
               @click="saveDay"
-            >
-              OK
-            </v-btn> 
+            />
           </v-card-actions>
         </v-card>
       </v-menu>

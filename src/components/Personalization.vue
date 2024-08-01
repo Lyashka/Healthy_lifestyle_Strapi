@@ -1,14 +1,15 @@
 <template>
-  <v-dialog
+  <v-overlay
     v-model="dialog"
     width="auto"
+    class="align-center justify-center"
+    @click:outside="closePersonalization"
   >
     <v-card 
       min-width="350"
       prepend-icon="mdi-account"
       title="Персонализация"
       text="Введите свои данные"
-      v-click-outside="closePersonalizationIfClickedOutsideSelect" 
     >
       <v-card-text>
         <v-text-field
@@ -38,10 +39,9 @@
           v-model="activity"       
           label="Уровень активности"
           :items="listItemsForSelect"
-          @focus="isSelectFocused = true"
-          @blur="isSelectFocused = false"
+         
         />
-      </v-card-text> 
+      </v-card-text>
       <template v-slot:actions>
         <v-btn
           text="Назад"
@@ -55,7 +55,7 @@
         />
       </template>
     </v-card>
-  </v-dialog>
+  </v-overlay>
 </template>
 
 <script setup>
@@ -109,11 +109,10 @@ const listItemsForSelect = [
   }
 ]
 
-function closePersonalizationIfClickedOutsideSelect() {
-  if (!isSelectFocused.value) {
-    closePersonalization();
-  }
-}
+// function closePersonalizationIfClickedOutside() {
+//   closePersonalization()
+ 
+// }
 
 function savePersonalization() {
   calculateCalories()

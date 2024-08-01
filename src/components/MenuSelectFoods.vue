@@ -47,11 +47,10 @@
                 density="compact" 
                 prepend-icon="mdi-silverware-fork-knife" 
                 class="py-1"
+                text="Еда"
                 stacked
                 @click="showComponent('meal')"
-                >
-                Еда
-              </v-btn>
+              />
             </v-col>
             <v-col >
               <v-btn 
@@ -60,11 +59,10 @@
                 density="compact" 
                 prepend-icon="mdi-history" 
                 class="py-1"
+                text="История"
                 stacked
                 @click="showComponent('history')"
-                >
-                История
-              </v-btn>
+              />
             </v-col>
             <v-col>
               <v-btn 
@@ -73,11 +71,10 @@
                 density="compact" 
                 prepend-icon="mdi-food-drumstick" 
                 class="py-1"
+                text="Моя еда"
                 stacked
                 @click="showComponent('myMeal')"
-                >
-                Моя еда
-              </v-btn>
+              />
             </v-col>
           </v-row> 
 

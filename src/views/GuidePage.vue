@@ -20,10 +20,9 @@
           <v-btn 
             v-if="!isNarrowScreen" 
             height="73%" 
+            text="Добавить продукт"
             @click="dialog = true"
-          >
-            Добавить продукт
-          </v-btn>
+          />
           <v-btn 
             v-else icon="mdi-plus" 
             @click="dialog = true"
