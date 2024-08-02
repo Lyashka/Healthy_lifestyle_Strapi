@@ -22,11 +22,14 @@
             </v-col>
             <v-col cols="auto">
               <v-badge 
-                :content="selectedFoodsCount" 
                 color="info"
                 inline
+                :content="selectedFoodsCount" 
               >
-                <v-icon icon="mdi-check" size="x-large"></v-icon>
+                <v-icon 
+                  icon="mdi-check" 
+                  size="x-large"
+                />
               </v-badge>
             </v-col>
           </v-row>
@@ -42,37 +45,37 @@
           >
             <v-col>
               <v-btn
+                stacked
                 width="100%" 
                 height="100%"
                 density="compact" 
                 prepend-icon="mdi-silverware-fork-knife" 
                 class="py-1"
                 text="Еда"
-                stacked
                 @click="showComponent('meal')"
               />
             </v-col>
             <v-col >
               <v-btn 
-                height="100%"
+                stacked
                 width="100%" 
+                height="100%"
                 density="compact" 
                 prepend-icon="mdi-history" 
                 class="py-1"
                 text="История"
-                stacked
                 @click="showComponent('history')"
               />
             </v-col>
             <v-col>
               <v-btn 
-                height="100%"
+                stacked
                 width="100%" 
+                height="100%"
                 density="compact" 
                 prepend-icon="mdi-food-drumstick" 
                 class="py-1"
                 text="Моя еда"
-                stacked
                 @click="showComponent('myMeal')"
               />
             </v-col>
@@ -82,26 +85,26 @@
             <div v-if="showMeal">
               <MealComponent 
                 :foodBase="foodBase" 
-                @updateSelectedFood="updateMealSelectedFood"
+                @updateSelectedFood="updateSelectedFood"
               /> 
             </div> 
             <div v-if="showHistory">
-              <HistoryComponent @updateSelectedFood="updateHistorySelectedFood"/>
+              <HistoryComponent @updateSelectedFood="updateSelectedFood"/>
             </div>
             <div v-if="showMyMeal">
-              <MyMealComponent @updateSelectedFood="updateMyFoodSelectedFood"/>
+              <MyMealComponent @updateSelectedFood="updateSelectedFood"/>
             </div>
           </v-card-text>
         </v-card-text>
 
-        <template v-slot:actions>
+        <template #actions>
           <v-btn 
-            text="Cancel"
+            text="Назад"
             @click="closeMenu"
           />
           <v-btn
             class="ms-auto"
-            text="Ok"
+            text="Ок"
             @click="addNewFood"
           />
         </template>
@@ -113,64 +116,47 @@
  <script setup>
  import { onMounted, ref, computed } from 'vue'
  import { useDisplay } from 'vuetify'
- const { name } = useDisplay()
-
- const height = computed(() => {
-    switch (name.value) {
-      case 'xs': return 700
-      case 'sm': return 800
-      case 'md': return 900
-      case 'lg': return 1000
-      case 'xl': return 1100
-      case 'xxl': return 1200
-      default: return 700
-    }
-  })
-
-  const width = computed(() => {
-    switch (name.value) {
-      case 'xs': return 500
-      case 'sm': return 500
-      case 'md': return 550
-      case 'lg': return 650
-      case 'xl': return 700
-      case 'xxl': return 800
-      default: return 500
-    }
-  })
-
  import MealComponent from './menuSelectFoods/MealComponent.vue'
  import HistoryComponent from './menuSelectFoods/HistoryComponent.vue'
  import MyMealComponent from './menuSelectFoods/MyMealComponent.vue'  
-
  import food_base from '../data/food_base.json'
- 
  import { useCalendarDaysStore } from '../stores/calendarDays'
- const calendarDaysStore = useCalendarDaysStore()
- const { getTargetDate, addNewDataInCalendar } = calendarDaysStore
-
  import { useHistoryDataStore } from '@/stores/historyData'
- const historyDataStore = useHistoryDataStore()
- const { addProductInHostory } = historyDataStore
-
  import { useSelectedDataStore } from '@/stores/selectedData'
- const selectedDataStore = useSelectedDataStore()
- const { addSelectedData, getSelectedData, clearSelectedData, getLengthSelectedData, clearLengthSelectedData } = selectedDataStore
 
  const props = defineProps({
   ration: Object
  })
 
- const dialog = ref(false)
+ const { getTargetDate, addNewDataInCalendar } = useCalendarDaysStore()
+ const { addProductInHostory } = useHistoryDataStore()
+ const { addSelectedData, getSelectedData, clearSelectedData, getLengthSelectedData, clearLengthSelectedData } = useSelectedDataStore()
 
+ const { name } = useDisplay()
+
+ const sizes = {
+  xs: { height: 700, width: 500 },
+  sm: { height: 800, width: 500 },
+  md: { height: 900, width: 550 },
+  lg: { height: 1000, width: 650 },
+  xl: { height: 1100, width: 700 },
+  xxl: { height: 1200, width: 800 }
+}
+
+ const height = computed(() => {
+    return sizes[name.value]?.height
+  })
+
+const width = computed(() => {
+    return sizes[name.value]?.width
+  })
+
+ const dialog = ref(false)
  const showMeal = ref(true)
  const showHistory = ref(false)
  const showMyMeal = ref(false)
-
  const selectedFoodsCount = ref(0)
-
  const selectedData = ref([])
-
  const foodBase = ref([])
 
  function showComponent(nameComponent) {
@@ -196,27 +182,11 @@
   }
  } 
 
-  
- function updateMealSelectedFood(selectedFood) {
+ function updateSelectedFood(selectedFood, nameComponent) {
   selectedData.value = selectedFood
-  addSelectedData(selectedFood, 1)   
-
+  addSelectedData(selectedFood, nameComponent)   
   selectedFoodsCount.value = getLengthSelectedData()
 }
-
-  function updateHistorySelectedFood(selectedFood) {
-    selectedData.value = selectedFood
-    addSelectedData(selectedFood, 2)   
-    
-    selectedFoodsCount.value = getLengthSelectedData()
-  }
-
-  function updateMyFoodSelectedFood(selectedFood) {
-    selectedData.value = selectedFood
-    addSelectedData(selectedFood, 3)   
-    
-    selectedFoodsCount.value = getLengthSelectedData()
-  }
 
 function addNewFood(){ 
   addNewDataInCalendar(
@@ -227,27 +197,27 @@ function addNewFood(){
     }
   )
   addProductInHostory(selectedData.value)
-  clearSelectedData()
-  clearLengthSelectedData()
-  localStorage.removeItem('filteredFood')
-  localStorage.removeItem('selectedFoodForMeal')
-  localStorage.removeItem('filteredFood')
-  selectedFoodsCount.value = 0
+
+  resetMenuSelectFoods()
   dialog.value = false
 }
 
 function closeMenu() {
+  resetMenuSelectFoods()
+  dialog.value = false
+}
+
+function resetMenuSelectFoods() {
   clearSelectedData()
   clearLengthSelectedData()
   localStorage.removeItem('filteredFood')
   localStorage.removeItem('selectedFoodForMeal')
-  localStorage.removeItem('filteredFood')
   selectedFoodsCount.value = 0
-  dialog.value = false
 }
 
  onMounted(async () => {
   foodBase.value = food_base
-  localStorage.removeItem('filteredFood')
+  resetMenuSelectFoods()
+  selectedFoodsCount.value = 0
  })
  </script>

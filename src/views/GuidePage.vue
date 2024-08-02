@@ -1,8 +1,7 @@
 <template>
   <v-card 
-    class="guide-container"  
     elevation="4" 
-    style="background-color:rgb(228,228,228);"
+    class="guide-container bg-grey-lighten-2"  
     >
       <v-card-text class="guide-container-header">
         <v-text-field 
@@ -30,8 +29,8 @@
         </div>
     
         <v-dialog
-          v-model="dialog"
           width="500"
+          v-model="dialog" 
         >
           <FormAddNewFood 
             :foodBase="foodBase"
@@ -60,7 +59,7 @@
       height="700"
       item-value="name"
     >
-      <template v-slot:item="{ item }">
+      <template #item="{ item }">
         <tr @click="handleRowClick(item)">
           <td class="column-name"> {{ item.name }} </td>
           <td class="text-center"> {{ item.calories }} </td>
@@ -84,8 +83,8 @@
           </td>
           <td class="text-center">
             <v-btn 
-              variant="text"
               v-if="item.canDelete"
+              variant="text"
               icon="mdi-delete"
               x-small
               @click.stop="deleteItem(item)"  
@@ -96,10 +95,10 @@
     </v-data-table>
 
     <v-overlay 
-      v-model="overlay"
       class="align-center justify-center"
       min-width="400"
       max-width="700"
+      v-model="overlay"
     >
       <v-card> 
         <v-card-title>
@@ -169,28 +168,23 @@
 import { ref, computed, onMounted } from 'vue'
 import food_base from '../data/food_base.json'
 import { debounce } from 'lodash'
-
 import FormAddNewFood from '@/components/FormAddNewFood.vue'
-
 import { useMyFoodsDataStore } from '@/stores/myFoodsData' 
-const myFoodsDataStore = useMyFoodsDataStore() 
-const { getMyFoods, filterMyFoods, updateMyFood, removeMyFoods } = myFoodsDataStore
-
 import { useDisplay } from 'vuetify'
+
 const { name } = useDisplay()
 
-const isNarrowScreen = computed(() => name.value == 'xs')
+const { getMyFoods, filterMyFoods, updateMyFood, removeMyFoods } = useMyFoodsDataStore() 
 
 const foodBase = ref([])
 const searchName = ref('')
 const loader = ref(false)
-
 const dialog = ref(false)
-
 const filteredFood = ref([])
-
 const overlay = ref(false)
 const foodInfo = ref({})
+
+const isNarrowScreen = computed(() => name.value == 'xs')
 
 const headers = computed(() => {
   if(name.value == 'xs'){
@@ -236,9 +230,9 @@ const selectFood = debounce((value) => {
 }, 800)
  
 function filteredFoods(value)  {
-        return foodBase.value.filter(item => 
-            item.name.toLowerCase().includes(value.toLowerCase()) 
-          )
+  return foodBase.value.filter(item => 
+      item.name.toLowerCase().includes(value.toLowerCase()) 
+    )
 }
 
 function setDialogAndFilteredFood(dialogStatus, newFilteredFood) {
@@ -247,8 +241,8 @@ function setDialogAndFilteredFood(dialogStatus, newFilteredFood) {
 }
 
 function deleteItem(value){
-    removeMyFoods(value.id)
-    filteredFood.value = [...getMyFoods(), ...foodBase.value]
+  removeMyFoods(value.id)
+  filteredFood.value = [...getMyFoods(), ...foodBase.value]
 }
 
 function handleRowClick(item){
@@ -265,6 +259,7 @@ onMounted(async () => {
   }
   filteredFood.value = [...getMyFoods(), ...foodBase.value]
 })
+
 </script>
 
 <style lang="scss" scoped>

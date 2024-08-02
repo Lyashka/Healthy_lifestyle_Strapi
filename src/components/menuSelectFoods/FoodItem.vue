@@ -40,11 +40,10 @@
       >
           <v-card-item>
             <v-text-field 
-              prepend-icon="mdi-plus-minus-variant" 
+              prepend-icon="mdi-plus-minus-variant"
+              type="number" 
               v-model="productWeight"
-              type="number"
               @update:modelValue="updateDataForProduct"
-    
             /> 
           </v-card-item>
 
@@ -112,9 +111,19 @@
 
 import { ref, onMounted, watch, computed } from 'vue'
 import trimString  from '@/composables/trimString.js'
-
 import { useDisplay } from 'vuetify'
+
  const { name } = useDisplay()
+
+ const dialog = ref(false)
+ const selected = ref([]) 
+ const dataProductForSettings = ref({})
+ const productWeight = ref(100)
+
+ const props = defineProps({
+  filteredFood: Array,
+  loader: Boolean
+})
 
  const height = computed(() => {
     switch (name.value) {
@@ -127,23 +136,11 @@ import { useDisplay } from 'vuetify'
       default: return 380
     }
   })
-  
-
-const dialog = ref(false)
-const isSelectFocused = ref(false);
-
-const props = defineProps({
-  filteredFood: Array,
-  loader: Boolean
-})
 
 const emit = defineEmits(
   ['updateSelectedFood']
-  )
+)
 
-const selected = ref([]) 
-
-const dataProductForSettings = ref({})
 function openInfoProduct(food) {
   dialog.value = true
   dataProductForSettings.value = Object.assign({}, food)
@@ -154,9 +151,7 @@ function openInfoProduct(food) {
   }
 }
 
-const productWeight = ref(100)
 function updateDataForProduct(newData) {
-
   let inputValue = newData > 0 ? newData : 100 
     props.filteredFood.forEach(el => {
       if (el.id == dataProductForSettings.value.id) { 
@@ -177,18 +172,8 @@ function saveSettings() {
       el.carbs = dataProductForSettings.value.carbs
       el.productWeight = +productWeight.value
     }
-
-    selected.value.forEach(item => {
-            if(el.id == item.id && el.name == item.name){
-              item.calories = el.calories
-              item.proteins = el.proteins
-              item.fats = el.fats
-              item.carbs = el.carbs
-              item.productWeight = el.productWeight
-          }
-        })
+    setSelectedItems()
   })
-  
   dataProductForSettings.value = {}
   productWeight.value = 100 
   dialog.value = false
@@ -198,37 +183,32 @@ function closeSettings() {
     dataProductForSettings.value = {}
     productWeight.value = 100 
     dialog.value = false
-  
 }
 
-
+function setSelectedItems() {
+  if (selected.value) {
+      selected.value.forEach(item => {
+        const foundFood = props.filteredFood.find(food => food.name === item.name)
+        if(foundFood){
+          foundFood.calories = item.calories
+          foundFood.proteins = item.proteins
+          foundFood.fats = item.fats
+          foundFood.carbs = item.carbs
+          foundFood.productWeight = item.productWeight
+        }
+      })
+    }
+}
 
 watch(selected, () => {
   localStorage.setItem('selectedFoodForMeal', JSON.stringify(selected.value))
   emit('updateSelectedFood', selected.value);
 })
 
-
 onMounted(() => {
   if(localStorage.getItem('selectedFoodForMeal')) {
-
       selected.value = JSON.parse(localStorage.getItem('selectedFoodForMeal'))
-
-      if (selected.value) {
-          selected.value.forEach(item => { 
-            props.filteredFood.forEach(el => {
-              if(el.id == item.id && el.name == item.name){
-                
-                el.calories = item.calories
-                el.proteins = item.proteins
-                el.fats = item.fats
-                el.carbs = item.carbs
-                el.productWeight = item.productWeight
-
-            }
-            })
-          })
-        }
+      setSelectedItems()
     }
 })
 

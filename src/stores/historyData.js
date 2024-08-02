@@ -5,13 +5,12 @@ export const useHistoryDataStore = defineStore('historyData', () => {
     const historyData = ref([])
 
     function addProductInHostory(products) {
-        
         products.forEach(el => {
-            const isDuplicate = historyData.value.some(item => item.id === el.id); 
+            const isDuplicate = historyData.value.some(item => item.name === el.name); 
             if (!isDuplicate){
                 historyData.value.unshift(el)
             }else{
-                const foundFood = historyData.value.find(food => food.id === el.id)
+                const foundFood = historyData.value.find(food => food.name === el.name)
                 if(foundFood){
                     foundFood.calories = el.calories
                     foundFood.proteins = el.proteins
@@ -36,7 +35,7 @@ export const useHistoryDataStore = defineStore('historyData', () => {
 
     function deleteDublicateInArr(arr) {
         return arr.filter((item, index, self) => 
-            index === self.findIndex(t => t.id === item.id && t.name === item.name)
+            index === self.findIndex(t =>  t.name === item.name)
         )
     }
     

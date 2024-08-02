@@ -3,7 +3,7 @@
     <v-app-bar>  
     <v-app-bar-title>Healthy Lifestyle</v-app-bar-title>
    
-    <template v-slot:append>
+    <template #append>
       <RouterLink 
         class="closeStyle" to="/">
         <v-btn 
@@ -52,18 +52,15 @@
 <script setup> 
 import { RouterView, RouterLink } from 'vue-router'
 import { onMounted, computed } from 'vue'
-
 import Personalization from './components/Personalization.vue';
-
 import { usePersonalizationDataStore } from '@/stores/personalizationData';
-const personalizationDataStore = usePersonalizationDataStore()
-const { setStatusMenuPersonalization, getStatusMenuPersonalization } = personalizationDataStore 
-
 import { useDisplay } from 'vuetify'
+
+const { setStatusMenuPersonalization, getStatusMenuPersonalization } = usePersonalizationDataStore()
+
 const { name } = useDisplay()
 
 const isNarrowScreen = computed(() => name.value == 'xs')
-
 const statusMenu = computed(() => {
   return getStatusMenuPersonalization()
 })

@@ -12,42 +12,42 @@
       <v-card-text class="pa-0">
         <v-text-field
           type="string"
+          label="Название"
           v-model="nameFood"
           :rules="[commonRules.checkStringName]"
-          label="Название"
         />
         <v-text-field
           type="number"
+          label="г/мл"
           v-model="productWeight"
           :rules="[commonRules.checkNumber]"
-          label="г/мл"
         />
         <v-text-field
           type="number"
+          label="Калории"
           v-model="calories"
           :rules="[commonRules.checkNumber]"
-          label="Калории"
         />
         <v-text-field
           type="number"
+          label="Белок"
           v-model="proteins"
           :rules="[commonRules.checkNumber]"
-          label="Белок"
         />
         <v-text-field
           type="number"
+          label="Жиры"
           v-model="fats"
           :rules="[commonRules.checkNumber]"
-          label="Жиры"
         />
         <v-text-field
           type="number"
+          label="Углеводы"
           v-model="carbs"
           :rules="[commonRules.checkNumber]"
-          label="Углеводы"
         />
       </v-card-text> 
-      <template v-slot:actions>
+      <template #actions>
         <v-btn 
           class="ms-auto"
           text="Назад"
@@ -65,35 +65,33 @@
 </template>
 
 <script setup>
- import { ref, computed } from 'vue'
- import commonRules from '@/composables/commonValidators'
- import { useMyFoodsDataStore } from '@/stores/myFoodsData'
+import { ref, computed } from 'vue'
+import commonRules from '@/composables/commonValidators'
+import { useMyFoodsDataStore } from '@/stores/myFoodsData'
 
- const emit = defineEmits(
-  ['setDialogAndFilteredFood'],
-  )
+const props = defineProps({
+  foodBase: Array
+})
+
+const emit = defineEmits(
+['setDialogAndFilteredFood'],
+)
   
+const { addMyFoods, getMyFoods, searchDuplicatesMyFood } = useMyFoodsDataStore() 
 
-  const props = defineProps({
-    foodBase: Array
-  })
-  
- const myFoodsDataStore = useMyFoodsDataStore() 
- const { addMyFoods, getMyFoods, filterMyFoods, searchDuplicatesMyFood, updateMyFood, removeMyFoods } = myFoodsDataStore
+const nameFood = ref('')
+const productWeight = ref(100)
+const calories = ref('') 
+const proteins = ref('')
+const fats = ref('')
+const carbs = ref('') 
 
- const nameFood = ref('')
- const productWeight = ref(100)
- const calories = ref('') 
- const proteins = ref('')
- const fats = ref('')
- const carbs = ref('') 
+const filteredFood = ref([])
 
- const filteredFood = ref([])
-
- const disableBtnSaveMyFood = computed(() => {
+const disableBtnSaveMyFood = computed(() => {
   const filterStatus = searchDuplicatesMyFood(nameFood.value); 
   return filterStatus || calories.value == '' || proteins.value == '' || fats.value == '' || carbs.value == '' || nameFood.value == ''
- })
+})
 
 function saveMyFood() {
   const newFood = {
@@ -110,8 +108,8 @@ function saveMyFood() {
   if(props.foodBase){
     filteredFood.value = [...getMyFoods(), ...props.foodBase]
   }
-  
- 
+
+
   productWeight.value = 100
   clearForm()
   emit('setDialogAndFilteredFood', false,  filteredFood.value)
@@ -127,11 +125,12 @@ function closeMenuAddMyFood() {
 }
 
 function clearForm() {
-   nameFood.value = ''
-   productWeight.value = 100
-   calories.value = '' 
-   proteins.value = ''
-   fats.value = ''
-   carbs.value = ''
+  nameFood.value = ''
+  productWeight.value = 100
+  calories.value = '' 
+  proteins.value = ''
+  fats.value = ''
+  carbs.value = ''
 }
+
 </script>

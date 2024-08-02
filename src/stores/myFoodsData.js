@@ -11,7 +11,6 @@ export const useMyFoodsDataStore = defineStore('myFoodsData', () => {
         id: index + 1, 
         canDelete: true
         }))
-
         localStorage.setItem('myFoods',  JSON.stringify(myFoods.value))
     }
 

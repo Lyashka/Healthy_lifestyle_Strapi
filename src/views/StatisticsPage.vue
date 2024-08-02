@@ -5,9 +5,8 @@
         min-width="300px" 
         max-width="1050px"
         height="650px"  
-        class="mx-auto text-center mt-5 pl-2 pr-2" 
+        class="mx-auto text-center mt-5 pl-2 pr-2 bg-grey-lighten-2" 
         elevation="4" 
-        style="background-color:rgb(228,228,228);"
       >
         <SelectedDateForCharts @getParametrsCalories="getParametrsCalories"/>
         <BarComponent :data="data"/>
@@ -19,16 +18,12 @@
 <script setup>
 import BarComponent from '../components/charts/BarComponent.vue'
 import SelectedDateForCharts from '../components/charts/SelectedDateForCharts.vue'
-
 import { ref, onMounted } from 'vue'
+import { useCalendarDaysStore } from '@/stores/calendarDays'
+import { usePersonalizationDataStore } from '@/stores/personalizationData'; 
 
-import { useCalendarDaysStore } from '@/stores/calendarDays' 
-const calendarDaysStore = useCalendarDaysStore()
-const { updateCalendarDays } = calendarDaysStore
-
-import { usePersonalizationDataStore } from '@/stores/personalizationData';
-const personalizationDataStore = usePersonalizationDataStore()
-const { getPersonalization } = personalizationDataStore 
+const { updateCalendarDays } = useCalendarDaysStore()
+const { getPersonalization } = usePersonalizationDataStore()
 
 const data = ref({
     datasets: [{ data: [] }], 

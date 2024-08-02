@@ -1,11 +1,11 @@
   <template>
     <div>
       <v-menu
+        location="center"
         v-model="menu"
         :close-on-content-click="false"
-        location="center"
       >
-        <template v-slot:activator="{ props }">
+        <template #activator="{ props }">
           <v-btn
             prepend-icon="$calendar" 
             color="white"
@@ -17,7 +17,8 @@
         <v-card min-height="300px">
           <v-date-picker 
             v-model="selectedDate" 
-            hide-header/>
+            hide-header
+          />
           <v-divider/>
           <v-card-actions>
             <v-spacer/>
@@ -37,12 +38,12 @@
   
   import {onMounted, ref} from 'vue'  
   import { useCalendarDaysStore } from '../stores/calendarDays'   
-  const calendarDaysStore = useCalendarDaysStore()
-  const { editTargetDate } = calendarDaysStore
-  
-  let menu = ref(false)
-  let selectedDate = ref(new Date());
 
+  const { editTargetDate } = useCalendarDaysStore()
+  
+  const menu = ref(false)
+  const selectedDate = ref(new Date());
+ 
   function saveDay() {
     editTargetDate(selectedDate.value)
     menu.value = false

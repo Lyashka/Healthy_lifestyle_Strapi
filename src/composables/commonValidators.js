@@ -1,7 +1,6 @@
 import { useMyFoodsDataStore } from '@/stores/myFoodsData' 
-const myFoodsDataStore = useMyFoodsDataStore() 
-const { searchDuplicatesMyFood } = myFoodsDataStore
 
+const { searchDuplicatesMyFood } = useMyFoodsDataStore() 
 
 const commonRules = {
   checkStringName: (value) => {

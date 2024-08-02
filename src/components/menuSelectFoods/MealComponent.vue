@@ -18,13 +18,10 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { debounce } from 'lodash'
-
 import FoodItem from './FoodItem.vue';
-
 import { useMyFoodsDataStore } from '@/stores/myFoodsData' 
 
-const myFoodsDataStore = useMyFoodsDataStore() 
-const { filterMyFoods } = myFoodsDataStore
+const { filterMyFoods } = useMyFoodsDataStore() 
 
 const props = defineProps({
   foodBase: Array
@@ -37,14 +34,9 @@ const loader = ref(false)
 const filteredFood = ref([])
 const selected = ref([]) 
 
-onMounted(async () => {
-  foodBase.value = props.foodBase
-
-  if(localStorage.getItem('filteredFood')) {
-    filteredFood.value = JSON.parse(localStorage.getItem('filteredFood'))[1]
-    searchName.value = JSON.parse(localStorage.getItem('filteredFood'))[0]
-  }
-})
+const emit = defineEmits(
+  ['updateSelectedFood']
+)
 
 const inputValueSelectFood = (value) =>{
   loader.value = true
@@ -63,18 +55,8 @@ const selectFood = debounce((value) => {
 
     filteredFood.value = [...filteredMyFoods, ...filteredAllFoods]
 
-    if (selected) {
-      selected.value.forEach(item => {
-        const foundFood = filteredFood.value.find(food => food.id === item.id)
-        if(foundFood){
-          foundFood.calories = item.calories
-          foundFood.proteins = item.proteins
-          foundFood.fats = item.fats
-          foundFood.carbs = item.carbs
-          foundFood.productWeight = item.productWeight
-        }
-      })
-    }
+    setSelectedItems()
+
     localStorage.setItem('filteredFood', JSON.stringify([searchName.value, filteredFood.value]))
     loader.value = false
   }
@@ -85,34 +67,41 @@ const selectFood = debounce((value) => {
 }, 1000)
 
 function filteredFoods(value)  {
-        return foodBase.value.filter(item => 
-            item.name.toLowerCase().includes(value.toLowerCase()) 
-          )
+  return foodBase.value.filter(item => 
+      item.name.toLowerCase().includes(value.toLowerCase()) 
+    )
 }
 
-const emit = defineEmits(
-  ['updateSelectedFood']
-  )
+function setSelectedItems() {
+  if (selected.value) {
+      selected.value.forEach(item => {
+        const foundFood = filteredFood.value.find(food => food.name === item.name)
+        if(foundFood){
+          foundFood.calories = item.calories
+          foundFood.proteins = item.proteins
+          foundFood.fats = item.fats
+          foundFood.carbs = item.carbs
+          foundFood.productWeight = item.productWeight
+        }
+      })
+  }
+}
 
 function updateSelectedFood(data) {
   selected.value = data
-  emit('updateSelectedFood', data);
+  emit('updateSelectedFood', data, 'MealComponent');
 }
 
 watch(selected, () => {
-  if (selected) {
-    selected.value.forEach(item => {
-      const foundFood = filteredFood.value.find(food => food.id === item.id)
-      if(foundFood){
-        foundFood.calories = item.calories
-        foundFood.proteins = item.proteins
-        foundFood.fats = item.fats
-        foundFood.carbs = item.carbs
-        foundFood.productWeight = item.productWeight
-      }
-    })
-  }
+  setSelectedItems()
 })
 
+onMounted(async () => {
+  foodBase.value = props.foodBase
+  if(localStorage.getItem('filteredFood')) {
+    filteredFood.value = JSON.parse(localStorage.getItem('filteredFood'))[1]
+    searchName.value = JSON.parse(localStorage.getItem('filteredFood'))[0]
+  }
+})
 </script>
 

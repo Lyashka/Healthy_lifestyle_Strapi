@@ -1,16 +1,13 @@
 <template>
   <div class="mx-auto ">
     <v-container>
-      <v-row 
-        style="display: flex; flex-wrap: wrap"
-      > 
+      <v-row> 
         <v-col>
           <v-card 
             max-width="800px" 
             min-width="300px" 
             min-height="500px" 
-            class="mx-auto" 
-            style="background-color:rgb(228,228,228);"
+            class="mx-auto bg-grey-lighten-2" 
             elevation="4"
             > 
             <v-row 
@@ -22,10 +19,10 @@
                     rounded="lg" 
                     class="mx-auto ml-1"
                     color="#228B22" 
-                    v-model="progressLinerValue" 
                     height="30"   
+                    v-model="progressLinerValue"
                   >
-                    {{ myCalories }} / {{ getPersonalization().needingCalories }}
+                    {{ persCalories }}
                   </v-progress-linear>
               </v-col>
               <v-col>
@@ -149,9 +146,8 @@
           <v-card 
             max-width="800px" 
             min-width="300px" 
-            min-height="250px" 
-            class="mx-auto" 
-            style="background-color:rgb(228,228,228);"
+            
+            class="mx-auto bg-grey-lighten-2" 
             elevation="4"
           >
             <v-card-title>
@@ -168,7 +164,7 @@
                 </v-col>
               </v-row>
             </v-card-title>
-            <v-card-text>
+            <v-card-text v-if="isPersonalization">
               <v-row>
                 <v-col >
                   Возраст:
@@ -220,21 +216,16 @@
 <script setup>
 import SelectDate from '../components/SelectDate.vue'; 
 import MenuSelectFoods from '../components/MenuSelectFoods.vue'
-
 import { ref, computed, onMounted, watch } from 'vue'
-
 import food_rations from '../data/food_rations.json'
-
 import { usePersonalizationDataStore } from '@/stores/personalizationData';
-const personalizationDataStore = usePersonalizationDataStore()
-const { getPersonalization, updatePersonalization,  setStatusMenuPersonalization, getStatusMenuPersonalization } = personalizationDataStore 
-
 import { useCalendarDaysStore } from '../stores/calendarDays'  
-const calendarDaysStore = useCalendarDaysStore()
-const { calendarDays, getDataForDay, removePositionFromRation, calculateMyCalories, updateCalendarDays } = calendarDaysStore
-
 import { useDisplay } from 'vuetify'
-const { name } = useDisplay()
+
+const { name } = useDisplay() 
+
+const { getPersonalization, updatePersonalization,  setStatusMenuPersonalization, getStatusMenuPersonalization, getPers } = usePersonalizationDataStore()
+const { calendarDays, getDataForDay, removePositionFromRation, calculateMyCalories, updateCalendarDays, dataForDay } = useCalendarDaysStore()
 const isNarrowScreen = computed(() => name.value == 'xs')
 
 const rations = ref([]);
@@ -260,6 +251,19 @@ const activity = computed(() => {
 const myCalories = computed(()=>{
   return calculateMyCalories()
 })
+
+const persCalories = computed(() => {
+  if (getPersonalization().needingCalories) {
+    return `${myCalories.value} / ${getPersonalization().needingCalories}` 
+  }else{ 
+    return `${myCalories.value}`
+  }
+})
+
+const isPersonalization = computed(() => {
+  return getPersonalization().age
+})
+
 
 const getRations = function() { 
   rations.value = food_rations
@@ -287,8 +291,9 @@ function trimString(value) {
   return parseFloat(cleanedStr)
 }
 
+
 watch(
-  () => calendarDaysStore.dataForDay, (newValue) => {
+  () => dataForDay, (newValue) => {
       data.value = newValue
   }
 )
@@ -302,8 +307,8 @@ watch(myCalories, ()=>{
   progressLinerValue.value = +calculateMyCalories() * 100 / +getPersonalization().needingCalories
 })
 
-onMounted(() => {
 
+onMounted(() => {
   getRations()
 
   if(localStorage.getItem('personalization')){

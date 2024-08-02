@@ -9,15 +9,15 @@ export const useSelectedDataStore = defineStore('selectedData', () => {
     const selectedMy = ref([])
     const countSelectedData = ref(0)
 
-    function addSelectedData(selected, seletedId) {
+    function addSelectedData(selected, nameComponent) {
         if(selected){
-            if(seletedId == 1) {
+            if(nameComponent === 'MealComponent') {
                 selectedMain.value = selected
             }
-            else if(seletedId == 2) {
+            else if(nameComponent === 'HistoryComponent') {
                 selectedHistory.value = selected
             }
-            else if(seletedId == 3) {
+            else if(nameComponent === 'MyMealComponent') {
                 selectedMy.value = selected
             }
         }

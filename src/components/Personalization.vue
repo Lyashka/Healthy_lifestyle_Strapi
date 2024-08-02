@@ -3,7 +3,7 @@
     v-model="dialog"
     width="auto"
     class="align-center justify-center"
-    @click:outside="closePersonalization"
+    @click:outside.prevent="closePersonalization"
   >
     <v-card 
       min-width="350"
@@ -14,35 +14,34 @@
       <v-card-text>
         <v-text-field
           type="number"
-          v-model="age"
           label="Возраст"
+          v-model="age"
         />
         <v-text-field
           type="number"
-          v-model="height"
           label="Рост"
+          v-model="height"
         />
         <v-text-field
           type="number"
-          v-model="weight"
           label="Вес"
+          v-model="weight"
         />
         <v-radio-group 
           inline 
-          v-model="gender"
           label="Пол"
+          v-model="gender"
         >
           <v-radio label="М" value="1"></v-radio>
           <v-radio label="Ж" value="2"></v-radio>
         </v-radio-group>
         <v-select
-          v-model="activity"       
           label="Уровень активности"
+          v-model="activity"       
           :items="listItemsForSelect"
-         
         />
       </v-card-text>
-      <template v-slot:actions>
+      <template #actions>
         <v-btn
           text="Назад"
           @click="closePersonalization"
@@ -60,20 +59,16 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import { usePersonalizationDataStore } from '@/stores/personalizationData'
 
-import { usePersonalizationDataStore } from '@/stores/personalizationData';
-const personalizationDataStore = usePersonalizationDataStore()
-const { updatePersonalization, setStatusMenuPersonalization } = personalizationDataStore 
+const { updatePersonalization, setStatusMenuPersonalization } = usePersonalizationDataStore() 
 
 const dialog = ref(true)
-
 const height = ref(null)
 const weight = ref(null)
 const age = ref(null)
 const gender = ref(null)
 const activity = ref(null)
-const isSelectFocused = ref(false);
-
 const needingCalories = ref(0)
 
 const listItemsForSelect = [
@@ -108,11 +103,6 @@ const listItemsForSelect = [
     }
   }
 ]
-
-// function closePersonalizationIfClickedOutside() {
-//   closePersonalization()
- 
-// }
 
 function savePersonalization() {
   calculateCalories()

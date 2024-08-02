@@ -10,44 +10,41 @@
     </div>
   
     <v-dialog
-      v-model="dialog"
       width="500"
+      v-model="dialog"
     >
     <FormAddNewFood @setDialogAndFilteredFood="setDialogAndFilteredFood"/>
     </v-dialog>
     
     <FoodItem 
       :filteredFood="filteredFood" 
-      @updateSelectedFood="updateSelectedFood" 
+      @updateSelectedFood="updateSelectedFood"
     />
   </div>
 </template> 
 
 <script setup>
 import { ref, onMounted, watch } from 'vue' 
-
 import FoodItem from './FoodItem.vue';
 import FormAddNewFood from '../FormAddNewFood.vue';
-
 import { useMyFoodsDataStore } from '@/stores/myFoodsData' 
-const myFoodsDataStore = useMyFoodsDataStore() 
-const { myFoods, getMyFoods, updateMyFood } = myFoodsDataStore
+
+const  { myFoods, getMyFoods, updateMyFood } = useMyFoodsDataStore() 
 
 const dialog = ref(false)
-
 const filteredFood = ref(getMyFoods())
+
+const emit = defineEmits(
+  ['updateSelectedFood']
+  )
 
 function setDialogAndFilteredFood(dialogStatus) {
   dialog.value = dialogStatus
   
 }
 
-const emit = defineEmits(
-  ['updateSelectedFood']
-  )
-
 function updateSelectedFood(data) {
-  emit('updateSelectedFood', data);
+  emit('updateSelectedFood', data, 'MyMealComponent');
 }
 
 watch(myFoods, () => {
