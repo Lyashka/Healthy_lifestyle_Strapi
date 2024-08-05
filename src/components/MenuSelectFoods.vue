@@ -143,23 +143,23 @@
   xxl: { height: 1200, width: 800 }
 }
 
- const height = computed(() => {
-    return sizes[name.value]?.height
-  })
+const height = computed(() => {
+  return sizes[name.value]?.height
+})
 
 const width = computed(() => {
-    return sizes[name.value]?.width
-  })
+  return sizes[name.value]?.width
+})
 
- const dialog = ref(false)
- const showMeal = ref(true)
- const showHistory = ref(false)
- const showMyMeal = ref(false)
- const selectedFoodsCount = ref(0)
- const selectedData = ref([])
- const foodBase = ref([])
+const dialog = ref(false)
+const showMeal = ref(true)
+const showHistory = ref(false)
+const showMyMeal = ref(false)
+const selectedFoodsCount = ref(0)
+const selectedData = ref([])
+const foodBase = ref([])
 
- function showComponent(nameComponent) {
+function showComponent(nameComponent) {
   switch(nameComponent){
     case 'meal': {
       showMeal.value = true
@@ -180,9 +180,9 @@ const width = computed(() => {
       break
     }
   }
- } 
+} 
 
- function updateSelectedFood(selectedFood, nameComponent) {
+function updateSelectedFood(selectedFood, nameComponent) {
   selectedData.value = selectedFood
   addSelectedData(selectedFood, nameComponent)   
   selectedFoodsCount.value = getLengthSelectedData()
@@ -215,7 +215,7 @@ function resetMenuSelectFoods() {
   selectedFoodsCount.value = 0
 }
 
- onMounted(async () => {
+ onMounted(() => {
   foodBase.value = food_base
   resetMenuSelectFoods()
   selectedFoodsCount.value = 0

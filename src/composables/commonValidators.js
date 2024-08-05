@@ -4,13 +4,13 @@ const { searchDuplicatesMyFood } = useMyFoodsDataStore()
 
 const commonRules = {
   checkStringName: (value) => {
-      if (!value) {
-        return  'Обязательное поле' 
-      }else if (searchDuplicatesMyFood(value)){
-        return 'Этот продукт уже существует'
-      }else{
-        return true
-      }
+    if (!value) {
+      return  'Обязательное поле' 
+    }else if (searchDuplicatesMyFood(value)){
+      return 'Этот продукт уже существует'
+    }else{
+      return true
+    }
   },
   checkNumber: (value) => {
     if(!value){

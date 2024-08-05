@@ -102,14 +102,12 @@ function saveMyFood() {
     fats: `${fats.value} г`, 
     carbs: `${carbs.value} г`
   }
-
   addMyFoods(newFood)
 
   if(props.foodBase){
     filteredFood.value = [...getMyFoods(), ...props.foodBase]
   }
-
-
+  
   productWeight.value = 100
   clearForm()
   emit('setDialogAndFilteredFood', false,  filteredFood.value)

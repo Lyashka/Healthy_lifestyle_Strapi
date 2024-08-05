@@ -224,8 +224,10 @@ import { useDisplay } from 'vuetify'
 
 const { name } = useDisplay() 
 
-const { getPersonalization, updatePersonalization,  setStatusMenuPersonalization, getStatusMenuPersonalization, getPers } = usePersonalizationDataStore()
-const { calendarDays, getDataForDay, removePositionFromRation, calculateMyCalories, updateCalendarDays, dataForDay } = useCalendarDaysStore()
+const { getPersonalization, updatePersonalization,  setStatusMenuPersonalization } = usePersonalizationDataStore()
+const { calendarDays, getDataForDay, removePositionFromRation, calculateMyCalories, updateCalendarDays } = useCalendarDaysStore()
+const calendarDaysStore = useCalendarDaysStore()
+
 const isNarrowScreen = computed(() => name.value == 'xs')
 
 const rations = ref([]);
@@ -291,10 +293,9 @@ function trimString(value) {
   return parseFloat(cleanedStr)
 }
 
-
 watch(
-  () => dataForDay, (newValue) => {
-      data.value = newValue
+  () => calendarDaysStore.dataForDay, (newValue) => {
+    data.value = newValue
   }
 )
 
@@ -316,8 +317,8 @@ onMounted(() => {
   }
   
   if(localStorage.getItem('calendarDays')){
-      updateCalendarDays(JSON.parse(localStorage.getItem('calendarDays')))
-      progressLinerValue.value = +calculateMyCalories() * 100 / +getPersonalization().needingCalories
+    updateCalendarDays(JSON.parse(localStorage.getItem('calendarDays')))
+    progressLinerValue.value = +calculateMyCalories() * 100 / +getPersonalization().needingCalories
   }
 })
 

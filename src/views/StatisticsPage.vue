@@ -26,19 +26,19 @@ const { updateCalendarDays } = useCalendarDaysStore()
 const { getPersonalization } = usePersonalizationDataStore()
 
 const data = ref({
-    datasets: [{ data: [] }], 
-    labels: [],
-  })
+  datasets: [{ data: [] }], 
+  labels: [],
+})
 
 function getParametrsCalories(dataCalories) {
-    data.value.datasets[0].data = dataCalories.parametrs
-    data.value.labels = dataCalories.labels
-    data.value.datasets[0].backgroundColor = dataCalories.parametrs.map(value => value >= getPersonalization().needingCalories ? '#ea5545' : '#87bc45')
+  data.value.datasets[0].data = dataCalories.parametrs
+  data.value.labels = dataCalories.labels
+  data.value.datasets[0].backgroundColor = dataCalories.parametrs.map(value => value >= getPersonalization().needingCalories ? '#ea5545' : '#87bc45')
 }
 
 onMounted(() => {
   if(localStorage.getItem('calendarDays')){
-      updateCalendarDays(JSON.parse(localStorage.getItem('calendarDays')))
+    updateCalendarDays(JSON.parse(localStorage.getItem('calendarDays')))
   }
 })
 

@@ -58,7 +58,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { usePersonalizationDataStore } from '@/stores/personalizationData'
 
 const { updatePersonalization, setStatusMenuPersonalization } = usePersonalizationDataStore() 
@@ -116,53 +116,75 @@ function closePersonalization() {
 }
 
 function calculateCalories() {
-    if (gender.value == 1) {
-      needingCalories.value = Math.round((10 * +weight.value + 6.25 * +height.value - 5 * +age.value + 5) * getActivityParameter()) 
+  if (gender.value == 1) {
+    needingCalories.value = Math.round((10 * +weight.value + 6.25 * +height.value - 5 * +age.value + 5) * getActivityParameter()) 
 
-    }else if(gender.value == 2){ 
-      needingCalories.value = Math.round((10 * +weight.value + 6.25 * +height.value - 5 * +age.value - 161) * getActivityParameter())
-    } 
-    const newPerson = {
-      height: height.value,
-      weight: weight.value,
-      age: age.value,
-      gender: gender.value,
-      activity: activity.value,
-      needingCalories: needingCalories.value
-    }
-    updatePersonalization(newPerson)
+  }else if(gender.value == 2){ 
+    needingCalories.value = Math.round((10 * +weight.value + 6.25 * +height.value - 5 * +age.value - 161) * getActivityParameter())
+  } 
+  const newPerson = {
+    height: height.value,
+    weight: weight.value,
+    age: age.value,
+    gender: gender.value,
+    activity: activity.value,
+    needingCalories: needingCalories.value
+  }
+  updatePersonalization(newPerson)
 }
 
 function getActivityParameter() {
-    let parameterValue = 0
-    switch (activity.value) {
-        case 'Минимальная активность':
-            parameterValue = 1.2
-            break;
-        case 'Слабый уровень активности':
-            parameterValue = 1.375
-            break;
+  let parameterValue = 0
+  switch (activity.value) {
+    case 'Минимальная активность':
+      parameterValue = 1.2
+      break;
+    case 'Слабый уровень активности':
+      parameterValue = 1.375
+      break;
 
-        case 'Умеренный уровень активности':
-            parameterValue = 1.55
-            break
-        
-        case 'Тяжелая или трудоемкая активность':
-            parameterValue = 1.7
-            break
+    case 'Умеренный уровень активности':
+      parameterValue = 1.55
+      break
+    
+    case 'Тяжелая или трудоемкая активность':
+      parameterValue = 1.7
+      break
 
-        case 'Экстремальный уровень':
-            parameterValue = 1.9
-            break
+    case 'Экстремальный уровень':
+      parameterValue = 1.9
+      break
 
-        default:
-            break;
-    }
-    return parameterValue
+    default:
+      break
+  }
+  return parameterValue
 }
 
 const disableBtnSaveMyFood = computed(() => {
-  return height.value == null || weight.value == null || age.value == null || gender.value == null || activity.value == null   
- })
+  return ( 
+    height.value === null ||
+    height.value === "" || 
+    weight.value === null ||
+    weight.value === "" ||
+    age.value === null ||
+    age.value === "" ||
+    gender.value === null ||
+    gender.value === "" ||
+    activity.value === null ||
+    activity.value === ""
+  )
+})
+
+onMounted(() => {
+  if(localStorage.getItem('personalization')) {
+    const dataPersonalization = JSON.parse(localStorage.getItem('personalization'))
+    height.value = dataPersonalization.height
+    weight.value = dataPersonalization.weight
+    age.value = dataPersonalization.age
+    gender.value = dataPersonalization.gender
+    activity.value = dataPersonalization.activity
+  }
+})
 
 </script>

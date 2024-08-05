@@ -8,13 +8,13 @@
 <script setup> 
 import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
-import {ref, computed, watch } from 'vue'
+import {ref, computed, watch, onMounted } from 'vue'
 import AnnotationPlugin from 'chartjs-plugin-annotation';
 import { usePersonalizationDataStore } from '@/stores/personalizationData';
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, AnnotationPlugin)
 
-const { getPersonalization }  = usePersonalizationDataStore()
+const { getPersonalization, setPersonalization }  = usePersonalizationDataStore()
 const props = defineProps({
   data: Object
 })
@@ -57,5 +57,10 @@ watch(chartData.value, () => {
   }
 })
 
+onMounted(() => {
+  if(localStorage.getItem('personalization')) {
+    setPersonalization(JSON.parse(localStorage.getItem('personalization')))
+  }
+})
 
 </script>

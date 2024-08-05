@@ -3,16 +3,16 @@
     lines="one" 
     :height="height"
   > 
-    <div 
-      v-if="props.loader" 
+    <div
+      v-if="loader" 
       class="text-center"
     >
       <v-progress-circular  indeterminate/>
     </div>
     <v-row 
       no-gutters 
-      v-for="(food, index) in props.filteredFood" 
-      :key="index"
+      v-for="food in props.filteredFood" 
+      :key="food.id"
       class="hover-color"
       @click="openInfoProduct(food)"
     > 
@@ -113,29 +113,29 @@ import { ref, onMounted, watch, computed } from 'vue'
 import trimString  from '@/composables/trimString.js'
 import { useDisplay } from 'vuetify'
 
- const { name } = useDisplay()
+const { name } = useDisplay()
 
- const dialog = ref(false)
- const selected = ref([]) 
- const dataProductForSettings = ref({})
- const productWeight = ref(100)
+const dialog = ref(false)
+const selected = ref([]) 
+const dataProductForSettings = ref({})
+const productWeight = ref(100)
 
- const props = defineProps({
+const props = defineProps({
   filteredFood: Array,
   loader: Boolean
 })
 
- const height = computed(() => {
-    switch (name.value) {
-      case 'xs': return 280
-      case 'sm': return 380
-      case 'md': return 480
-      case 'lg': return 580
-      case 'xl': return 680
-      case 'xxl': return 780
-      default: return 380
-    }
-  })
+const height = computed(() => {
+  switch (name.value) {
+    case 'xs': return 280
+    case 'sm': return 380
+    case 'md': return 480
+    case 'lg': return 580
+    case 'xl': return 680
+    case 'xxl': return 780
+    default: return 380
+  }
+})
 
 const emit = defineEmits(
   ['updateSelectedFood']
@@ -180,23 +180,23 @@ function saveSettings() {
 }
 
 function closeSettings() {
-    dataProductForSettings.value = {}
-    productWeight.value = 100 
-    dialog.value = false
+  dataProductForSettings.value = {}
+  productWeight.value = 100 
+  dialog.value = false
 }
 
 function setSelectedItems() {
   if (selected.value) {
-      selected.value.forEach(item => {
-        const foundFood = props.filteredFood.find(food => food.name === item.name)
-        if(foundFood){
-          foundFood.calories = item.calories
-          foundFood.proteins = item.proteins
-          foundFood.fats = item.fats
-          foundFood.carbs = item.carbs
-          foundFood.productWeight = item.productWeight
-        }
-      })
+    selected.value.forEach(item => {
+      const foundFood = props.filteredFood.find(food => food.name === item.name)
+      if(foundFood){
+        foundFood.calories = item.calories
+        foundFood.proteins = item.proteins
+        foundFood.fats = item.fats
+        foundFood.carbs = item.carbs
+        foundFood.productWeight = item.productWeight
+      }
+    })
     }
 }
 
@@ -207,9 +207,9 @@ watch(selected, () => {
 
 onMounted(() => {
   if(localStorage.getItem('selectedFoodForMeal')) {
-      selected.value = JSON.parse(localStorage.getItem('selectedFoodForMeal'))
-      setSelectedItems()
-    }
+    selected.value = JSON.parse(localStorage.getItem('selectedFoodForMeal'))
+    setSelectedItems()
+  }
 })
 
 </script>

@@ -142,13 +142,10 @@ export const useCalendarDaysStore = defineStore('calendarDays', () => {
   }
 
   function updateCalendarDays(newCalendarDays) {
-
-  
     newCalendarDays.forEach(e => {
       if(!calendarDays.some(item => item.date == e.date)) {
         calendarDays.push(e)
       }
-      
     })
   }
 

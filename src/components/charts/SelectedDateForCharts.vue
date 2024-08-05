@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue'  
+import { onMounted, ref } from 'vue'  
 import getDataCalories from '@/composables/calculateDataCaloriesForDays'
 import { useSelectedDateForStatisticsDataStore } from '@/stores/selectedDateForStatisticsData'
 

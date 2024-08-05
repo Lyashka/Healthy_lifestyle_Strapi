@@ -50,13 +50,9 @@ const selectFood = debounce((value) => {
       productWeight: 100, 
       id: index + 1,
     }))
-
     const filteredMyFoods = filterMyFoods(value) 
-
     filteredFood.value = [...filteredMyFoods, ...filteredAllFoods]
-
     setSelectedItems()
-
     localStorage.setItem('filteredFood', JSON.stringify([searchName.value, filteredFood.value]))
     loader.value = false
   }
@@ -74,16 +70,16 @@ function filteredFoods(value)  {
 
 function setSelectedItems() {
   if (selected.value) {
-      selected.value.forEach(item => {
-        const foundFood = filteredFood.value.find(food => food.name === item.name)
-        if(foundFood){
-          foundFood.calories = item.calories
-          foundFood.proteins = item.proteins
-          foundFood.fats = item.fats
-          foundFood.carbs = item.carbs
-          foundFood.productWeight = item.productWeight
-        }
-      })
+    selected.value.forEach(item => {
+      const foundFood = filteredFood.value.find(food => food.name === item.name)
+      if(foundFood){
+        foundFood.calories = item.calories
+        foundFood.proteins = item.proteins
+        foundFood.fats = item.fats
+        foundFood.carbs = item.carbs
+        foundFood.productWeight = item.productWeight
+      }
+    })
   }
 }
 
@@ -96,7 +92,7 @@ watch(selected, () => {
   setSelectedItems()
 })
 
-onMounted(async () => {
+onMounted(() => {
   foodBase.value = props.foodBase
   if(localStorage.getItem('filteredFood')) {
     filteredFood.value = JSON.parse(localStorage.getItem('filteredFood'))[1]

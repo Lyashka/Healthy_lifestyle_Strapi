@@ -6,40 +6,33 @@ const { calendarDays, updateCalendarDays } = useCalendarDaysStore()
 const { getSelectedDates } = useSelectedDateForStatisticsDataStore()
 
 export default function getDataCalories() {
-    const labels = buildArrayLabels() 
-    const parametrs = buildArrayParametrs()
-    return {
-        labels: labels,
-        parametrs: parametrs
-    }
+  const labels = buildArrayLabels() 
+  const parametrs = buildArrayParametrs()
+  return {
+    labels: labels,
+    parametrs: parametrs
+  }
 }
 
 function buildArrayParametrs() {
-    if(localStorage.getItem('calendarDays')){
-      updateCalendarDays(JSON.parse(localStorage.getItem('calendarDays')))
-    }
+  if(localStorage.getItem('calendarDays')){
+    updateCalendarDays(JSON.parse(localStorage.getItem('calendarDays')))
+  }
+  
+  const labelsValue = getSelectedDates()
 
-    const arrayParametrs = []
-    const labelsValue = getSelectedDates()
+  const arrayParametrs = labelsValue.map(item => {
+    const foundLabel = calendarDays.find(el => item.toLocaleDateString() == el.date)
+    return foundLabel ? foundLabel.summCalories : 0
+  })
 
-    labelsValue.forEach(item => {
-        let found = false;
-        const foundLabel = calendarDays.find(el => item.toLocaleDateString() == el.date)
-        if (foundLabel) {
-            arrayParametrs.push(foundLabel.summCalories)
-            found = true      
-        }
-        if (!found) {
-            arrayParametrs.push(0);
-          }
-    })
-    return arrayParametrs
+  return arrayParametrs
 }
 
 function buildArrayLabels() {
-    const arrayLabels = []
-    getSelectedDates().forEach(el => {
-        arrayLabels.push(el.toLocaleDateString())
-    }) 
-    return arrayLabels
+  const arrayLabels = []
+  getSelectedDates().forEach(el => {
+    arrayLabels.push(el.toLocaleDateString())
+  }) 
+  return arrayLabels
 }
