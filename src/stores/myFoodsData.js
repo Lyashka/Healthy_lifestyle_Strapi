@@ -1,36 +1,48 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
+import requestGetUserProduct from '../api/requestGetUserProducts.js'
+import requestPostAddUserProduct  from '../api/requestPostAddUserProduct.js'
+import requestDeleteUserProduct from '../api/requestDeleteUserProduct.js'
+
 export const useMyFoodsDataStore = defineStore('myFoodsData', () => {
-  const myFoods = ref([]) 
+  const myFoods = ref([])
 
-  function addMyFoods(newFood) {
-    myFoods.value.unshift(newFood)
-    myFoods.value = myFoods.value.map((food, index) => ({
-      ...food,
-      id: index + 1, 
-      canDelete: true
-    }))
-    localStorage.setItem('myFoods',  JSON.stringify(myFoods.value))
+  const alertStatus = ref({})
+  function getAlertStatus(){
+    return alertStatus.value
   }
 
-  function removeMyFoods(foodId) {
-    const index = myFoods.value.findIndex((item) => item.id === foodId)
-    if (index !== -1) {
-      myFoods.value.splice(index, 1)
+  async function addMyFoods(newFood) {
+
+    const res = await requestPostAddUserProduct(newFood)
+    if (res.status === 200) {
+      myFoods.value.unshift(newFood)
     }
-    localStorage.setItem('myFoods',  JSON.stringify(myFoods.value))
+    alertStatus.value = res
   }
 
-  function getMyFoods() {
+  async function removeMyFoods(foodId) {
+    const res = await requestDeleteUserProduct(foodId)
+    await getMyFoods()
+    alertStatus.value = res
+    return res
+  }
+
+  async function getMyFoods() {
+    const myFoodsResponse = await requestGetUserProduct()
+    if(myFoodsResponse.status === 200) {
+      myFoods.value = myFoodsResponse.data.data
+        .map((food) => ({
+          ...food,
+          canDelete: true
+        }))
+    }else{
+      myFoods.value = []
+      alertStatus.value = myFoodsResponse
+    }
+
     return myFoods.value
-  }
-
-  function updateMyFood(myFood){
-    myFoods.value = []
-    myFood.forEach(e => {
-      myFoods.value.push(e)
-    })
   }
 
   function filterMyFoods(value) {
@@ -40,7 +52,7 @@ export const useMyFoodsDataStore = defineStore('myFoodsData', () => {
   }
 
   function searchDuplicatesMyFood(value) {
-    if (myFoods.value.some(item => item.name == value)){
+    if (myFoods.value.some(item => item.name === value)){
       return true
     }else{
       return false
@@ -54,6 +66,6 @@ export const useMyFoodsDataStore = defineStore('myFoodsData', () => {
     getMyFoods,
     searchDuplicatesMyFood,
     filterMyFoods,
-    updateMyFood
+    getAlertStatus
   }
 })

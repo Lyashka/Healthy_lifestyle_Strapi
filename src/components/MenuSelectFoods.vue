@@ -118,11 +118,11 @@
  import { useDisplay } from 'vuetify'
  import MealComponent from './menuSelectFoods/MealComponent.vue'
  import HistoryComponent from './menuSelectFoods/HistoryComponent.vue'
- import MyMealComponent from './menuSelectFoods/MyMealComponent.vue'  
- import food_base from '../data/food_base.json'
+ import MyMealComponent from './menuSelectFoods/MyMealComponent.vue'
  import { useCalendarDaysStore } from '../stores/calendarDays'
  import { useHistoryDataStore } from '@/stores/historyData'
  import { useSelectedDataStore } from '@/stores/selectedData'
+ import getProducts from '@/api/requestGetAllProducts.js'
 
  const props = defineProps({
   ration: Object
@@ -216,8 +216,10 @@ function resetMenuSelectFoods() {
 }
 
  onMounted(() => {
-  foodBase.value = food_base
-  resetMenuSelectFoods()
-  selectedFoodsCount.value = 0
+   getProducts().then(products => {
+     foodBase.value = products.data.data;
+     resetMenuSelectFoods()
+     selectedFoodsCount.value = 0
+   })
  })
  </script>

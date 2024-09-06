@@ -29,10 +29,10 @@ import FoodItem from './FoodItem.vue';
 import FormAddNewFood from '../FormAddNewFood.vue';
 import { useMyFoodsDataStore } from '@/stores/myFoodsData' 
 
-const  { myFoods, getMyFoods, updateMyFood } = useMyFoodsDataStore() 
+const  { myFoods, getMyFoods } = useMyFoodsDataStore()
 
 const dialog = ref(false)
-const filteredFood = ref(getMyFoods())
+const filteredFood = ref(await getMyFoods())
 
 const emit = defineEmits(
   ['updateSelectedFood']
@@ -47,14 +47,11 @@ function updateSelectedFood(data) {
   emit('updateSelectedFood', data, 'MyMealComponent');
 }
 
-watch(myFoods, () => {
-  filteredFood.value = getMyFoods()
+watch(myFoods,async () => {
+  filteredFood.value = await getMyFoods()
 })
 
-onMounted(() => {
-  if(localStorage.getItem('myFoods')) {
-    updateMyFood( JSON.parse(localStorage.getItem('myFoods')) )
-    filteredFood.value = getMyFoods()
-  }
+onMounted(async () => {
+    filteredFood.value = (await getMyFoods()).reverse()
 })
 </script>

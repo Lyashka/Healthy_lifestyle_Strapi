@@ -166,15 +166,17 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import food_base from '../data/food_base.json'
+import getProducts from '../api/requestGetAllProducts.js'
 import { debounce } from 'lodash'
+
 import FormAddNewFood from '@/components/FormAddNewFood.vue'
+
 import { useMyFoodsDataStore } from '@/stores/myFoodsData' 
 import { useDisplay } from 'vuetify'
 
 const { name } = useDisplay()
 
-const { getMyFoods, filterMyFoods, updateMyFood, removeMyFoods } = useMyFoodsDataStore() 
+const { getMyFoods, filterMyFoods, removeMyFoods} = useMyFoodsDataStore()
 
 const foodBase = ref([])
 const searchName = ref('')
@@ -184,10 +186,12 @@ const filteredFood = ref([])
 const overlay = ref(false)
 const foodInfo = ref({})
 
-const isNarrowScreen = computed(() => name.value == 'xs')
+
+
+const isNarrowScreen = computed(() => name.value === 'xs')
 
 const headers = computed(() => {
-  if(name.value == 'xs'){
+  if(name.value === 'xs'){
     return [ 
       { title: 'Название', align: 'start', sortable: false, key: 'name' },
       { title: 'Ккал', align: 'center', sortable: false, key: 'calories' },
@@ -210,13 +214,12 @@ const inputValueSelectFood = (value) =>{
   selectFood(value)
 }
   
-const selectFood = debounce((value) => {
-  const myFood = getMyFoods()
+const selectFood = debounce(async (value) => {
+  const myFoodsResponse = (await getMyFoods()).reverse()
   if (value){
-    const filteredAllFoods = filteredFoods(value).map((food, index) => ({
+    const filteredAllFoods = filteredFoods(value).map((food) => ({
       ...food,
-      productWeight: 100, 
-      id: index + 1,
+      productWeight: 100,
     }))
     const filteredMyFoods = filterMyFoods(value)
     filteredFood.value = [...filteredMyFoods, ...filteredAllFoods]
@@ -224,7 +227,7 @@ const selectFood = debounce((value) => {
     loader.value = false
   }
   else{
-    filteredFood.value = [...myFood, ...foodBase.value]
+    filteredFood.value = [...myFoodsResponse, ...foodBase.value]
     loader.value = false
   }
 }, 800)
@@ -240,9 +243,11 @@ function setDialogAndFilteredFood(dialogStatus, newFilteredFood) {
   filteredFood.value = newFilteredFood
 }
 
-function deleteItem(value){
-  removeMyFoods(value.id)
-  filteredFood.value = [...getMyFoods(), ...foodBase.value]
+async function deleteItem(value){
+  await removeMyFoods(value.id)
+
+  const myFoodsResponse = (await getMyFoods()).reverse()
+  filteredFood.value = [...myFoodsResponse, ...foodBase.value]
 }
 
 function handleRowClick(item){
@@ -251,13 +256,18 @@ function handleRowClick(item){
     overlay.value = true
   }
 }
-
-onMounted(async () => {
-  foodBase.value = food_base
-  if(localStorage.getItem('myFoods')) {
-    updateMyFood( JSON.parse(localStorage.getItem('myFoods')) )
+onMounted( async () => {
+  loader.value=true
+  const myFoodsResponse = (await getMyFoods()).reverse()
+  const foodBaseResponse = await  getProducts()
+  if(foodBaseResponse.status === 200){
+    foodBase.value = foodBaseResponse.data.data
+  }else{
+    foodBase.value = []
   }
-  filteredFood.value = [...getMyFoods(), ...foodBase.value]
+
+  filteredFood.value = [...myFoodsResponse, ...foodBase.value]
+  loader.value=false
 })
 
 </script>
